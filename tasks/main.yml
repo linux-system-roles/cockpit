@@ -22,8 +22,7 @@
 
 - name: Generate /etc/SUBSYSTEM.conf
   template:
-    src: SUBSYSTEM.conf.j2
-    dest: /etc/SUBSYSTEM.conf
-    backup: yes
+      src: SUBSYSTEM.conf.j2
+      dest: /etc/SUBSYSTEM.conf
+      backup: yes
   notify: restart SUBSYSTEM
-
