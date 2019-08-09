@@ -7,11 +7,6 @@ Requirements
 ------------
 
 If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role does not allow handling of that yet.
-    - hosts: rhel_node
-      roles:
-        - role: linux-system-roles.cockpit
-          become: yes
-
 
 Role Variables
 --------------
@@ -19,6 +14,7 @@ Role Variables
 Available variables per distribution are listed below, along with default values (see `vars/<distro>.yml`):
 
 Specify the list of Cockpit packages to be installed depending on what functionality is desired.
+
 ```yaml
 cockpit_packages: 
   - cockpit		## Default list installed.
@@ -47,9 +43,10 @@ cockpit_packages:
 
 [To Do] Specify the repository to enable in case non-standard repository mirror names are used.
 This has yet to be implemented, though the variable exists but not used.
+
 ```yaml
 cockpit_enablerepo: ""  
-```yaml
+```
 
 Dependencies
 ------------
