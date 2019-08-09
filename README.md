@@ -42,7 +42,7 @@ cockpit_packages:
 This has yet to be implemented, though the variable exists but not used.
 
 ```yaml
-cockpit_enablerepo: ""  
+cockpit_enablerepo: "rhel-7-server-extras-rpms"  
 ```
 
 ## Dependencies
