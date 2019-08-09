@@ -1,45 +1,76 @@
 Role Name
 =========
 
-A template for an ansible role which configures some GNU/Linux subsystem or service.
-A brief description of the role goes here.
+Installs and configures the Cockpit Web Console RHEL & Fedora.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role does not allow handling of that yet.
+    - hosts: rhel_node
+      roles:
+        - role: linux-system-roles.cockpit
+          become: yes
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values (see `vars/<distro>.yml`):
+
+cockpit_packages: [list]
+
+cockpit_enablerepo:  # yet to implement to specify Extras or alternate repo
+
 
 ```yaml
-some_feature:
-  option: foo
-  location: /tmp/bar
+linux-system-roles.cockpit:
+  cockpit_packages: 
+    - cockpit		## Default list installed.
+    - cockpit-bridge
+    - cockpit-networkmanager
+    - cockpit-packagekit
+    - cockpit-selinux
+    - cockpit-storaged
+    - cockpit-system
+    - cockpit-ws
+
+    - cockpit-389-ds	## More functionality can be added
+    - cockpit-composer
+    - cockpit-dashboard
+    - cockpit-doc
+    - cockpit-docker
+    - cockpit-kdump
+    - cockpit-machines
+    - cockpit-ostree
+    - cockpit-pcp
+    - cockpit-podman
+    - cockpit-session-recording
+    - cockpit-sosreport
+    - cockpit-tests
 ```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+RHEL/CentOS 7.x depend on the Extras repository being enabled.  Other considerations include using linux-system-roles.firewall to make the Web Console available remotely.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## Example Playbook
 
-    - hosts: servers
+    - hosts: fedora, rhel7, rhel8
+      become: yes
       roles:
-         - { role: username.rolename, x: 42 }
+        - linux-system-roles.cockpit
 
 License
 -------
 
-assign accordingly, default GPLv3
+GPLv3
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was created in 2019 by Terry Bowling.

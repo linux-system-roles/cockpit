@@ -1,28 +1,20 @@
 ---
-# tasks file for template
+# tasks file for cockpit
 
-- name: Set version specific variables
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
-    - "default.yml"
+# Variable configuration.
+- include_tasks: variables.yml
 
-- name: Install packages
-  package:
-    name: "{{ SOME_PACKAGE_NAMES_VARIABLE | default([]) }}"
-    state: present
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: Enable SUBSYSTEM service
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure Cockpit Web Console is started and enabled on boot.
+
   service:
-    name: "{{ SUBSYSTEM_service_name }}"
+    name: "{{ cockpit_daemon }}"
     state: started
     enabled: yes
 
-- name: Generate /etc/SUBSYSTEM.conf
-  template:
-    src: SUBSYSTEM.conf.j2
-    dest: /etc/SUBSYSTEM.conf
-    backup: yes
-  notify: restart SUBSYSTEM

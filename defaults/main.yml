@@ -1,3 +1,6 @@
 ---
-# defaults file for template
-this_subsystem_provider: "{{ some_default_service_or_toolset }}"
+# defaults file for cockpit
+
+# RHEL only. Set a repository to use for Cockpit Web Console installation.
+cockpit_enablerepo: ""
+

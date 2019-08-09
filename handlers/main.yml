@@ -1,6 +1,9 @@
 ---
-# handlers file for template
-# - name: restart NAME
-#   service:
-#     name: NAME
-#     state: restarted or started
+# handlers file for cockpit
+
+- name: restart cockpit
+  service:
+    name: "{{ cockpit_daemon }}"
+    state: "restarted"
+    sleep: 3
+

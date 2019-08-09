@@ -1,0 +1,28 @@
+# RHEL only. Set a repository to use for Cockpit Web Console installation.
+cockpit_enablerepo: ""
+
+__cockpit_repo: rhel-7-server-extras-rpms
+__cockpit_daemon: cockpit
+__cockpit_packages:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
+
+#  - cockpit-bridge
+#  - cockpit-composer
+#  - cockpit-dashboard
+#  - cockpit-doc
+#  - cockpit-docker
+#  - cockpit-machines
+#  - cockpit-machines-ovirt
+#  - cockpit-packagekit
+#  - cockpit-pcp
+#  - cockpit-shell
+#  - cockpit-storaged
+#  - cockpit-system
+#  - cockpit-ws
