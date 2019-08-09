@@ -16,39 +16,40 @@ If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as t
 Role Variables
 --------------
 
-Available variables are listed below, along with default values (see `vars/<distro>.yml`):
+Available variables per distribution are listed below, along with default values (see `vars/<distro>.yml`):
 
-cockpit_packages: [list]
-
-cockpit_enablerepo:  # yet to implement to specify Extras or alternate repo
-
-
+Specify the list of Cockpit packages to be installed depending on what functionality is desired.
 ```yaml
-linux-system-roles.cockpit:
-  cockpit_packages: 
-    - cockpit		## Default list installed.
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-selinux
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
+cockpit_packages: 
+  - cockpit		## Default list installed.
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
 
-    - cockpit-389-ds	## More functionality can be added
-    - cockpit-composer
-    - cockpit-dashboard
-    - cockpit-doc
-    - cockpit-docker
-    - cockpit-kdump
-    - cockpit-machines
-    - cockpit-ostree
-    - cockpit-pcp
-    - cockpit-podman
-    - cockpit-session-recording
-    - cockpit-sosreport
-    - cockpit-tests
+  - cockpit-389-ds	## More functionality can be added
+  - cockpit-composer
+  - cockpit-dashboard
+  - cockpit-doc
+  - cockpit-docker
+  - cockpit-kdump
+  - cockpit-machines
+  - cockpit-ostree
+  - cockpit-pcp
+  - cockpit-podman
+  - cockpit-session-recording
+  - cockpit-sosreport
+  - cockpit-tests
 ```
+
+[To Do] Specify the repository to enable in case non-standard repository mirror names are used.
+This has yet to be implemented, though the variable exists but not used.
+```yaml
+cockpit_enablerepo: ""  
+```yaml
 
 Dependencies
 ------------
