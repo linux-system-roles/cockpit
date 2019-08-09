@@ -60,17 +60,15 @@ Example Playbook
 
 ## Example Playbook
 
-    - hosts: fedora, rhel7, rhel8
-      become: yes
-      roles:
-        - linux-system-roles.cockpit
+```yaml
+- hosts: fedora, rhel7, rhel8
+  become: yes
+  roles:
+    - linux-system-roles.cockpit
+```
 
 License
 -------
 
 GPLv3
 
-Author Information
-------------------
-
-This role was created in 2019 by Terry Bowling.
