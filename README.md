@@ -1,15 +1,12 @@
-Role Name
-=========
+# Role Name
 
 Installs and configures the Cockpit Web Console RHEL & Fedora.
 
-Requirements
-------------
+## Requirements
 
 If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role does not allow handling of that yet.
 
-Role Variables
---------------
+## Role Variables
 
 Available variables per distribution are listed below, along with default values (see `vars/<distro>.yml`):
 
@@ -48,13 +45,9 @@ This has yet to be implemented, though the variable exists but not used.
 cockpit_enablerepo: ""  
 ```
 
-Dependencies
-------------
+## Dependencies
 
 RHEL/CentOS 7.x depend on the Extras repository being enabled.  Other considerations include using linux-system-roles.firewall to make the Web Console available remotely.
-
-Example Playbook
-----------------
 
 ## Example Playbook
 
@@ -65,8 +58,7 @@ Example Playbook
     - linux-system-roles.cockpit
 ```
 
-License
--------
+## License
 
 GPLv3
 
