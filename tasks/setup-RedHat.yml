@@ -1,0 +1,8 @@
+---
+- name: Ensure Cockpit Web Console packages are installed.
+  package:
+    name: "{{ cockpit_packages }}"
+    state: present
+    enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
+
+

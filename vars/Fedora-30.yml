@@ -1,0 +1,27 @@
+__cockpit_repo: "fedora {{ ansible_distribution_major_version }} - {{ ansible_architecture }}"
+
+__cockpit_daemon: cockpit
+__cockpit_packages:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
+
+#  - cockpit-389-ds
+#  - cockpit-composer
+#  - cockpit-dashboard
+#  - cockpit-doc
+#  - cockpit-docker
+#  - cockpit-kdump
+#  - cockpit-machines
+#  - cockpit-ostree
+#  - cockpit-pcp
+#  - cockpit-podman
+#  - cockpit-session-recording
+#  - cockpit-sosreport
+#  - cockpit-tests
+
