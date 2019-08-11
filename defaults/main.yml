@@ -1,6 +1,4 @@
 ---
 # defaults file for cockpit
-
 # RHEL only. Set a repository to use for Cockpit Web Console installation.
 cockpit_enablerepo: ""
-

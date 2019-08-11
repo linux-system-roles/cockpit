@@ -4,5 +4,3 @@
     name: "{{ cockpit_packages }}"
     state: present
     enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
-
-

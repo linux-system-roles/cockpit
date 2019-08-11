@@ -1,3 +1,4 @@
+---
 __cockpit_repo: rhel-8-for-{{ ansible_architecture }}-appstream-rpms
 __cockpit_daemon: cockpit
 __cockpit_packages:
@@ -9,7 +10,7 @@ __cockpit_packages:
   - cockpit-storaged
   - cockpit-system
   - cockpit-ws
-
+#--------------------------
 #  -cockpit-bridge
 #  -cockpit-composer
 #  -cockpit-dashboard
@@ -21,5 +22,3 @@ __cockpit_packages:
 #  -cockpit-storaged
 #  -cockpit-system
 #  -cockpit-ws
-
-

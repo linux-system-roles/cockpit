@@ -6,4 +6,3 @@
   remote_user: root
   roles:
     - cockpit
-

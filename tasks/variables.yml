@@ -1,6 +1,5 @@
 ---
 # Variable configuration.
- 
 - name: Include OS-specific variables (RedHat & Fedora).
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == 'RedHat'
@@ -19,7 +18,6 @@
     cockpit_packages: "{{ __cockpit_packages | list }}"
   when: cockpit_packages is not defined
 
-
 # ansible fedora -c local -m setup | grep -ie ansible_os -e distribution
 #         "ansible_distribution": "Fedora",
 #         "ansible_distribution_file_parsed": true,
@@ -29,7 +27,6 @@
 #         "ansible_distribution_release": "",
 #         "ansible_distribution_version": "30",
 #         "ansible_os_family": "RedHat",
-
 # ansible localhost -c local -m setup | grep -ie ansible_os -e distribution
 #         "ansible_distribution": "RedHat",
 #         "ansible_distribution_file_parsed": true,
@@ -40,4 +37,3 @@
 #         "ansible_distribution_release": "Ootpa",
 #         "ansible_distribution_version": "8.0",
 #         "ansible_os_family": "RedHat",
-

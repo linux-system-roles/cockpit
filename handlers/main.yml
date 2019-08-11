@@ -1,9 +1,7 @@
 ---
 # handlers file for cockpit
-
 - name: restart cockpit
   service:
     name: "{{ cockpit_daemon }}"
     state: "restarted"
     sleep: 3
-
