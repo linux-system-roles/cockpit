@@ -1,2 +1,14 @@
 ---
 # vars file for cockpit
+
+cockpit_enablerepo_default: "{{
+    'fedora ' + ansible_distribution_major_version + ' - ' + ansible_architecture
+        if ansible_distribution == 'Fedora' else (
+    'rhel-7-server-extras-rpms'
+        if ansible_distribution == 'RedHat'
+        and ansible_distribution_major_version == 7 else (
+    'rhel-8-for-' + ansible_architecture + '-appstream-rpms'
+        if ansible_distribution == 'RedHat'
+        and ansible_distribution_major_version == 8 else ''
+    ))
+}}"

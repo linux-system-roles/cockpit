@@ -1,8 +1,7 @@
 ---
-- hosts: all
-#  become: yes
-#  become_method: sudo
-#  become_user: root
-  remote_user: root
+
+- name: Ensure that the role runs with default parameters
+  hosts: all
+
   roles:
-    - cockpit
+    - linux-system-roles.cockpit
