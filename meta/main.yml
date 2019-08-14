@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Terry Bowling <tbowling@redhat.com>
   description: Install and enable the Cockpit Web Console
@@ -13,7 +14,7 @@ galaxy_info:
       versions:
         - 7
         - 8
-  galaxy_tags: 
+  galaxy_tags:
     - rhel
     - redhat
     - fedora
