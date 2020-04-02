@@ -1,4 +1,5 @@
 ---
+# yamllint disable-line rule:line-length
 __cockpit_repo: "fedora {{ ansible_distribution_major_version }} - {{ ansible_architecture }}"
 __cockpit_daemon: cockpit
 __cockpit_packages:
@@ -10,7 +11,7 @@ __cockpit_packages:
   - cockpit-storaged
   - cockpit-system
   - cockpit-ws
-#--------------------
+# --------------------
 #  - cockpit-389-ds
 #  - cockpit-composer
 #  - cockpit-dashboard

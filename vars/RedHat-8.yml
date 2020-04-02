@@ -10,7 +10,7 @@ __cockpit_packages:
   - cockpit-storaged
   - cockpit-system
   - cockpit-ws
-#--------------------------
+# --------------------------
 #  -cockpit-bridge
 #  -cockpit-composer
 #  -cockpit-dashboard

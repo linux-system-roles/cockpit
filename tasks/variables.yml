@@ -1,10 +1,12 @@
 ---
 # Variable configuration.
 - name: Include OS-specific variables (RedHat & Fedora).
+  # yamllint disable-line rule:line-length
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == 'RedHat'
 
 - name: Include OS-specific variables (Debian).
+  # yamllint disable-line rule:line-length
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == 'Debian'
 

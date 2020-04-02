@@ -5,15 +5,15 @@ galaxy_info:
   license: GPLv3
   min_ansible_version: 2.5
   platforms:
-  - name: Fedora
-    versions:
-    - 29
-    - 30
-  - name: EL
-    versions:
-    - 7
-    - 8
-  galaxy_tags: 
+    - name: Fedora
+      versions:
+        - 29
+        - 30
+    - name: EL
+      versions:
+        - 7
+        - 8
+  galaxy_tags:
     - rhel
     - redhat
     - fedora
