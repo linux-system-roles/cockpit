@@ -1,0 +1,22 @@
+---
+__cockpit_daemon: cockpit
+__cockpit_packages:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
+# --------------------------
+#  -cockpit-bridge
+#  -cockpit-composer
+#  -cockpit-dashboard
+#  -cockpit-doc
+#  -cockpit-machines
+#  -cockpit-packagekit
+#  -cockpit-pcp
+#  -cockpit-session-recording
+#  -cockpit-storaged
+#  -cockpit-system
+#  -cockpit-ws
