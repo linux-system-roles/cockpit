@@ -1,8 +1,10 @@
 ---
 # RHEL only. Set a repository to use for Cockpit Web Console installation.
-cockpit_enablerepo: ""
-__cockpit_repo: rhel-7-server-extras-rpms
+#cockpit_enablerepo: ""
 __cockpit_daemon: cockpit
+__cockpit_repo: rhel-7-server-extras-rpms
+
+#- name: Define default recommended cockpit package list
 __cockpit_packages:
   - cockpit
   - cockpit-bridge
@@ -12,17 +14,78 @@ __cockpit_packages:
   - cockpit-storaged
   - cockpit-system
   - cockpit-ws
+#when: cockpit_packages is not defined
+when: cockpit_packages == 'default' or cockpit_packages is not defined
+
+#  set_fact: cockpit_packages = "{{ item }}"
+#    #cockpit_packages: "{{ __cockpit_packages | list }}"
+#  with_items:
+#    - cockpit
+#    - cockpit-bridge
+#    - cockpit-networkmanager
+#    - cockpit-packagekit
+#    - cockpit-selinux
+#    - cockpit-storaged
+#    - cockpit-system
+#    - cockpit-ws
+  #when: cockpit_packages == 'default' or cockpit_packages is not defined
+
+#- name: Define minimal cockpit package list.
+set_fact:
+  cockpit_packages:
+    - cockpit
+    - cockpit-bridge
+    - cockpit-system
+    - cockpit-ws
+when: cockpit_packages == 'minimal'
+
+#- name: Define full cockpit package list.
+set_fact:
+  cockpit_packages:
+    - cockpit
+    - cockpit-bridge
+    - cockpit-composer
+    - cockpit-dashboard
+    - cockpit-doc
+    - cockpit-docker
+    - cockpit-leapp
+    - cockpit-networkmanager
+    - cockpit-machines
+    - cockpit-packagekit
+    - cockpit-pcp
+    - cockpit-selinux
+    - cockpit-shell
+    - cockpit-storaged
+    - cockpit-system
+    - cockpit-ws
+when: cockpit_packages == 'full'
+
+#__cockpit_packages:
+#  - cockpit
+#  - cockpit-bridge
+#  - cockpit-networkmanager
+#  - cockpit-packagekit
+#  - cockpit-selinux
+#  - cockpit-storaged
+#  - cockpit-system
+#  - cockpit-ws
 #-------------------------
 #  - cockpit-bridge
 #  - cockpit-composer
 #  - cockpit-dashboard
 #  - cockpit-doc
 #  - cockpit-docker
+#  - cockpit-leapp
 #  - cockpit-machines
-#  - cockpit-machines-ovirt
-#  - cockpit-packagekit
 #  - cockpit-pcp
 #  - cockpit-shell
-#  - cockpit-storaged
-#  - cockpit-system
-#  - cockpit-ws
+#
+#  to validate this list of packages for each Major.Minor release
+#  use nextgen-yum4 (dnf) to query the repos
+#
+# for MINOR in 6 7; do
+#   subscription-manager release --set="7.${MINOR}"
+#   dnf clean all
+#   dnf repoquery cockpit* --disablerepo=* --enablerepo=rhel-7-server-rpms --enablerepo=rhel-7-server-extras-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+# done;
+

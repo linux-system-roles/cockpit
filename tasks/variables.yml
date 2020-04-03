@@ -1,11 +1,22 @@
 ---
 # Variable configuration.
-- name: Include OS-specific variables (RedHat & Fedora).
-  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
-  when: ansible_os_family == 'RedHat'
+- name: Include OS-specific variables (RedHat RHEL 7).
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+  when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: Include OS-specific variables (RedHat RHEL 8).
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+#  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == 'RedHat' and ansible_distribution_major_version > '8'
+
+- name: Include OS-specific variables (Fedora).
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+#  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == 'Fedora'
 
 - name: Include OS-specific variables (Debian).
-  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+#  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == 'Debian'
 
 - name: Define cockpit_daemon.
@@ -16,7 +27,12 @@
 - name: Define cockpit_packages.
   set_fact:
     cockpit_packages: "{{ __cockpit_packages | list }}"
-  when: cockpit_packages is not defined
+
+- name: Define 2 cockpit_packages.
+  cockpit_packages: "{{ __cockpit_packages | list }}"
+
+#  when: cockpit_packages == 'default' or cockpit_packages == 'minimal' or cockpit_packages == 'all' or cockpit_packages is not defined
+
 
 # ansible fedora -c local -m setup | grep -ie ansible_os -e distribution
 #         "ansible_distribution": "Fedora",

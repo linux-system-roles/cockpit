@@ -11,14 +11,19 @@ __cockpit_packages:
   - cockpit-system
   - cockpit-ws
 #--------------------------
-#  -cockpit-bridge
 #  -cockpit-composer
 #  -cockpit-dashboard
 #  -cockpit-doc
 #  -cockpit-machines
-#  -cockpit-packagekit
 #  -cockpit-pcp
+#  -cockpit-podman
 #  -cockpit-session-recording
-#  -cockpit-storaged
-#  -cockpit-system
-#  -cockpit-ws
+#
+#
+#  to validate this list of packages for each Major.Minor release
+# 
+# for MINOR in 0 1; do
+#   subscription-manager release --set="8.${MINOR}"
+#   yum clean all
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-8-for-x86_64-appstream-rpms --enablerepo=rhel-8-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+# done;
