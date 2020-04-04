@@ -14,11 +14,16 @@
 
 - name: Ensure Cockpit Web Console packages are installed.
   package:
-    name: "{{ __cockpit_packages[cockpit_packages] }}"
+    name: "{{ __cockpit_packages[cockpit_packages]
+              if cockpit_packages in __cockpit_package_types
+              else cockpit_packages }}"
     state: present
-    enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
-    exclude: "{{ __cockpit_packages_exclude | default(omit, true) }}"
 
+- name: Remove undesired Cockpit packages
+  package:
+    name: "{{ __cockpit_packages_exclude }}"
+    state: absent
+  when: __cockpit_packages_exclude is defined
 
 - name: Ensure Cockpit Web Console is started and enabled on boot.
   service:

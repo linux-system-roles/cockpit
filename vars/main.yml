@@ -1,2 +1,11 @@
 ---
 # vars file for cockpit
+# These are the valid values for `cockpit_package`.  These are also
+# used as the indices into __cockpit_package to figure out which
+# packages to load.
+# If the given `cockpit_package` is not one of these values, it
+# is assumed to be the actual names of the packages to install.
+__cockpit_package_types:
+  - minimal
+  - default
+  - full
