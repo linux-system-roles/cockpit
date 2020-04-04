@@ -1,12 +1,23 @@
----
-# tasks file for cockpit
-# Variable configuration.
-- include_tasks: variables.yml
-# Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
-- include_tasks: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+- name: Set version specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
+- name: Define cockpit_daemon.
+  set_fact:
+    cockpit_daemon: "{{ __cockpit_daemon }}"
+  when: cockpit_daemon is not defined
+
+- name: Ensure Cockpit Web Console packages are installed.
+  package:
+    name: "{{ __cockpit_packages[cockpit_packages] }}"
+    state: present
+    enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
+
 - name: Ensure Cockpit Web Console is started and enabled on boot.
   service:
     name: "{{ cockpit_daemon }}"
