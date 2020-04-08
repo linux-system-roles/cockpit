@@ -1,54 +1,29 @@
 ---
-__cockpit_daemon: cockpit
-# default recommended cockpit package list
+#
+# to validate this list of packages
+#   yum clean all
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=BaseOS --enablerepo=AppStream --queryformat '%{name}.%{arch} : %{reponame}' ;
+#
+#
+__cockpit_repo: "Extras"
+__cockpit_daemon: "cockpit"
 __cockpit_packages:
   default:
     - cockpit
-    - cockpit-bridge
     - cockpit-networkmanager
     - cockpit-packagekit
     - cockpit-selinux
     - cockpit-storaged
     - cockpit-system
-    - cockpit-ws
-  minimal:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-system
-    - cockpit-ws
+  minimal: "cockpit"
   full:
-    - cockpit
-    - cockpit-bridge
     - cockpit-composer
     - cockpit-dashboard
     - cockpit-doc
     - cockpit-docker
     - cockpit-leapp
-    - cockpit-networkmanager
     - cockpit-machines
-    - cockpit-packagekit
     - cockpit-pcp
-    - cockpit-selinux
     - cockpit-shell
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-#__cockpit_packages:
-#  - cockpit
-#  - cockpit-bridge
-#  - cockpit-networkmanager
-#  - cockpit-packagekit
-#  - cockpit-selinux
-#  - cockpit-storaged
-#  - cockpit-system
-#  - cockpit-ws
-#-------------------------
-#  - cockpit-bridge
-#  - cockpit-composer
-#  - cockpit-dashboard
-#  - cockpit-doc
-#  - cockpit-docker
-#  - cockpit-leapp
-#  - cockpit-machines
-#  - cockpit-pcp
-#  - cockpit-shell
+__cockpit_packages_exclude:
+  - cockpit-machines-ovirt   # omit only needed for Red Hat Virtualization product

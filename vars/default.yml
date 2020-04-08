@@ -1,54 +1,16 @@
 ---
 __cockpit_daemon: cockpit
-# default recommended cockpit package list
 __cockpit_packages:
   default:
     - cockpit
-    - cockpit-bridge
     - cockpit-networkmanager
     - cockpit-packagekit
     - cockpit-selinux
     - cockpit-storaged
     - cockpit-system
-    - cockpit-ws
-  minimal:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-system
-    - cockpit-ws
-  full:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-composer
-    - cockpit-dashboard
-    - cockpit-doc
-    - cockpit-docker
-    - cockpit-leapp
-    - cockpit-networkmanager
-    - cockpit-machines
-    - cockpit-packagekit
-    - cockpit-pcp
-    - cockpit-selinux
-    - cockpit-shell
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-#__cockpit_packages:
-#  - cockpit
-#  - cockpit-bridge
-#  - cockpit-networkmanager
-#  - cockpit-packagekit
-#  - cockpit-selinux
-#  - cockpit-storaged
-#  - cockpit-system
-#  - cockpit-ws
-#-------------------------
-#  - cockpit-bridge
-#  - cockpit-composer
-#  - cockpit-dashboard
-#  - cockpit-doc
-#  - cockpit-docker
-#  - cockpit-leapp
-#  - cockpit-machines
-#  - cockpit-pcp
-#  - cockpit-shell
+  minimal: "cockpit"
+  full: "cockpit*"
+__cockpit_packages_exclude:
+  - cockpit-docker   # omit in favor of podman
+  - cockpit-ostree   # omit only needed for CoreOS
+  - cockpit-tests    # omit only needed for testing

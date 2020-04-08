@@ -1,55 +1,18 @@
 ---
-__cockpit_daemon: cockpit
+__cockpit_repo: ""
+__cockpit_daemon: "cockpit"
 __cockpit_packages:
   default:
     - cockpit
-    - cockpit-bridge
     - cockpit-networkmanager
     - cockpit-packagekit
     - cockpit-selinux
     - cockpit-storaged
     - cockpit-system
-    - cockpit-ws
-  minimal:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-selinux
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-  full:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-selinux
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-    - cockpit-389-ds
-    - cockpit-composer
-    - cockpit-dashboard
-    - cockpit-doc
-    - cockpit-kdump
-    - cockpit-machines
-    - cockpit-ostree
-    - cockpit-pcp
-    - cockpit-podman
-    - cockpit-session-recording
-    - cockpit-sosreport
-#--------------------
-#  - cockpit-389-ds
-#  - cockpit-composer
-#  - cockpit-dashboard
-#  - cockpit-doc
-#  - cockpit-docker
-#  - cockpit-kdump
-#  - cockpit-machines
-#  - cockpit-ostree
-#  - cockpit-pcp
-#  - cockpit-podman
-#  - cockpit-session-recording
-#  - cockpit-sosreport
-#  - cockpit-tests
+  minimal: "cockpit"
+  full: "cockpit*"
+__cockpit_packages_exclude:
+  - cockpit-docker   # omit in favor of podman
+  - cockpit-ostree   # omit only needed for CoreOS
+  - cockpit-tests    # omit only needed for testing
+

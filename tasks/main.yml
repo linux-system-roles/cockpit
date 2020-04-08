@@ -17,6 +17,8 @@
     name: "{{ __cockpit_packages[cockpit_packages] }}"
     state: present
     enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
+    exclude: "{{ __cockpit_packages_exclude | default(omit, true) }}"
+
 
 - name: Ensure Cockpit Web Console is started and enabled on boot.
   service:
