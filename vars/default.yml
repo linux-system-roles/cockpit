@@ -1,0 +1,29 @@
+---
+__cockpit_repo: ""
+__cockpit_daemon: cockpit
+__cockpit_packages_exclude:
+  - cockpit-docker   # omit in favor of podman
+  - cockpit-ostree   # omit only needed for CoreOS
+  - cockpit-tests    # omit only needed for testing
+  # absolute minimum package set
+__cockpit_packages:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-system
+  - cockpit-ws
+when: cockpit_packages == 'minimal'
+  # common and basic functionality
+__cockpit_packages:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
+when: cockpit_packages == 'default' or cockpit_packages == 'basic' or cockpit_packages is not defined
+  # full feature set
+__cockpit_packages: "cockpit*"
+when: cockpit_packages == 'all'
+

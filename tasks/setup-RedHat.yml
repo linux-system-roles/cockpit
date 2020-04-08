@@ -1,7 +1,8 @@
 ---
 - name: Ensure Cockpit Web Console packages are installed.
   #package:
-  dnf:
-    name: "{{ cockpit_packages }}"
+  yum:
+    name: "{{ __cockpit_packages }}"
     state: present
     enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
+    exclude: "{{ __cockpit_packages_exclude }}"
