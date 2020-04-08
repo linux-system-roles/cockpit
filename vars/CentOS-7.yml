@@ -1,9 +1,5 @@
 ---
-# RHEL only. Set a repository to use for Cockpit Web Console installation.
-#cockpit_enablerepo: ""
 __cockpit_daemon: cockpit
-__cockpit_repo: rhel-7-server-extras-rpms
-
 # default recommended cockpit package list
 __cockpit_packages:
   default:
@@ -56,13 +52,3 @@ __cockpit_packages:
 #  - cockpit-machines
 #  - cockpit-pcp
 #  - cockpit-shell
-#
-#  to validate this list of packages for each Major.Minor release
-#  use nextgen-yum4 (dnf) to query the repos
-#
-# for MINOR in 6 7; do
-#   subscription-manager release --set="7.${MINOR}"
-#   dnf clean all
-#   dnf repoquery cockpit* --disablerepo=* --enablerepo=rhel-7-server-rpms --enablerepo=rhel-7-server-extras-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
-# done;
-

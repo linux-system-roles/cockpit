@@ -1,0 +1,45 @@
+---
+__cockpit_daemon: cockpit
+__cockpit_packages:
+  default:
+    - cockpit
+    - cockpit-bridge
+    - cockpit-networkmanager
+    - cockpit-packagekit
+    - cockpit-storaged
+    - cockpit-system
+    - cockpit-ws
+  minimal:
+    - cockpit
+    - cockpit-bridge
+    - cockpit-networkmanager
+    - cockpit-packagekit
+    - cockpit-storaged
+    - cockpit-system
+    - cockpit-ws
+  full:
+    - cockpit
+    - cockpit-bridge
+    - cockpit-networkmanager
+    - cockpit-packagekit
+    - cockpit-storaged
+    - cockpit-system
+    - cockpit-ws
+    - cockpit-dashboard
+    - cockpit-doc
+    - cockpit-machines
+    - cockpit-pcp
+#--------------------
+#  - cockpit-389-ds
+#  - cockpit-composer
+#  - cockpit-dashboard
+#  - cockpit-doc
+#  - cockpit-docker
+#  - cockpit-kdump
+#  - cockpit-machines
+#  - cockpit-ostree
+#  - cockpit-pcp
+#  - cockpit-podman
+#  - cockpit-session-recording
+#  - cockpit-sosreport
+#  - cockpit-tests
