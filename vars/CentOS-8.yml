@@ -5,18 +5,22 @@
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=BaseOS --enablerepo=AppStream --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
 #
-__cockpit_repo: "AppStream"
-__cockpit_daemon: "cockpit"
+__cockpit_yum_repo: AppStream
+__cockpit_daemon: cockpit
+__cockpit_packages_minimal:
+  - cockpit
+__cockpit_packages_default:
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+__cockpit_packages_full:
+  - cockpit-*
 __cockpit_packages:
-  default:
-    - cockpit
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-selinux
-    - cockpit-storaged
-    - cockpit-system
-  minimal: "cockpit"
-  full: "cockpit*"
+  minimal: "{{ __cockpit_packages_minimal }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
 __cockpit_packages_exclude:
   - cockpit-docker   # omit in favor of podman
   - cockpit-ostree   # omit only needed for CoreOS

@@ -7,18 +7,16 @@
     - "{{ ansible_os_family }}.yml"
     - "default.yml"
 
+- name: Manage cockpit packages using platform specific package manager if applicable
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "setup-{{ ansible_pkg_mgr }}.yml"
+    - "setup-default.yml"
+
 - name: Define cockpit_daemon.
   set_fact:
     cockpit_daemon: "{{ __cockpit_daemon }}"
   when: cockpit_daemon is not defined
-
-- name: Ensure Cockpit Web Console packages are installed.
-  package:
-    name: "{{ __cockpit_packages[cockpit_packages] }}"
-    state: present
-    enablerepo: "{{ cockpit_enablerepo | default(omit, true) }}"
-    exclude: "{{ __cockpit_packages_exclude | default(omit, true) }}"
-
 
 - name: Ensure Cockpit Web Console is started and enabled on boot.
   service:

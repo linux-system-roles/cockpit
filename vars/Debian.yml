@@ -1,34 +1,23 @@
 ---
 __cockpit_daemon: cockpit
+__cockpit_packages_minimal:
+  - cockpit
+__cockpit_packages_default:
+  - cockpit-bridge
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-storaged
+  - cockpit-system
+  - cockpit-ws
+__cockpit_packages_full:
+  - cockpit-dashboard
+  - cockpit-doc
+  - cockpit-machines
+  - cockpit-pcp
 __cockpit_packages:
-  default:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-  minimal:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-  full:
-    - cockpit
-    - cockpit-bridge
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-storaged
-    - cockpit-system
-    - cockpit-ws
-    - cockpit-dashboard
-    - cockpit-doc
-    - cockpit-machines
-    - cockpit-pcp
+  minimal: "{{ __cockpit_packages_minimal }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
 #--------------------
 #  - cockpit-389-ds
 #  - cockpit-composer

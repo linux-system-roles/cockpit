@@ -1,0 +1,7 @@
+- name: Ensure Cockpit Web Console packages are installed.
+  dnf:
+    name: "{{ __cockpit_packages[cockpit_packages]
+              if cockpit_packages in __cockpit_package_types
+              else cockpit_packages }}"
+    exclude: "{{ __cockpit_packages_exclude }}"
+    state: present
