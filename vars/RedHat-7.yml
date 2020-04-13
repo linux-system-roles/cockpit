@@ -10,28 +10,29 @@
 # done;
 #
 #
-__cockpit_repo: "rhel-7-server-extras-rpms"
-__cockpit_daemon: "cockpit"
+__cockpit_yum_repo: rhel-7-server-extras-rpms
+__cockpit_daemon: cockpit
+__cockpit_packages_minimal:
+  - cockpit
+__cockpit_packages_default:
+  - cockpit
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-system
+__cockpit_packages_full:
+  - cockpit-composer
+  - cockpit-dashboard
+  - cockpit-doc
+  - cockpit-docker
+  - cockpit-leapp
+  - cockpit-machines
+  - cockpit-pcp
+  - cockpit-shell
 __cockpit_packages:
-  default:
-    - cockpit
-    - cockpit-networkmanager
-    - cockpit-packagekit
-    - cockpit-selinux
-    - cockpit-storaged
-    - cockpit-system
-  minimal: "cockpit"
-  full:
-    - cockpit-composer
-    - cockpit-dashboard
-    - cockpit-doc
-    - cockpit-docker
-    - cockpit-leapp
-    - cockpit-machines
-    - cockpit-pcp
-    - cockpit-shell
+  minimal: "{{ __cockpit_packages_minimal }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
 __cockpit_packages_exclude:
   - cockpit-machines-ovirt   # omit only needed for Red Hat Virtualization product
-
-
-
