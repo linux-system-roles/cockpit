@@ -1,16 +1,14 @@
 ---
-# RHEL only. Set a repository to use for Cockpit Web Console installation.
-#
+# RHEL Web Console (Cockpit) only:#
 #  to validate this list of packages for each Major.Minor release
 # 
-# for MINOR in 0 1; do
-#   subscription-manager release --set="8.${MINOR}"
+# for MINOR in 6 7 8; do
+#   subscription-manager release --set="7.${MINOR}"
 #   yum clean all
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-7-server-rpms --enablerepo=rhel-7-server-extras-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
 # done;
 #
 #
-__cockpit_yum_repo: rhel-7-server-extras-rpms
 __cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit

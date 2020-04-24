@@ -5,7 +5,6 @@
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=BaseOS --enablerepo=AppStream --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
 #
-__cockpit_yum_repo: AppStream
 __cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit

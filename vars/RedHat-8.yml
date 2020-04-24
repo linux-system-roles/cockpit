@@ -1,5 +1,13 @@
 ---
-__cockpit_yum_repo: rhel-8-for-{{ ansible_architecture }}-appstream-rpms
+# RHEL Web Console (Cockpit) only:#
+#  to validate this list of packages for each Major.Minor release
+#
+# for MINOR in 0 1; do
+#   subscription-manager release --set="8.${MINOR}"
+#   yum clean all
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-8-for-x86_64-appstream-rpms --enablerepo=rhel-8-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+# done;
+#
 __cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit
@@ -20,18 +28,3 @@ __cockpit_packages_exclude:
   - cockpit-ostree   # omit only needed for CoreOS
   - cockpit-tests    # omit only needed for testing
 #--------------------------
-#  -cockpit-composer
-#  -cockpit-dashboard
-#  -cockpit-doc
-#  -cockpit-machines
-#  -cockpit-pcp
-#  -cockpit-session-recording
-#
-#
-#  to validate this list of packages for each Major.Minor release
-# 
-# for MINOR in 0 1; do
-#   subscription-manager release --set="8.${MINOR}"
-#   yum clean all
-#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-8-for-x86_64-appstream-rpms --enablerepo=rhel-8-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
-# done;

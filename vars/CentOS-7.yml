@@ -2,10 +2,9 @@
 #
 # to validate this list of packages
 #   yum clean all
-#   yum repoquery cockpit* --disablerepo=* --enablerepo=BaseOS --enablerepo=AppStream --queryformat '%{name}.%{arch} : %{reponame}' ;
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=base --enablerepo=updates --enablerepo=extras --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
 #
-__cockpit_yum_repo: Extras
 __cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit

@@ -38,12 +38,6 @@ cockpit_packages:
   - cockpit-tests
 ```
 
-[To Do] Specify the repository to enable in case non-standard repository mirror names are used.
-This has yet to be implemented, though the variable exists but not used.
-
-```yaml
-cockpit_enablerepo: "rhel-7-server-extras-rpms"  
-```
 
 ## Dependencies
 
