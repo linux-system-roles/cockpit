@@ -5,7 +5,6 @@
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=base --enablerepo=updates --enablerepo=extras --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
 #
-__cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit
 __cockpit_packages_default:

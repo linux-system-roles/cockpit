@@ -8,7 +8,6 @@
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-8-for-x86_64-appstream-rpms --enablerepo=rhel-8-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
 # done;
 #
-__cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit
 __cockpit_packages_default:

@@ -1,3 +1,17 @@
 ---
 # defaults file for Cockpit Web Console
+
+# public vars if user defined, else defaults from internal vars
 cockpit_packages: default
+
+
+# internal vars
+__cockpit_daemon: cockpit.socket
+
+# below are not defined here, documentation reference only
+# __cockpit_packages: default
+# __cockpit_packages_exclude    set in vars/*
+# __cockpit_packages_default    set in vars/*
+# __cockpit_packages_full       set in vars/*
+# __cockpit_packages_minimal    set in vars/*
+

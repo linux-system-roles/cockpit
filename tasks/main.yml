@@ -13,7 +13,7 @@
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
 
-- name: Define cockpit_daemon.
+- name: Define daemon as
   set_fact:
     cockpit_daemon: "{{ __cockpit_daemon }}"
   when: cockpit_daemon is not defined

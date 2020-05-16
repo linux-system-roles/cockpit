@@ -9,7 +9,6 @@
 # done;
 #
 #
-__cockpit_daemon: cockpit
 __cockpit_packages_minimal:
   - cockpit
 __cockpit_packages_default:
