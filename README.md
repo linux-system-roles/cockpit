@@ -1,58 +1,95 @@
 # Role Name
 
-Installs and configures the Cockpit Web Console RHEL & Fedora.
+Installs and configures the Cockpit Web Console for distributions that support it, such as RHEL, Fedora, and a few others.
 
 ## Requirements
 
-If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role does not allow handling of that yet.
+If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role will not manage this.
 
 ## Role Variables
 
-Available variables per distribution are listed below, along with default values (see `vars/<distro>.yml`):
+Available variables per distribution are listed below, along with default values (see `defaults/main.yml`):
 
-Specify the list of Cockpit packages to be installed depending on what functionality is desired.
+The primary variable is `cockpit_packages` which allows you to specify your own selection of cockpit packages you want to install, or allows you to choose one of three predefined package sets: `default, minimal, or full`.  Obviously `default` is selected if you do not define this variable.  Not that the packages installed may vary depending on the distribution and version as different packages of cockpit functionality have been provided over time.  Also, some may not be available on all distributions, such as `cockpit-docker` which was deprecated on RHEL in favor of `cockpit-podman`.
 
+Example of explicit cockpit packages to install.  Dependencies should pull in the minimal cockpit packages so that they work.
 ```yaml
-cockpit_packages: 
-  - cockpit		## Default list installed.
-  - cockpit-bridge
-  - cockpit-networkmanager
-  - cockpit-packagekit
-  - cockpit-selinux
+cockpit_packages:
   - cockpit-storaged
-  - cockpit-system
-  - cockpit-ws
-
-  - cockpit-389-ds	## More functionality can be added
-  - cockpit-composer
-  - cockpit-dashboard
-  - cockpit-doc
-  - cockpit-docker
-  - cockpit-kdump
-  - cockpit-machines
-  - cockpit-ostree
-  - cockpit-pcp
   - cockpit-podman
-  - cockpit-session-recording
-  - cockpit-sosreport
-  - cockpit-tests
 ```
+Example of using the predefined package sets.  This is the recommended method for installation.
+```yaml
+cockpit_packages: default
+    # equivalent to
+    #  - cockpit-networkmanager
+    #  - cockpit-packagekit
+    #  - cockpit-selinux
+    #  - cockpit-storaged
+    #  - cockpit-system
 
+cockpit_packages: minimal
+    # equivalent to
+    #  - cockpit
 
+cockpit_packages: full
+    # equivalent to globbing all of them
+    #  - cockpit-*
+    # This is will pull in many packages such as
+        #  - cockpit		## Default list
+        #  - cockpit-bridge
+        #  - cockpit-networkmanager
+        #  - cockpit-packagekit
+        #  - cockpit-selinux
+        #  - cockpit-storaged
+        #  - cockpit-system
+        #  - cockpit-ws
+        ## and all the rest
+        #  - cockpit-389-ds
+        #  - cockpit-composer
+        #  - cockpit-dashboard
+        #  - cockpit-doc
+        #  - cockpit-docker
+        #  - cockpit-kdump
+        #  - cockpit-machines
+        #  - cockpit-ostree
+        #  - cockpit-pcp
+        #  - cockpit-podman
+        #  - cockpit-session-recording
+        #  - cockpit-sosreport
+        #  - cockpit-tests
+```
 ## Dependencies
-
 RHEL/CentOS 7.x depend on the Extras repository being enabled.  Other considerations include using linux-system-roles.firewall to make the Web Console available remotely.
 
 ## Example Playbook
-
+The most simple example.
 ```yaml
+---
 - hosts: fedora, rhel7, rhel8
   become: yes
   roles:
     - linux-system-roles.cockpit
 ```
+Another example, including the role as a task to control when the action is performed.  It is also recommended to configure the firewall using the linux-system-roles.firewall role to make the service accessible.
+```yaml
+---
+tasks:  
+  - name: Install RHEL/Fedora Web Console (Cockpit)
+    include_role:
+      name: linux-system-roles.cockpit
+    vars:
+      cockpit_packages: default
+      #cockpit_packages: minimal
+      #cockpit_packages: full
 
+  - name: Configure Firewall for Web Console
+    include_role:
+      name: linux-system-roles.firewall
+    vars:
+      firewall:
+        service: cockpit
+        state: enabled
+```
 ## License
-
 GPLv3
-
