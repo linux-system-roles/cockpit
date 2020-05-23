@@ -4,7 +4,8 @@ Installs and configures the Cockpit Web Console for distributions that support i
 
 ## Requirements
 
-If running on RHEL/CentOS 7, please ensure the Extras repository is enabled as the role will not manage this.
+  - RHEL/CentOS 7.x depend on the Extras repository being enabled.
+  - Recommended to use linux-system-roles.firewall to make the Web Console available remotely.
 
 ## Role Variables
 
@@ -59,10 +60,8 @@ cockpit_packages: full
         #  - cockpit-sosreport
         #  - cockpit-tests
 ```
-## Dependencies
-RHEL/CentOS 7.x depend on the Extras repository being enabled.  Other considerations include using linux-system-roles.firewall to make the Web Console available remotely.
 
-## Example Playbook
+## Example Playbooks
 The most simple example.
 ```yaml
 ---
