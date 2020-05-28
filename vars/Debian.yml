@@ -1,13 +1,12 @@
 ---
 __cockpit_packages_minimal:
-  - cockpit
+  - cockpit-system
+  - cockpit-ws
 __cockpit_packages_default:
-  - cockpit-bridge
+  - cockpit
   - cockpit-networkmanager
   - cockpit-packagekit
   - cockpit-storaged
-  - cockpit-system
-  - cockpit-ws
 __cockpit_packages_full:
   - cockpit-dashboard
   - cockpit-doc
