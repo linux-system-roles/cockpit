@@ -23,15 +23,16 @@ Example of using the predefined package sets.  This is the recommended method fo
 ```yaml
 cockpit_packages: default
     # equivalent to
+    #  - cockpit
     #  - cockpit-networkmanager
     #  - cockpit-packagekit
     #  - cockpit-selinux
     #  - cockpit-storaged
-    #  - cockpit-system
 
 cockpit_packages: minimal
     # equivalent to
-    #  - cockpit
+    #  - cockpit-system
+    #  - cockpit-ws
 
 cockpit_packages: full
     # equivalent to globbing all of them

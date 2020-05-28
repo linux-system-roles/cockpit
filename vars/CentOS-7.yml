@@ -6,14 +6,14 @@
 #
 #
 __cockpit_packages_minimal:
-  - cockpit
+  - cockpit-system
+  - cockpit-ws
 __cockpit_packages_default:
   - cockpit
   - cockpit-networkmanager
   - cockpit-packagekit
   - cockpit-selinux
   - cockpit-storaged
-  - cockpit-system
 __cockpit_packages_full:
   - cockpit-composer
   - cockpit-dashboard
