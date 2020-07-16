@@ -13,13 +13,8 @@
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
 
-- name: Define daemon as "{{ __cockpit_daemon }}"
-  set_fact:
-    cockpit_daemon: "{{ __cockpit_daemon }}"
-  when: cockpit_daemon is not defined
-
 - name: Ensure Cockpit Web Console is started and enabled on boot.
   service:
-    name: "{{ cockpit_daemon }}"
+    name: "{{ __cockpit_daemon }}"
     state: started
     enabled: yes

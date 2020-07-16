@@ -1,4 +1,6 @@
 passes.yml
 vault.yml
 *.retry
+*.swp
+*.swo
 
