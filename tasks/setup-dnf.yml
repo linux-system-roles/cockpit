@@ -1,9 +1,9 @@
 - name: If choosing custom package set, ensure minimal cockpit is included
   set_fact:
-    cockpit_packages: "{{ cockpit_packages + __cockpit_packages_minimal  
-                          if cockpit_packages not in __cockpit_package_types 
+    cockpit_packages: "{{ cockpit_packages + __cockpit_packages_minimal
+                          if cockpit_packages not in __cockpit_package_types
                           else cockpit_packages }}"
-  when: cockpit_packages is defined 
+  when: cockpit_packages is defined
 
 - name: Ensure Cockpit Web Console packages are installed.
   dnf:

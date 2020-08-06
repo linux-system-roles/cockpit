@@ -1,4 +1,3 @@
----
 __cockpit_packages_minimal:
   - cockpit-system
   - cockpit-ws
@@ -16,7 +15,7 @@ __cockpit_packages:
   minimal: "{{ __cockpit_packages_minimal }}"
   default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
   full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
-#--------------------
+# --------------------
 #  - cockpit-389-ds
 #  - cockpit-composer
 #  - cockpit-dashboard

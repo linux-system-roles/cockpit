@@ -1,7 +1,6 @@
----
 # RHEL Web Console (Cockpit) only:#
 #  to validate this list of packages for each Major.Minor release
-# 
+#
 # for MINOR in 6 7 8; do
 #   subscription-manager release --set="7.${MINOR}"
 #   yum clean all
