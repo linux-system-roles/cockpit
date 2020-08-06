@@ -1,4 +1,3 @@
----
 # RHEL Web Console (Cockpit) only:#
 #  to validate this list of packages for each Major.Minor release
 #
@@ -27,4 +26,4 @@ __cockpit_packages_exclude:
   - cockpit-docker   # omit in favor of podman
   - cockpit-ostree   # omit only needed for CoreOS
   - cockpit-tests    # omit only needed for testing
-#--------------------------
+# --------------------------

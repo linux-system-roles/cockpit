@@ -1,6 +1,5 @@
----
 #
-# to validate this list of packages 
+# to validate this list of packages
 #   yum clean all
 #   yum repoquery cockpit* --disablerepo=* --enablerepo=BaseOS --enablerepo=AppStream --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
