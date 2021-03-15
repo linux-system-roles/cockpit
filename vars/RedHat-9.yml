@@ -1,0 +1,29 @@
+# RHEL Web Console (Cockpit) only:#
+#  to validate this list of packages for each Major.Minor release
+#
+# for MINOR in 0 1; do
+#   subscription-manager release --set="9.${MINOR}"
+#   yum clean all
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-9-for-x86_64-appstream-rpms --enablerepo=rhel-9-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+# done;
+#
+__cockpit_packages_minimal:
+  - cockpit-system
+  - cockpit-ws
+__cockpit_packages_default:
+  - cockpit
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-selinux
+  - cockpit-storaged
+__cockpit_packages_full:
+  - cockpit-*
+__cockpit_packages:
+  minimal: "{{ __cockpit_packages_minimal }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
+__cockpit_packages_exclude:
+  - cockpit-docker   # omit in favor of podman
+  - cockpit-ostree   # omit only needed for CoreOS
+  - cockpit-tests    # omit only needed for testing
+# --------------------------
