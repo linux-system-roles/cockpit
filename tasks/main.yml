@@ -13,8 +13,12 @@
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
 
-- name: Ensure Cockpit Web Console is started and enabled on boot.
+- name: Ensure Cockpit Web Console is started/stopped based on cockpit_started.
   service:
     name: "{{ __cockpit_daemon }}"
-    state: started
-    enabled: yes
+    state: "{{ 'started' if cockpit_started | bool else 'stopped' }}"
+
+- name: Ensure Cockpit Web Console is enabled/disabled on boot based on cockpit_enabled var.
+  service:
+    name: "{{ __cockpit_daemon }}"
+    enabled: "{{ cockpit_enabled | bool }}"

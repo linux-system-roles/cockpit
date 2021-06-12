@@ -63,6 +63,12 @@ cockpit_packages: full
         #  - cockpit-tests
 ```
 
+    cockpit_enabled: yes
+Boolean falg to control if Cockpit is enabled to start automatically at boot (default yes).
+
+    cockpit_started: yes
+Boolean falg to control if Cockpit should be started/running (default yes). 
+
 ## Example Playbooks
 The most simple example.
 ```yaml
