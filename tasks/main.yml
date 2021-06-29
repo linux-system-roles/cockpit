@@ -26,5 +26,6 @@
     mode: 0644
     owner: root
     group: root
+    backup: true
   when: cockpit_config is defined
   notify: restart cockpit
