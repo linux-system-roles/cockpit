@@ -18,3 +18,13 @@
     name: "{{ __cockpit_daemon }}"
     enabled: "{{ cockpit_enabled | bool }}"
     state: "{{ 'started' if cockpit_started | bool else 'stopped' }}"
+
+- name: Create cockpit.conf configuration file
+  template:
+    src: templates/cockpit.conf.j2
+    dest: /etc/cockpit/cockpit.conf
+    mode: 0644
+    owner: root
+    group: root
+  when: cockpit_config is defined
+  notify: restart cockpit

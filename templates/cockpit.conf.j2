@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+{% if cockpit_config is defined %}
+{% for section, config in cockpit_config.items() %}
+[{{ section }}]
+{% for key, value in config.items() %}
+{{ key }} = {{ value }}
+{% endfor %}
+
+{% endfor %}
+{%- endif %}
