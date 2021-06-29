@@ -64,7 +64,7 @@ cockpit_packages: full
 ```
 
     cockpit_enabled: yes
-Boolean variable to control if Cockpit is enabled to start automatically at boot (default yes).
+Boolean variable to control if Cockpit is enabled to start automatically on boot (default yes).
 
     cockpit_started: yes
 Boolean variable to control if Cockpit should be started/running (default yes). 
