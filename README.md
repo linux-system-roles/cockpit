@@ -63,6 +63,24 @@ cockpit_packages: full
         #  - cockpit-tests
 ```
 
+    cockpit_enabled: yes
+Boolean variable to control if Cockpit is enabled to start automatically at boot (default yes).
+
+    cockpit_started: yes
+Boolean variable to control if Cockpit should be started/running (default yes). 
+
+
+```yaml
+    cockpit_config:                               #Configure /etc/cockpit/cockpit.conf
+      WebService:                                 #Specify "WebService" config section
+        LoginTitle: "custom login screen title"   #Set "LoginTitle" in "WebService" section
+        MaxStartups: 20                           #Set "MaxStartups" in "WebService" section
+      Session:                                    #Specify "Session" config section
+        IdleTimeout: 15                           #Set "IdleTimeout" in "Session" section
+        Banner: "/etc/motd"                       #Set "Banner" in "Session" section
+```
+Configure settings in the /etc/cockpit/cockpit.conf file.  See "man cockpit.conf" for a list of available settings.  Previous settings will be lost, even if they are not specified in the role variable (no attempt is made to preserve or merge the previous settings, the configuration file is replaced entirely).
+
 ## Example Playbooks
 The most simple example.
 ```yaml
