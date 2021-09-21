@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 {% if cockpit_config is defined %}
 {%   for section, config in cockpit_config.items() %}
 [{{ section }}]
