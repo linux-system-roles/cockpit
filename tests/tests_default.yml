@@ -2,3 +2,37 @@
 - hosts: all
   roles:
     - linux-system-roles.cockpit
+
+  tasks:
+    - name: test - socket is active  # noqa 303 command-instead-of-module
+      command: systemctl is-active cockpit.socket
+      changed_when: false
+
+    - name: test - socket is enabled  # noqa 303 command-instead-of-module
+      command: systemctl is-enabled cockpit.socket
+      changed_when: false
+
+    - name: test - cockpit works with TLS
+      get_url:
+        dest: /run/out
+        url: https://localhost:9090
+        validate_certs: no
+
+    - name: test - no configuration file
+      stat:
+        path: /etc/cockpit/cockpit.conf
+      register: result
+      failed_when: result.stat.exists
+
+    # cleanup
+
+    - name: test - cleanup
+      package:
+        name:
+          # everything else depends on one of these two, so will be removed along
+          - cockpit-bridge
+          - cockpit-ws
+        state: absent
+      tags:
+        - always
+        - tests::cleanup
