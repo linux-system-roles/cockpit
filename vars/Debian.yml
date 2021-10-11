@@ -7,7 +7,6 @@ __cockpit_packages_default:
   - cockpit-packagekit
   - cockpit-storaged
 __cockpit_packages_full:
-  - cockpit-dashboard
   - cockpit-doc
   - cockpit-machines
   - cockpit-pcp
@@ -18,7 +17,6 @@ __cockpit_packages:
 # --------------------
 #  - cockpit-389-ds
 #  - cockpit-composer
-#  - cockpit-dashboard
 #  - cockpit-doc
 #  - cockpit-docker
 #  - cockpit-kdump
