@@ -1,0 +1,22 @@
+name: Integration tests
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+  # run them regularly, to catch changes in operating systems
+  schedule:
+    - cron: 0 4 * * MON
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Install Ansible
+        run: sudo apt install -y ansible
+
+      - name: Run test playbook
+        run: |
+          cd tests
+          sudo ansible-playbook --connection=local --inventory localhost, tests_default.yml
