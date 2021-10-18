@@ -24,15 +24,4 @@
       register: result
       failed_when: result.stat.exists
 
-    # cleanup
-
-    - name: test - cleanup
-      package:
-        name:
-          # everything else depends on one of these two, so will be removed along
-          - cockpit-bridge
-          - cockpit-ws
-        state: absent
-      tags:
-        - always
-        - tests::cleanup
+    - include_tasks: tasks/cleanup.yml
