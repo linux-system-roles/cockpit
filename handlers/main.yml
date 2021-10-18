@@ -3,4 +3,4 @@
 - name: restart cockpit
   service:
     name: "{{ __cockpit_daemon }}"
-    state: "restarted"
+    state: "{{ 'restarted' if cockpit_started | bool else 'stopped' }}"
