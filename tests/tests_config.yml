@@ -1,0 +1,59 @@
+---
+- name: Test cockpit_* role options
+  hosts: all
+  roles:
+    - role: linux-system-roles.cockpit
+      vars:
+        cockpit_packages: minimal
+        cockpit_enabled: yes
+        cockpit_started: no
+        cockpit_config:
+          WebService:
+            LoginTitle: "hello world"
+          Session:
+            IdleTimeout: 60
+
+  tasks:
+    - meta: flush_handlers
+
+    - name: test - socket is enabled  # noqa 303 command-instead-of-module
+      command: systemctl is-enabled {{ __cockpit_daemon }}
+      changed_when: false
+
+    - name: test - socket is not active  # noqa 303 command-instead-of-module
+      command: systemctl is-active {{ __cockpit_daemon }}
+      register: result
+      failed_when: result is succeeded
+      changed_when: false
+
+    - package_facts:
+
+    - name: test - cockpit-bridge is installed
+      fail:
+        msg: cockpit-bridge is not installed
+      when: "'cockpit-bridge' not in ansible_facts.packages"
+
+    - name: test - cockpit metapackage is not installed
+      fail:
+        msg: cockpit is unexpectedly installed
+      when: "'cockpit' in ansible_facts.packages"
+
+    - name: test - write expected configuration file
+      copy:
+        content: |+
+          #
+          # Ansible managed
+          #
+          [Session]
+          IdleTimeout = 60
+
+          [WebService]
+          LoginTitle = hello world
+
+        dest: /run/cockpit.conf.expected
+
+    - name: test - compare generated with expected configuration file
+      command: diff -u /run/cockpit.conf.expected /etc/cockpit/cockpit.conf
+      changed_when: false
+
+    - include_tasks: tasks/cleanup.yml

@@ -8,3 +8,11 @@
   tags:
     - always
     - tests::cleanup
+
+- name: cleanup - config file
+  file:
+    path: /etc/cockpit/cockpit.conf
+    state: absent
+  tags:
+    - always
+    - tests::cleanup
