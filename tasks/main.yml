@@ -7,6 +7,23 @@
     - "{{ ansible_os_family }}.yml"
     - "default.yml"
 
+- name: Enable the Extras repository on RHEL 7
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '7'
+  block:
+    - name: List active RHEL repositories
+      command:
+        cmd: yum repolist
+        warn: no
+      register: __cockpit_repolist
+      changed_when: no
+      check_mode: no
+
+    - name: Enable RHEL repositories
+      command: subscription-manager repos --enable rhel-7-server-extras-rpms
+      when: "'rhel-7-server-extras-rpms' not in __cockpit_repolist.stdout"
+
 - name: Manage cockpit packages using platform specific package manager if applicable
   include_tasks: "{{ item }}"
   with_first_found:
