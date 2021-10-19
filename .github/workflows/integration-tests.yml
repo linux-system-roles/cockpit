@@ -19,4 +19,4 @@ jobs:
       - name: Run test playbook
         run: |
           cd tests
-          sudo ansible-playbook --connection=local --inventory localhost, tests_default.yml
+          sudo ansible-playbook --connection=local --inventory localhost, tests_*.yml
