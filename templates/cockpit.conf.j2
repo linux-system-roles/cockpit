@@ -1,8 +1,8 @@
 {{ ansible_managed | comment }}
 {% if cockpit_config is defined %}
-{%   for section, config in cockpit_config.items() %}
+{%   for section, config in cockpit_config.items() | sort(attribute=0) %}
 [{{ section }}]
-{%     for key, value in config.items() %}
+{%     for key, value in config.items() | sort(attribute=0) %}
 {{ key }} = {{ value }}
 {%     endfor %}
 
