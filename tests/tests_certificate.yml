@@ -11,7 +11,9 @@
         depth: 1
       become: false
       # skip this for RHEL downstream tests, which define $BEAKERLIB
-      when: lookup('env', 'BEAKERLIB') | length == 0 and not lookup('file', 'roles/linux-system-roles.certificate/.git/HEAD', errors='ignore')
+      when:
+        - lookup('env', 'BEAKERLIB') | length == 0
+        - not 'roles/linux-system-roles.certificate/.git/HEAD' is exists
 
 - name: Install cockpit
   hosts: all
@@ -48,7 +50,8 @@
             # (https://github.com/linux-system-roles/certificate/pull/97)
             run_after: |
               DEST=/etc/cockpit/ws-certs.d/monger-cockpit.cert
-              cat {{ __certificate_default_directory }}/certs/monger-cockpit.crt {{ __certificate_default_directory }}/private/monger-cockpit.key > $DEST
+              cat {{ __certificate_default_directory }}/certs/monger-cockpit.crt \
+              {{ __certificate_default_directory }}/private/monger-cockpit.key > $DEST
               chmod 640 $DEST
               chown root:cockpit-ws $DEST
 
@@ -58,7 +61,9 @@
     # ugh, is there really no better way to do that?
     - name: Get PEM of certmonger's local CA
       command:
-        cmd: openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem -nokeys -nodes -passin pass:""
+        cmd: >
+          openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem
+          -nokeys -nodes -passin pass:""
         creates: /var/lib/certmonger/local/ca.pem
 
     - name: test - cockpit works with TLS and expected certificate
@@ -69,7 +74,9 @@
       changed_when: false
 
     - name: test - get certmonger tracking status
-      command: getcert list  --tracking-only -f {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+      command: >
+        getcert list  --tracking-only -f
+        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
       register: result
       changed_when: false
 
@@ -78,7 +85,9 @@
         that: "'status: MONITORING' in result.stdout"
 
     - name: test - clean up tracked certificate
-      command: getcert stop-tracking -f {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+      command: >
+        getcert stop-tracking -f
+        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
       changed_when: false
 
     - name: test - clean up generated certificate
