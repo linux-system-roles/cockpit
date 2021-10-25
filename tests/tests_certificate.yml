@@ -36,7 +36,8 @@
         setype: cert_t
 
     # has to be done dynamically, as the first step checks it out
-    - include_role:
+    - name: Generate certificate with linux-system-roles.certificate
+      include_role:
         name: linux-system-roles.certificate
       vars:
         certificate_requests:
@@ -105,4 +106,5 @@
         path: /etc/cockpit/ws-certs.d/monger-cockpit.cert
         state: absent
 
-    - include_tasks: tasks/cleanup.yml
+    - name: test - generic cleanup
+      include_tasks: tasks/cleanup.yml
