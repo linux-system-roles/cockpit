@@ -13,7 +13,7 @@
       # skip this for RHEL downstream tests, which define $BEAKERLIB
       when:
         - lookup('env', 'BEAKERLIB') | length == 0
-        - not 'roles/linux-system-roles.certificate/.git/HEAD' is exists
+        - not 'roles/linux-system-roles.certificate' is exists
 
 - name: Install cockpit
   hosts: all
