@@ -1,7 +1,7 @@
 # Cockpit
 ![CI Testing](https://github.com/linux-system-roles/cockpit/workflows/tox/badge.svg)
 
-Installs and configures the Cockpit Web Console for distributions that support it, such as RHEL, Fedora, and a few others.
+Installs and configures the Cockpit Web Console for distributions that support it, such as RHEL, CentOS, Fedora, Debian, and Ubuntu.
 
 ## Requirements
 
