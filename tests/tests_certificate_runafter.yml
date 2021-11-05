@@ -1,0 +1,113 @@
+---
+# This approach uses a `run_after:` shell script. This works everywhere,
+# including RHEL/CentOS 7, but is hackish and non-obvious in `getcert list`.
+# tests_certificate.yml covers a cleaner approach.
+- name: test - local setup
+  hosts: 127.0.0.1
+  gather_facts: false
+  tasks:
+    - name: Download current linux-system-roles.certificate
+      git:
+        repo: https://github.com/linux-system-roles/certificate/
+        dest: roles/linux-system-roles.certificate
+        version: master
+        depth: 1
+      become: false
+      # skip this for RHEL downstream tests, which define $BEAKERLIB
+      when:
+        - lookup('env', 'BEAKERLIB') | length == 0
+        - not 'roles/linux-system-roles.certificate' is exists
+
+- name: Install cockpit
+  hosts: all
+  vars:
+    cockpit_packages: minimal
+  roles:
+    - linux-system-roles.cockpit
+
+# self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
+# and has too restrictive keyUsage so that using the certificate as CA is not allowed
+# (https://github.com/linux-system-roles/certificate/issues/99), thus use "local"
+- name: Generate local certmonger certificate
+  hosts: all
+  tasks:
+    # Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
+    - name: Allow certmonger to write into Cockpit's certificate directory
+      file:
+        path: /etc/cockpit/ws-certs.d/
+        state: directory
+        setype: cert_t
+
+    # has to be done dynamically, as the first step checks it out
+    - name: Generate certificate with linux-system-roles.certificate
+      include_role:
+        name: linux-system-roles.certificate
+      vars:
+        certificate_requests:
+          - name: monger-cockpit
+            dns: ['localhost', 'www.example.com']
+            ca: local
+            group: cockpit-ws
+            # ideally we'd put the cert directly into /etc/cockpit/ws-certs.d;
+            # however, cockpit in RHEL/CentOS 7 does not yet support a separate
+            # key file, and lsr.certificate sets wrong permissions
+            # (https://github.com/linux-system-roles/certificate/pull/97)
+            run_after: |
+              DEST=/etc/cockpit/ws-certs.d/monger-cockpit.cert
+              cat {{ __certificate_default_directory }}/certs/monger-cockpit.crt \
+              {{ __certificate_default_directory }}/private/monger-cockpit.key > $DEST
+              chmod 640 $DEST
+              chown root:cockpit-ws $DEST
+
+- name: Validate installation
+  hosts: all
+  tasks:
+    # ugh, is there really no better way to do that?
+    - name: Get PEM of certmonger's local CA
+      command:
+        cmd: >
+          openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem
+          -nokeys -nodes -passin pass:""
+        creates: /var/lib/certmonger/local/ca.pem
+
+    - name: test - cockpit works with TLS and expected certificate
+      command:
+        cmd: curl --cacert /var/lib/certmonger/local/ca.pem https://localhost:9090
+        # ansible 2.11's uri module has ca_path, but that's still too new for us
+        warn: false
+      changed_when: false
+
+    - name: test - get certmonger tracking status
+      command: >
+        getcert list  --tracking-only -f
+        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+      register: result
+      changed_when: false
+
+    - name: test - ensure certificate generation succeeded
+      assert:
+        that: "'status: MONITORING' in result.stdout"
+
+    - name: test - clean up tracked certificate
+      command: >
+        getcert stop-tracking -f
+        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+      changed_when: false
+
+    - name: test - clean up generated certificate
+      file:
+        path: "{{ __certificate_default_directory }}/certs/monger-cockpit.crt"
+        state: absent
+
+    - name: test - clean up generated private key
+      file:
+        path: "{{ __certificate_default_directory }}/private/monger-cockpit.key"
+        state: absent
+
+    - name: test - clean up copied certificate
+      file:
+        path: /etc/cockpit/ws-certs.d/monger-cockpit.cert
+        state: absent
+
+    - name: test - generic cleanup
+      include_tasks: tasks/cleanup.yml
