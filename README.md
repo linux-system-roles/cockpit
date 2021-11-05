@@ -81,6 +81,33 @@ Boolean variable to control if Cockpit should be started/running (default yes).
 ```
 Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.conf`](https://cockpit-project.org/guide/latest/cockpit.conf.5.html) for a list of available settings.  Previous settings will be lost, even if they are not specified in the role variable (no attempt is made to preserve or merge the previous settings, the configuration file is replaced entirely).
 
+## Certificate setup
+
+By default, Cockpit creates a self-signed certificate for itself on first startup. This should [be customized](https://cockpit-project.org/guide/latest/https.html) for environments which use real certificates. It is recommended to use the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/) for that. If your machines are joined to a FreeIPA domain, or you use certmonger in a different mode already, generate a certificate for Cockpit like this:
+
+```yaml
+    # This step is only necessary for Cockpit version < 255; in particular on RHEL/CentOS 8
+    - name: Allow certmonger to write into Cockpit's certificate directory
+      file:
+        path: /etc/cockpit/ws-certs.d/
+        state: directory
+        setype: cert_t
+
+    - name: Generate Cockpit web server certificate
+      include_role:
+        name: linux-system-roles.certificate
+      vars:
+        certificate_requests:
+          - name: /etc/cockpit/ws-certs.d/monger-cockpit
+            dns: ['localhost', 'www.example.com']
+            ca: ipa
+            group: cockpit-ws
+```
+
+You can also use `ca: self-sign` or `ca: local` depending on your certmonger usage, see the [linux-system-roles.certificate documentation](https://github.com/linux-system-roles/certificate/#cas-and-providers) for details.
+
+Note that this does *not* work on RHEL/CentOS 7.
+
 ## Example Playbooks
 The most simple example.
 ```yaml
