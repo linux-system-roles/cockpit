@@ -6,7 +6,7 @@ Installs and configures the Cockpit Web Console for distributions that support i
 ## Requirements
 
   - RHEL/CentOS 7.x depend on the Extras repository being enabled.
-  - Recommended to use linux-system-roles.firewall to make the Web Console available remotely.
+  - Recommended to use [`linux-system-roles.firewall`](https://github.com/linux-system-roles/firewall/) to make the Web Console available remotely.
 
 ## Role Variables
 
