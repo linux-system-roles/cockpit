@@ -25,10 +25,7 @@
   roles:
     - linux-system-roles.cockpit
 
-# self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
-# and has too restrictive keyUsage so that using the certificate as CA is not allowed
-# (https://github.com/linux-system-roles/certificate/issues/99), thus use "local"
-- name: Generate local certmonger certificate
+- name: Generate self-signed certmonger certificate
   hosts: all
   tasks:
     - name: Collect installed package versions
@@ -52,24 +49,16 @@
             certificate_requests:
               - name: /etc/cockpit/ws-certs.d/monger-cockpit
                 dns: ['localhost', 'www.example.com']
-                ca: local
+                ca: self-sign
                 group: cockpit-ws
 
         #
         # Validate installation
         #
 
-        # ugh, is there really no better way to do that?
-        - name: Get PEM of certmonger's local CA
-          command:
-            cmd: >
-              openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem
-              -nokeys -nodes -passin pass:""
-            creates: /var/lib/certmonger/local/ca.pem
-
         - name: test - cockpit works with TLS and expected certificate
           command:
-            cmd: curl --cacert /var/lib/certmonger/local/ca.pem https://localhost:9090
+            cmd: curl --cacert /etc/cockpit/ws-certs.d/monger-cockpit.crt https://localhost:9090
             # ansible 2.11's uri module has ca_path, but that's still too new for us
             warn: false
           changed_when: false
