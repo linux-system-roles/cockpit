@@ -4,6 +4,7 @@
   roles:
     - linux-system-roles.cockpit
 
+
   tasks:
     - name: test - socket is active  # noqa 303 command-instead-of-module
       command: systemctl is-active {{ __cockpit_daemon }}
