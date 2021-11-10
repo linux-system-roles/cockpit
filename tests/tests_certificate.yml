@@ -6,6 +6,22 @@
   hosts: 127.0.0.1
   gather_facts: false
   tasks:
+    - name: Debug ls
+      command: ls -lR
+      changed_when: false
+
+    - name: Debug pwd
+      command: pwd
+      changed_when: false
+
+    - name: Check the roles/linux-system-roles.certificate directory
+      stat:
+        path: roles/linux-system-roles.certificate
+      register: __cockpit_certificate_directory
+
+    - debug:
+        var: __cockpit_certificate_directory
+
     - name: Download current linux-system-roles.certificate
       git:
         repo: https://github.com/linux-system-roles/certificate/
