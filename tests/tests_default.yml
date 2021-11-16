@@ -5,24 +5,27 @@
     - linux-system-roles.cockpit
 
   tasks:
-    - name: test - socket is active  # noqa 303 command-instead-of-module
-      command: systemctl is-active {{ __cockpit_daemon }}
-      changed_when: false
+    - name: tests
+      block:
+        - name: test - socket is active  # noqa 303 command-instead-of-module
+          command: systemctl is-active {{ __cockpit_daemon }}
+          changed_when: false
 
-    - name: test - socket is enabled  # noqa 303 command-instead-of-module
-      command: systemctl is-enabled {{ __cockpit_daemon }}
-      changed_when: false
+        - name: test - socket is enabled  # noqa 303 command-instead-of-module
+          command: systemctl is-enabled {{ __cockpit_daemon }}
+          changed_when: false
 
-    - name: test - cockpit works with TLS
-      get_url:
-        dest: /run/out
-        url: https://localhost:9090
-        validate_certs: no
+        - name: test - cockpit works with TLS
+          get_url:
+            dest: /run/out
+            url: https://localhost:9090
+            validate_certs: no
 
-    - name: test - no configuration file
-      stat:
-        path: /etc/cockpit/cockpit.conf
-      register: result
-      failed_when: result.stat.exists
+        - name: test - no configuration file
+          stat:
+            path: /etc/cockpit/cockpit.conf
+          register: result
+          failed_when: result.stat.exists
 
-    - include_tasks: tasks/cleanup.yml
+      always:
+        - include_tasks: tasks/cleanup.yml

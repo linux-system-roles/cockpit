@@ -62,52 +62,55 @@
 - name: Validate installation
   hosts: all
   tasks:
-    # ugh, is there really no better way to do that?
-    - name: Get PEM of certmonger's local CA
-      command:
-        cmd: >
-          openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem
-          -nokeys -nodes -passin pass:""
-        creates: /var/lib/certmonger/local/ca.pem
+    - name: tests
+      block:
+        # ugh, is there really no better way to do that?
+        - name: Get PEM of certmonger's local CA
+          command:
+            cmd: >
+              openssl pkcs12 -in /var/lib/certmonger/local/creds -out /var/lib/certmonger/local/ca.pem
+              -nokeys -nodes -passin pass:""
+            creates: /var/lib/certmonger/local/ca.pem
 
-    - name: test - cockpit works with TLS and expected certificate
-      command:
-        cmd: curl --cacert /var/lib/certmonger/local/ca.pem https://localhost:9090
-        # ansible 2.11's uri module has ca_path, but that's still too new for us
-        warn: false
-      changed_when: false
+        - name: test - cockpit works with TLS and expected certificate
+          command:
+            cmd: curl --cacert /var/lib/certmonger/local/ca.pem https://localhost:9090
+            # ansible 2.11's uri module has ca_path, but that's still too new for us
+            warn: false
+          changed_when: false
 
-    - name: test - get certmonger tracking status
-      command: >
-        getcert list  --tracking-only -f
-        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
-      register: result
-      changed_when: false
+        - name: test - get certmonger tracking status
+          command: >
+            getcert list  --tracking-only -f
+            {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+          register: result
+          changed_when: false
 
-    - name: test - ensure certificate generation succeeded
-      assert:
-        that: "'status: MONITORING' in result.stdout"
+        - name: test - ensure certificate generation succeeded
+          assert:
+            that: "'status: MONITORING' in result.stdout"
 
-    - name: test - clean up tracked certificate
-      command: >
-        getcert stop-tracking -f
-        {{ __certificate_default_directory }}/certs/monger-cockpit.crt
-      changed_when: false
+        - name: test - clean up tracked certificate
+          command: >
+            getcert stop-tracking -f
+            {{ __certificate_default_directory }}/certs/monger-cockpit.crt
+          changed_when: false
 
-    - name: test - clean up generated certificate
-      file:
-        path: "{{ __certificate_default_directory }}/certs/monger-cockpit.crt"
-        state: absent
+      always:
+        - name: test - clean up generated certificate
+          file:
+            path: "{{ __certificate_default_directory }}/certs/monger-cockpit.crt"
+            state: absent
 
-    - name: test - clean up generated private key
-      file:
-        path: "{{ __certificate_default_directory }}/private/monger-cockpit.key"
-        state: absent
+        - name: test - clean up generated private key
+          file:
+            path: "{{ __certificate_default_directory }}/private/monger-cockpit.key"
+            state: absent
 
-    - name: test - clean up copied certificate
-      file:
-        path: /etc/cockpit/ws-certs.d/monger-cockpit.cert
-        state: absent
+        - name: test - clean up copied certificate
+          file:
+            path: /etc/cockpit/ws-certs.d/monger-cockpit.cert
+            state: absent
 
-    - name: test - generic cleanup
-      include_tasks: tasks/cleanup.yml
+        - name: test - generic cleanup
+          include_tasks: tasks/cleanup.yml
