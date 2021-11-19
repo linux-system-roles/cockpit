@@ -9,6 +9,25 @@
     - always
     - tests::cleanup
 
+- name: cleanup - find certificates
+  find:
+    paths: /etc/cockpit/ws-certs.d/
+    file_type: any
+    patterns: "*"
+  register: certs_to_delete
+  tags:
+    - always
+    - tests::cleanup
+
+- name: cleanup - certificates
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ certs_to_delete.files }}"
+  tags:
+    - always
+    - tests::cleanup
+
 - name: cleanup - config file
   file:
     path: /etc/cockpit/cockpit.conf

@@ -67,7 +67,7 @@ cockpit_packages: full
 Boolean variable to control if Cockpit is enabled to start automatically at boot (default yes).
 
     cockpit_started: yes
-Boolean variable to control if Cockpit should be started/running (default yes). 
+Boolean variable to control if Cockpit should be started/running (default yes).
 
 
 ```yaml
@@ -83,7 +83,24 @@ Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.con
 
 ## Certificate setup
 
-By default, Cockpit creates a self-signed certificate for itself on first startup. This should [be customized](https://cockpit-project.org/guide/latest/https.html) for environments which use real certificates. It is recommended to use the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/) for that. If your machines are joined to a FreeIPA domain, or you use certmonger in a different mode already, generate a certificate for Cockpit like this:
+By default, Cockpit creates a self-signed certificate for itself on first startup. This should [be customized](https://cockpit-project.org/guide/latest/https.html) for environments which use real certificates.
+
+### Use an existing certificate
+
+If your server already has some certificate which you want Cockpit to use as well, point the `cockpit_cert` and `cockpit_private_key` role options to it:
+
+```yaml
+    cockpit_cert: /path/to/server.crt
+    cockpit_private_key: /path/to/server.key
+```
+
+This will create `/etc/cockpit/ws-certs.d/50-system-role.{crt,key}` symlinks.
+
+Note that this functionality requires at least Cockpit version 257, i.e. RHEL ≥ 8.6 or ≥ 9.0, or Fedora ≥ 34.
+
+### Generate a new certificate
+
+For generating a new certificate for Cockpit it is recommended to use the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/). If your machines are joined to a FreeIPA domain, or you use certmonger in a different mode already, generate a certificate with:
 
 ```yaml
     # This step is only necessary for Cockpit version < 255; in particular on RHEL/CentOS 8
@@ -120,7 +137,7 @@ The most simple example.
 Another example, including the role as a task to control when the action is performed.  It is also recommended to configure the firewall using the linux-system-roles.firewall role to make the service accessible.
 ```yaml
 ---
-tasks:  
+tasks:
   - name: Install RHEL/Fedora Web Console (Cockpit)
     include_role:
       name: linux-system-roles.cockpit

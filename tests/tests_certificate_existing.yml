@@ -1,0 +1,52 @@
+---
+- name: Test using an existing certificate with cockpit
+  hosts: all
+  roles:
+    - role: linux-system-roles.cockpit
+      vars:
+        cockpit_packages: minimal
+        cockpit_cert: /etc/myserver.crt
+        cockpit_private_key: /etc/myserver.key
+
+  tasks:
+    - name: Collect installed package versions
+      package_facts:
+
+    - name: Check if cockpit is new enough (at least 257) to support existing certificates
+      when: ansible_facts.packages['cockpit-ws'][0].version | int >= 257
+      block:
+        - name: create test certificate key
+          command: openssl ecparam -name secp521r1 -genkey -out /etc/myserver.key
+          args:
+            creates: /etc/myserver.key
+
+        - name: create test certificate cert
+          command: openssl req -new -x509 -key /etc/myserver.key -subj '/CN=localhost' -out /etc/myserver.crt -days 365
+          args:
+            creates: /etc/myserver.crt
+
+        - name: test - cockpit works with TLS and expected certificate
+          command:
+            cmd: curl --cacert /etc/myserver.crt https://localhost:9090
+            # ansible 2.11's uri module has ca_path, but that's still too new for us
+            warn: false
+          changed_when: false
+
+      always:
+        - name: cleanup - test certificate cert
+          file:
+            path: /etc/myserver.crt
+            state: absent
+          tags:
+            - always
+            - tests::cleanup
+
+        - name: cleanup - test certificate key
+          file:
+            path: /etc/myserver.key
+            state: absent
+          tags:
+            - always
+            - tests::cleanup
+
+        - include_tasks: tasks/cleanup.yml

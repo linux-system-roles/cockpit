@@ -46,3 +46,23 @@
     backup: true
   when: cockpit_config is defined
   notify: restart cockpit
+
+- name: Link to configured existing certificate
+  file:
+    src: "{{ cockpit_cert }}"
+    path: /etc/cockpit/ws-certs.d/50-system-role.crt
+    state: link
+    force: yes
+  when:
+    - cockpit_cert is defined
+    - cockpit_private_key is defined
+
+- name: Link to configured existing certificate key
+  file:
+    src: "{{ cockpit_private_key }}"
+    path: /etc/cockpit/ws-certs.d/50-system-role.key
+    state: link
+    force: yes
+  when:
+    - cockpit_cert is defined
+    - cockpit_private_key is defined
