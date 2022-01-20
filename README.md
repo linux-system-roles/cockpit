@@ -52,15 +52,12 @@ cockpit_packages: full
         #  - cockpit-composer
         #  - cockpit-dashboard
         #  - cockpit-doc
-        #  - cockpit-docker
         #  - cockpit-kdump
         #  - cockpit-machines
-        #  - cockpit-ostree
         #  - cockpit-pcp
         #  - cockpit-podman
         #  - cockpit-session-recording
         #  - cockpit-sosreport
-        #  - cockpit-tests
 ```
 
     cockpit_enabled: yes
