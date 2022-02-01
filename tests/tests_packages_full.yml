@@ -1,0 +1,41 @@
+---
+- name: "Test cockpit_packages: full"
+  hosts: all
+  tasks:
+    - name: tests
+      block:
+        - include_role:
+            name: linux-system-roles.cockpit
+          vars:
+            cockpit_packages: full
+
+        - meta: flush_handlers
+
+        - package_facts:
+
+        # basic package (part of minimal)
+        - name: test - cockpit-system is installed
+          fail:
+            msg: cockpit-system is not installed
+          when: "'cockpit-system' not in ansible_facts.packages"
+
+        # metapackage (part of default)
+        - name: test - cockpit metapackage is installed
+          fail:
+            msg: cockpit is not installed
+          when: "'cockpit' not in ansible_facts.packages"
+
+        # extra package (part of full)
+        - name: test - cockpit-pcp is installed
+          fail:
+            msg: cockpit-pcp is not installed
+          when: "'cockpit-pcp' not in ansible_facts.packages"
+
+        # another extra package (part of full)
+        - name: test - cockpit-doc is installed
+          fail:
+            msg: cockpit-doc is not installed
+          when: "'cockpit-doc' not in ansible_facts.packages"
+
+      always:
+        - include_tasks: tasks/cleanup.yml
