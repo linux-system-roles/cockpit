@@ -1,11 +1,5 @@
-- name: Set version specific variables
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
-    - "default.yml"
+- name: Ensure ansible_facts and variables used by role
+  include_tasks: tasks/set_vars.yml
 
 - name: Enable the Extras repository on RHEL 7
   when:
