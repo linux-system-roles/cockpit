@@ -1,0 +1,25 @@
+- hosts: all
+  tasks:
+    - name: Set platform/version specific variables
+      include_role:
+        name: linux-system-roles.cockpit
+        tasks_from: set_vars.yml
+        public: true
+
+    - name: Install test packages
+      package:
+        name: "{{ __cockpit_packages_default }}"
+        state: present
+
+    - name: Remove undesired Cockpit packages
+      package:
+        name: "{{ __cockpit_packages_exclude }}"
+        state: absent
+      when: __cockpit_packages_exclude is defined
+
+    # NOTE: Removed packages will still be in the local package cache
+    # and when installed will be installed from the local disk
+    - name: Remove cockpit metapackage for config test
+      package:
+        name: cockpit
+        state: absent
