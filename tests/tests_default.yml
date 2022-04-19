@@ -1,6 +1,7 @@
 ---
 - name: Test role with default options
   hosts: all
+  gather_facts: false
   roles:
     - linux-system-roles.cockpit
 

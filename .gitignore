@@ -4,3 +4,4 @@ vault.yml
 *.swp
 *.swo
 tests/roles/linux-system-roles.certificate/
+.tox/

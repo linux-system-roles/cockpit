@@ -2,9 +2,8 @@
 # This approach uses a `run_after:` shell script. This works everywhere,
 # including RHEL/CentOS 7, but is hackish and non-obvious in `getcert list`.
 # tests_certificate.yml covers a cleaner approach.
-- name: test - local setup
-  hosts: 127.0.0.1
-  gather_facts: false
+- name: test certificate issuance with run_after shell script
+  hosts: all
   tasks:
     - name: Download current linux-system-roles.certificate
       git:
@@ -17,20 +16,17 @@
       when:
         - lookup('env', 'BEAKERLIB') | length == 0
         - not 'roles/linux-system-roles.certificate' is exists
+      delegate_to: localhost
 
-- name: Install cockpit
-  hosts: all
-  vars:
-    cockpit_packages: minimal
-  roles:
-    - linux-system-roles.cockpit
+    - name: Install cockpit
+      vars:
+        cockpit_packages: minimal
+      include_role:
+        name: linux-system-roles.cockpit
 
 # self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
 # and has too restrictive keyUsage so that using the certificate as CA is not allowed
 # (https://github.com/linux-system-roles/certificate/issues/99), thus use "local"
-- name: Generate local certmonger certificate
-  hosts: all
-  tasks:
     # Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
     - name: Allow certmonger to write into Cockpit's certificate directory
       file:
@@ -42,6 +38,7 @@
     - name: Generate certificate with linux-system-roles.certificate
       include_role:
         name: linux-system-roles.certificate
+        public: true
       vars:
         certificate_requests:
           - name: monger-cockpit
@@ -59,10 +56,7 @@
               chmod 640 $DEST
               chown root:cockpit-ws $DEST
 
-- name: Validate installation
-  hosts: all
-  tasks:
-    - name: tests
+    - name: Validate installation
       block:
         # ugh, is there really no better way to do that?
         - name: Get PEM of certmonger's local CA

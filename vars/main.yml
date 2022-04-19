@@ -9,3 +9,10 @@ __cockpit_package_types:
   - minimal
   - default
   - full
+
+__cockpit_required_facts:
+  - distribution
+  - distribution_major_version
+  - distribution_version
+  - os_family
+  - pkg_mgr
