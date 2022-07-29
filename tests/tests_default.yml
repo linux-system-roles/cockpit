@@ -22,6 +22,14 @@
             url: https://localhost:9090
             validate_certs: no
 
+        - name: test - HTTP response is something sensible
+          command: grep 'id="login-user-input"' /run/out
+
+        - name: test - clean up output file
+          file:
+            path: /run/out
+            state: absent
+
         - name: test - no configuration file
           stat:
             path: /etc/cockpit/cockpit.conf
