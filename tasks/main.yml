@@ -24,6 +24,38 @@
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
 
+- name: Create custom port configuration file directory
+  file:
+    path: /etc/systemd/system/cockpit.socket.d/
+    owner: root
+    group: root
+    state: directory
+  when: cockpit_port is defined
+
+- name: Create custom port configuration file
+  copy:
+    dest: /etc/systemd/system/cockpit.socket.d/listen.conf
+    mode: 0644
+    owner: root
+    group: root
+    content: |
+      [Socket]
+      ListenStream=
+      ListenStream={{ cockpit_port }}
+  when: cockpit_port is defined
+  notify:
+    - reload systemd
+    - restart cockpit
+
+- name: Clean up port configuration file for undefined custom port
+  file:
+    path: /etc/systemd/system/cockpit.socket.d/listen.conf
+    state: absent
+  when: cockpit_port is not defined
+  notify:
+    - reload systemd
+    - restart cockpit
+
 - name: Ensure Cockpit Web Console is started/stopped and enabled/disabled
   service:
     name: "{{ __cockpit_daemon }}"

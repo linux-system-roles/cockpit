@@ -1,5 +1,9 @@
 ---
 # handlers file for cockpit
+- name: reload systemd
+  systemd:
+    daemon_reload: true
+
 - name: restart cockpit
   service:
     name: "{{ __cockpit_daemon }}"

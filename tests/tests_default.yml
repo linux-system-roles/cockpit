@@ -36,5 +36,11 @@
           register: result
           failed_when: result.stat.exists
 
+        - name: test - no port configuration file
+          stat:
+            path: /etc/systemd/system/cockpit.socket.d
+          register: result
+          failed_when: result.stat.exists
+
       always:
         - include_tasks: tasks/cleanup.yml

@@ -36,3 +36,18 @@
   tags:
     - always
     - tests::cleanup
+
+- name: cleanup - port customization
+  file:
+    path: /etc/systemd/system/cockpit.socket.d/
+    state: absent
+  tags:
+    - always
+    - tests::cleanup
+
+- name: cleanup - reload systemd
+  systemd:
+    daemon_reload: true
+  tags:
+    - always
+    - tests::cleanup
