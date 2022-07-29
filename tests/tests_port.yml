@@ -1,10 +1,43 @@
 ---
 - name: Test cockpit_* role options
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: tests
       block:
+        - name: Install SELinux python2 tools
+          package:
+            name:
+              - libselinux-python
+              - policycoreutils-python
+            state: present
+          when: "ansible_python_version is version('3', '<')"
+
+        - name: Install SELinux python3 tools
+          package:
+            name:
+              - libselinux-python3
+              - policycoreutils-python3
+            state: present
+          when: "ansible_python_version is version('3', '>=')"
+
+        - name: Install SELinux python3 tools
+          package:
+            name:
+              - libselinux-python3
+              - policycoreutils-python3
+            state: present
+          when: "ansible_python_version is version('3', '>=')"
+
+        - name: Install SELinux tool semanage
+          package:
+            name:
+              - policycoreutils-python-utils
+            state: present
+          when: ansible_distribution == "Fedora" or
+            ( ansible_distribution_major_version | int > 7 and
+              ansible_distribution in ["CentOS", "RedHat", "Rocky"] )
+
         - name: Allow cockpit to own customized port in SELinux
           shell: if selinuxenabled; then semanage port -m -t websm_port_t -p tcp 443; fi
 
