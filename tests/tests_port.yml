@@ -11,7 +11,8 @@
               - libselinux-python
               - policycoreutils-python
             state: present
-          when: "ansible_python_version is version('3', '<')"
+          when: ( ansible_python_version is version('3', '<') and
+                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
 
         - name: Install SELinux python3 tools
           package:
@@ -19,15 +20,8 @@
               - libselinux-python3
               - policycoreutils-python3
             state: present
-          when: "ansible_python_version is version('3', '>=')"
-
-        - name: Install SELinux python3 tools
-          package:
-            name:
-              - libselinux-python3
-              - policycoreutils-python3
-            state: present
-          when: "ansible_python_version is version('3', '>=')"
+          when: ( ansible_python_version is version('3', '>=') and
+                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
 
         - name: Install SELinux tool semanage
           package:
