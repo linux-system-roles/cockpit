@@ -1,6 +1,33 @@
 Changelog
 =========
 
+[1.3.0] - 2022-07-29
+--------------------
+
+### New Features
+
+- Add customization of port (#67)
+
+Introduce a `cockpit_port` variable which changes the default port 9090,
+as per https://cockpit-project.org/guide/latest/listen.html#listen-systemd
+
+This requires an extra step with SELinux: It only allows cockpit to own port
+9090, so for any other port the user needs to adjust the policy first. As this
+is outside of what the cockpit role ought to mess with, only document it and do
+that in the tests.
+
+Fixes #63
+
+### Bug Fixes
+
+- none
+
+### Other Changes
+
+- changelog_to_tag action - support other than "master" for the main branch name (#66)
+
+- fix yamllint indentation issue
+
 [1.2.5] - 2022-07-19
 --------------------
 
