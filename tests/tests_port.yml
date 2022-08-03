@@ -1,40 +1,26 @@
 ---
-- name: Test cockpit_* role options
+- name: test - local setup
+  hosts: 127.0.0.1
+  gather_facts: false
+  tasks:
+    - name: Download current linux-system-roles.selinux
+      git:
+        repo: https://github.com/linux-system-roles/selinux/
+        dest: roles/linux-system-roles.selinux
+        version: master
+        depth: 1
+      become: false
+      # skip this for RHEL downstream tests, which define $BEAKERLIB
+      when:
+        - lookup('env', 'BEAKERLIB') | length == 0
+        - not 'roles/linux-system-roles.selinux' is exists
+
+- name: Test cockpit_port option
   hosts: all
   gather_facts: true
   tasks:
     - name: tests
       block:
-        - name: Install SELinux python2 tools
-          package:
-            name:
-              - libselinux-python
-              - policycoreutils-python
-            state: present
-          when: ( ansible_python_version is version('3', '<') and
-                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
-
-        - name: Install SELinux python3 tools
-          package:
-            name:
-              - libselinux-python3
-              - policycoreutils-python3
-            state: present
-          when: ( ansible_python_version is version('3', '>=') and
-                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
-
-        - name: Install SELinux tool semanage
-          package:
-            name:
-              - policycoreutils-python-utils
-            state: present
-          when: ansible_distribution == "Fedora" or
-            ( ansible_distribution_major_version | int > 7 and
-              ansible_distribution in ["CentOS", "RedHat", "Rocky"] )
-
-        - name: Allow cockpit to own customized port in SELinux
-          shell: if selinuxenabled; then semanage port -m -t websm_port_t -p tcp 443; fi
-
         - name: Run cockpit role
           include_role:
             name: linux-system-roles.cockpit

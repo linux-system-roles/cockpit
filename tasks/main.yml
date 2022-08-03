@@ -47,6 +47,22 @@
     - reload systemd
     - restart cockpit
 
+# the selinux role does not like being run on systems without SELinux
+- name: Check if SELinux is enabled
+  command: selinuxenabled
+  failed_when: false
+  changed_when: false
+  register: selinuxenabled
+  when: cockpit_port is defined
+
+- name: Allow cockpit to own custom port in SELinux policy
+  include_role:
+    name: linux-system-roles.selinux
+  vars:
+    selinux_ports:
+      - { ports: '{{ cockpit_port }}', proto: 'tcp', setype: 'websm_port_t', state: 'present' }
+  when: cockpit_port is defined and selinuxenabled.rc == 0
+
 - name: Clean up port configuration file for undefined custom port
   file:
     path: /etc/systemd/system/cockpit.socket.d/listen.conf

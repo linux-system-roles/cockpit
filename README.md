@@ -80,18 +80,7 @@ Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.con
 
     cockpit_port: 9090
 Cockpit runs on port 9090 by default. You can change the port with this option.
-
-Note that the default SELinux policy does not allow Cockpit to listen to anything else than port 9090, so you need to allow that first, with e.g.
-
-    semanage port -m -t websm_port_t -p tcp 443
-
-for ports that are already defined in the SELinux policy, such as 443, or
-
-    semanage port -a -t websm_port_t -p tcp 9999
-
-otherwise.
-
-See the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
+This will also allow cockpit to own the given port in the SELinux policy, using [linux-system-roles.selinux](https://github.com/linux-system-roles/selinux/). See the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
 
 ## Certificate setup
 
