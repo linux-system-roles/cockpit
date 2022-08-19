@@ -24,9 +24,9 @@
       include_role:
         name: linux-system-roles.cockpit
 
-# self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
-# and has too restrictive keyUsage so that using the certificate as CA is not allowed
-# (https://github.com/linux-system-roles/certificate/issues/99), thus use "local"
+    # self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
+    # and has too restrictive keyUsage so that using the certificate as CA is not allowed
+    # (https://github.com/linux-system-roles/certificate/issues/99), thus use "local"
     # Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
     - name: Allow certmonger to write into Cockpit's certificate directory
       file:

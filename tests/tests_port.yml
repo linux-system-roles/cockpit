@@ -1,0 +1,70 @@
+---
+- name: Test cockpit_* role options
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: tests
+      block:
+        - name: Install SELinux python2 tools
+          package:
+            name:
+              - libselinux-python
+              - policycoreutils-python
+            state: present
+          when: ( ansible_python_version is version('3', '<') and
+                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
+
+        - name: Install SELinux python3 tools
+          package:
+            name:
+              - libselinux-python3
+              - policycoreutils-python3
+            state: present
+          when: ( ansible_python_version is version('3', '>=') and
+                  ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"] )
+
+        - name: Install SELinux tool semanage
+          package:
+            name:
+              - policycoreutils-python-utils
+            state: present
+          when: ansible_distribution == "Fedora" or
+            ( ansible_distribution_major_version | int > 7 and
+              ansible_distribution in ["CentOS", "RedHat", "Rocky"] )
+
+        - name: Allow cockpit to own customized port in SELinux
+          shell: if selinuxenabled; then semanage port -m -t websm_port_t -p tcp 443; fi
+
+        - name: Run cockpit role
+          include_role:
+            name: linux-system-roles.cockpit
+          vars:
+            cockpit_packages: minimal
+            cockpit_port: 443
+
+        - meta: flush_handlers
+
+        - name: test - cockpit works on customized port
+          get_url:
+            dest: /run/out
+            url: https://localhost
+            validate_certs: no
+
+        - name: test - HTTP response is something sensible
+          command: grep 'id="login-user-input"' /run/out
+
+        - name: test - cockpit does not listen on port 9090
+          get_url:
+            dest: /run/out
+            url: https://localhost:9090
+            validate_certs: no
+          register: result
+          failed_when: result is succeeded
+
+        - name: test - clean up output file
+          file:
+            path: /run/out
+            state: absent
+
+      always:
+        - include_tasks: tasks/cleanup.yml

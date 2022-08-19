@@ -78,6 +78,21 @@ Boolean variable to control if Cockpit should be started/running (default yes).
 ```
 Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.conf`](https://cockpit-project.org/guide/latest/cockpit.conf.5.html) for a list of available settings.  Previous settings will be lost, even if they are not specified in the role variable (no attempt is made to preserve or merge the previous settings, the configuration file is replaced entirely).
 
+    cockpit_port: 9090
+Cockpit runs on port 9090 by default. You can change the port with this option.
+
+Note that the default SELinux policy does not allow Cockpit to listen to anything else than port 9090, so you need to allow that first, with e.g.
+
+    semanage port -m -t websm_port_t -p tcp 443
+
+for ports that are already defined in the SELinux policy, such as 443, or
+
+    semanage port -a -t websm_port_t -p tcp 9999
+
+otherwise.
+
+See the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
+
 ## Certificate setup
 
 By default, Cockpit creates a self-signed certificate for itself on first startup. This should [be customized](https://cockpit-project.org/guide/latest/https.html) for environments which use real certificates.
