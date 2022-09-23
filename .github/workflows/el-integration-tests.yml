@@ -1,0 +1,43 @@
+name: el-integration
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+env:
+  TOX_LSR: "git+https://github.com/richm/tox-lsr@container-improvements"
+  LSR_CONFIG: "https://raw.githubusercontent.com/linux-system-roles/linux-system-roles.github.io/master/download/linux-system-roles.json"
+  PARALLEL: "999"
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: "centos-9"
+          - os: "centos-8"
+          - os: "centos-7"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install platform dependencies, python, tox, tox-lsr
+        run: |
+          set -euxo pipefail
+          python -m pip install --upgrade pip
+          sudo apt-get update
+          sudo apt-get install -y git
+          pip install "$TOX_LSR"
+
+      - name: Run tests
+        run: |
+          if [ ! -d "$HOME/.config" ]; then
+            mkdir -p "$HOME/.config"
+          fi
+          curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
+          tox -e container-ansible-core-2.13 -- --image-name "${{ matrix.os }}" \
+            --parallel "$PARALLEL" tests/tests_*.yml
+
