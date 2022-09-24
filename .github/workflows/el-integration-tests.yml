@@ -1,4 +1,4 @@
-name: el-integration
+name: Integration
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ env:
   LSR_CONFIG: "https://raw.githubusercontent.com/linux-system-roles/linux-system-roles.github.io/master/download/linux-system-roles.json"
   PARALLEL: "999"
 jobs:
-  integration:
+  test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,8 +37,6 @@ jobs:
           if [ ! -d "$HOME/.config" ]; then
             mkdir -p "$HOME/.config"
           fi
-          /usr/bin/wait --help
           curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
           tox -e container-ansible-core-2.13 -- --image-name "${{ matrix.os }}" \
             --parallel "$PARALLEL" tests/tests_*.yml
-
