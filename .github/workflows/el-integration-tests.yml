@@ -37,6 +37,7 @@ jobs:
           if [ ! -d "$HOME/.config" ]; then
             mkdir -p "$HOME/.config"
           fi
+          /usr/bin/wait --help
           curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
           tox -e container-ansible-core-2.13 -- --image-name "${{ matrix.os }}" \
             --parallel "$PARALLEL" tests/tests_*.yml
