@@ -38,5 +38,10 @@ jobs:
             mkdir -p "$HOME/.config"
           fi
           curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
+          for ii in $(seq 1 300); do
+            echo date $(date -Isec)
+            podman ps -a
+            sleep 5
+          done &
           tox -e container-ansible-core-2.13 -- --image-name "${{ matrix.os }}" \
             --parallel "$PARALLEL" tests/tests_*.yml
