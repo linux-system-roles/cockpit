@@ -16,6 +16,9 @@
           command: systemctl is-enabled {{ __cockpit_daemon }}
           changed_when: false
 
+        - name: Show sockets
+          command: ss -lntp
+
         - name: test - cockpit works with TLS
           get_url:
             dest: /run/out
