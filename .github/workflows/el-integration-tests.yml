@@ -9,7 +9,7 @@ on:
 env:
   TOX_LSR: "git+https://github.com/richm/tox-lsr@container-improvements"
   LSR_CONFIG: "https://raw.githubusercontent.com/linux-system-roles/linux-system-roles.github.io/master/download/linux-system-roles.json"
-  PARALLEL: "999"
+  PARALLEL: "2"
 jobs:
   test:
     runs-on: ubuntu-latest
