@@ -43,6 +43,7 @@ jobs:
 
       - name: Upload test logs
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: ${{ matrix.os }}-logs
           path: logs.tar.gz
