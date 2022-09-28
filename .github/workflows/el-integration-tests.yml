@@ -17,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         os: ["centos-7", "centos-8", "centos-9", "fedora-35", "fedora-36"]
-        ansible_ver: ["2.9", "2.13"]
-        collection: ["false", "true"]
+        ansible_ver: ["ansible-2.9", "ansible-core-2.13"]
+        collection: ["role", "collection"]
 
     steps:
       - uses: actions/checkout@v2
@@ -37,18 +37,16 @@ jobs:
             mkdir -p "$HOME/.config"
           fi
           curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
-          toxenv=container-ansible-2.9
-          if [ "${{ matrix.ansible_ver }}" = "2.13" ]; then
-            toxenv=container-ansible-core-2.13
-          fi
+          toxenv="container-${{ matrix.ansible_ver }}"
           test_dir=tests
-          if [ "${{ matrix.collection }}" = true ]; then
+          if [ "${{ matrix.collection }}" = collection ]; then
             tox -e collection
             mv .tox/ansible_collection/fedora/linux_system_roles/tests .tox
             for file in .tox/tests/*/tests_default.yml; do
               test_dir="$(dirname "$file")"
               break
             done
+          fi
           tox -e "$toxenv" -- --image-name "${{ matrix.os }}" \
             --parallel "$PARALLEL" "$test_dir"/tests_*.yml
 
