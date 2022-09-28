@@ -54,5 +54,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ matrix.os }}-logs
+          name: ${{ matrix.os }}_${{ matrix.ansible_ver }}_${{ matrix.collection }}_logs
           path: logs.tar.gz
