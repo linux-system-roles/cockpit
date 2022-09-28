@@ -41,7 +41,7 @@ jobs:
           test_dir=tests
           if [ "${{ matrix.collection }}" = collection ]; then
             tox -e collection
-            mv .tox/ansible_collection/fedora/linux_system_roles/tests .tox
+            mv .tox/ansible_collections/fedora/linux_system_roles/tests .tox
             for file in .tox/tests/*/tests_default.yml; do
               test_dir="$(dirname "$file")"
               break
