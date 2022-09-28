@@ -40,3 +40,9 @@ jobs:
           curl -o "$HOME/.config/linux-system-roles.json" "$LSR_CONFIG"
           tox -e container-ansible-core-2.13 -- --image-name "${{ matrix.os }}" \
             --parallel "$PARALLEL" tests/tests_*.yml
+
+      - name: Upload test logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs
+          path: logs.tar.gz
