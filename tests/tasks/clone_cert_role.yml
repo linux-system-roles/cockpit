@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Create temp dir test
+  tempfile:
+    state: directory
+    prefix: lsr_cockpit_
+  register: __cockpit_tmp_dir
+  changed_when: false
+
+- name: Set cockpit_test_roles_dir
+  set_fact:
+    cockpit_test_roles_dir: "{{ __cockpit_tmp_dir.path }}"
+
+- name: Download current linux-system-roles.certificate
+  git:
+    repo: https://github.com/linux-system-roles/certificate/
+    dest: "{{ cockpit_test_roles_dir }}/linux-system-roles.certificate"
+    version: master
+    depth: 1
+  become: false
+  delegate_to: localhost
+  # skip this for RHEL downstream tests, which define $BEAKERLIB
+  when:
+    - lookup('env', 'BEAKERLIB') | length == 0
