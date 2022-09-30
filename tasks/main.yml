@@ -30,7 +30,7 @@
     owner: root
     group: root
     state: directory
-  when: cockpit_port is defined
+  when: cockpit_port is not none
 
 - name: Create custom port configuration file
   copy:
@@ -42,7 +42,7 @@
       [Socket]
       ListenStream=
       ListenStream={{ cockpit_port }}
-  when: cockpit_port is defined
+  when: cockpit_port is not none
   notify:
     - reload systemd
     - restart cockpit
@@ -51,7 +51,7 @@
   file:
     path: /etc/systemd/system/cockpit.socket.d/listen.conf
     state: absent
-  when: cockpit_port is not defined
+  when: cockpit_port is none
   notify:
     - reload systemd
     - restart cockpit

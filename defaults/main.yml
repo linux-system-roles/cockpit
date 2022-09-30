@@ -14,3 +14,6 @@ __cockpit_daemon: cockpit.socket
 # __cockpit_packages_default    set in vars/*
 # __cockpit_packages_full       set in vars/*
 # __cockpit_packages_minimal    set in vars/*
+
+# Cockpit runs on port 9090 by default.
+cockpit_port: null
