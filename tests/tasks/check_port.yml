@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: MIT
+---
+- block:
+    - block:
+        - name: Check firewall port status when cockpit_manage_firewall is true
+          command: firewall-cmd --list-service
+          register: _result
+          failed_when: "'cockpit' not in _result.stdout"
+          changed_when: false
+          when:
+            - _cockpit_port | int == 9090
+
+        - name: Check firewall port status when cockpit_manage_firewall is true
+          command: firewall-cmd --list-port
+          register: _result
+          failed_when: "'{{ _cockpit_port }}/tcp' not in _result.stdout"
+          changed_when: false
+          when:
+            - _cockpit_port | int != 9090
+      when:
+        - cockpit_manage_firewall | bool
+  vars:
+    _cockpit_port: "{{ cockpit_port if cockpit_port is defined else 9090 }}"
+  when:
+    - ansible_facts['os_family'] == 'RedHat'

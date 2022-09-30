@@ -8,6 +8,18 @@ Installs and configures the Cockpit Web Console for distributions that support i
   - RHEL/CentOS 7.x depend on the Extras repository being enabled.
   - Recommended to use [`linux-system-roles.firewall`](https://github.com/linux-system-roles/firewall/) to make the Web Console available remotely.
 
+  - The role requires the `firewall` role from the `fedora.linux_system_roles`
+    collection, if `cockpit_manage_firewall` is set to `yes`.
+    Please see also `cockpit_manage_firewall` in [`Role Variables`](#role-variables).
+
+    If `cockpit` is a role from the `fedora.linux_system_roles` collection
+    or from the Fedora RPM package, the requirement is already satisfied.
+
+    Otherwise, please run the following command line to install the collection.
+    ```
+    ansible-galaxy collection install -r meta/collection-requirements.yml
+    ```
+
 ## Role Variables
 
 Available variables per distribution are listed below, along with default values (see `defaults/main.yml`):
@@ -80,6 +92,19 @@ Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.con
 
     cockpit_port: 9090
 Cockpit runs on port 9090 by default. You can change the port with this option.
+
+    cockpit_manage_firewall: no
+Boolean variable to control the `cockpit` firewall service with the `firewall` role.
+If the variable is set to `no`, the `cockpit` role does not manage the firewall.
+Default to `no`.
+
+NOTE: `cockpit_manage_firewall` is limited to *adding* ports.
+It cannot be used for *removing* ports.
+If you want to remove ports, you will need to use the firewall system
+role directly.
+
+NOTE: This functionality is supported only when the managed host's `os_family`
+is `RedHat`.
 
 Note that the default SELinux policy does not allow Cockpit to listen to anything else than port 9090, so you need to allow that first, with e.g.
 

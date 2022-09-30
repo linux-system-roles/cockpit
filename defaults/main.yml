@@ -17,3 +17,6 @@ __cockpit_daemon: cockpit.socket
 
 # Cockpit runs on port 9090 by default.
 cockpit_port: null
+
+# If yes, manage the cockpit ports using the firewall role.
+cockpit_manage_firewall: no

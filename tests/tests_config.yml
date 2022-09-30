@@ -12,6 +12,8 @@
             LoginTitle: "hello world"
           Session:
             IdleTimeout: 60
+        cockpit_manage_firewall: false
+      public: true
 
   tasks:
     - name: tests
@@ -57,6 +59,9 @@
         - name: test - compare generated with expected configuration file
           command: diff -u /run/cockpit.conf.expected /etc/cockpit/cockpit.conf
           changed_when: false
+
+        - name: test - ensure cockpit_port is configured for firewall
+          include_tasks: tasks/check_port.yml
 
       always:
         - include_tasks: tasks/cleanup.yml

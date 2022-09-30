@@ -38,7 +38,9 @@
         - name: Run cockpit role
           include_role:
             name: linux-system-roles.cockpit
+            public: true
           vars:
+            cockpit_manage_firewall: true
             cockpit_packages: minimal
             cockpit_port: 443
 
@@ -60,6 +62,9 @@
             validate_certs: no
           register: result
           failed_when: result is succeeded
+
+        - name: test - ensure cockpit_port is configured for firewall
+          include_tasks: tasks/check_port.yml
 
         - name: test - clean up output file
           file:

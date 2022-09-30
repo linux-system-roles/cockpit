@@ -24,6 +24,9 @@
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
 
+- name: Configure firewall
+  include_tasks: firewall.yml
+
 - name: Create custom port configuration file directory
   file:
     path: /etc/systemd/system/cockpit.socket.d/
