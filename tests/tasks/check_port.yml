@@ -2,7 +2,7 @@
 ---
 - block:
     - block:
-        - name: Check firewall port status when cockpit_manage_firewall is true
+        - name: Check firewall port status when cockpit_manage_firewall is yes
           command: firewall-cmd --list-service
           register: _result
           failed_when: "'cockpit' not in _result.stdout"
@@ -10,7 +10,7 @@
           when:
             - _cockpit_port | int == 9090
 
-        - name: Check firewall port status when cockpit_manage_firewall is true
+        - name: Check firewall port status when cockpit_manage_firewall is yes
           command: firewall-cmd --list-port
           register: _result
           failed_when: "'{{ _cockpit_port }}/tcp' not in _result.stdout"
@@ -19,7 +19,18 @@
             - _cockpit_port | int != 9090
       when:
         - cockpit_manage_firewall | bool
+
+    - block:
+        - name: Install SELinux tools
+          include_tasks: install_selinux_tools.yml
+
+        - name: Check associated selinux ports when cockpit_manage_selinux is yes
+          shell: |-
+            set -euo pipefail
+            semanage port --list | egrep "websm_port_t *tcp" | grep "{{ _cockpit_port }}"
+          changed_when: false
+      when: cockpit_manage_selinux | bool
   vars:
-    _cockpit_port: "{{ cockpit_port if cockpit_port is defined else 9090 }}"
+    _cockpit_port: "{{ cockpit_port if cockpit_port is not none else 9090 }}"
   when:
     - ansible_facts['os_family'] == 'RedHat'

@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Ensure the service and the ports status with the selinux role
+  include_role:
+    name: fedora.linux_system_roles.selinux
+  vars:
+    selinux_ports: "{{ [{'ports': cockpit_port, 'proto': 'tcp',
+                         'setype': 'websm_port_t',
+                         'state': 'present', 'local': 'true'}] }}"
+  when:
+    - cockpit_manage_selinux | bool
+    - ansible_facts['os_family'] == 'RedHat'
+    - cockpit_port is not none

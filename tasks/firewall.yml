@@ -4,7 +4,7 @@
   include_role:
     name: fedora.linux_system_roles.firewall
   vars:
-    _cockpit_port: "{{ cockpit_port if cockpit_port is defined else 9090 }}"
+    _cockpit_port: "{{ cockpit_port if cockpit_port is not none else 9090 }}"
     _cockpit_port_proto: "{{ _cockpit_port }}/tcp"
     firewall: "{{ [{'service': 'cockpit', 'state': 'enabled'}]
                   if (_cockpit_port | int) == 9090 else

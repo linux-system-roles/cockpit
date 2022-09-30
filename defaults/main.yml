@@ -20,3 +20,6 @@ cockpit_port: null
 
 # If yes, manage the cockpit ports using the firewall role.
 cockpit_manage_firewall: no
+
+# If yes, manage the cockpit ports using the selinux role.
+cockpit_manage_selinux: no

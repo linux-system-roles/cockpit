@@ -12,7 +12,8 @@
             LoginTitle: "hello world"
           Session:
             IdleTimeout: 60
-        cockpit_manage_firewall: false
+        cockpit_manage_firewall: no
+        cockpit_manage_selinux: yes
       public: true
 
   tasks:
@@ -60,7 +61,7 @@
           command: diff -u /run/cockpit.conf.expected /etc/cockpit/cockpit.conf
           changed_when: false
 
-        - name: test - ensure cockpit_port is configured for firewall
+        - name: test - ensure cockpit_port is configured for firewall and selinux
           include_tasks: tasks/check_port.yml
 
       always:

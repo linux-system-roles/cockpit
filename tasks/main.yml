@@ -27,6 +27,9 @@
 - name: Configure firewall
   include_tasks: firewall.yml
 
+- name: Configure selinux
+  include_tasks: selinux.yml
+
 - name: Create custom port configuration file directory
   file:
     path: /etc/systemd/system/cockpit.socket.d/
