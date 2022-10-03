@@ -5,18 +5,8 @@
 - name: test certificate issuance with run_after shell script
   hosts: all
   tasks:
-    - name: Download current linux-system-roles.certificate
-      git:
-        repo: https://github.com/linux-system-roles/certificate/
-        dest: roles/linux-system-roles.certificate
-        version: master
-        depth: 1
-      become: false
-      # skip this for RHEL downstream tests, which define $BEAKERLIB
-      when:
-        - lookup('env', 'BEAKERLIB') | length == 0
-        - not 'roles/linux-system-roles.certificate' is exists
-      delegate_to: localhost
+    - name: Clone certificate role
+      include_tasks: tasks/clone_cert_role.yml
 
     - name: Install cockpit
       vars:
@@ -37,7 +27,7 @@
     # has to be done dynamically, as the first step checks it out
     - name: Generate certificate with linux-system-roles.certificate
       include_role:
-        name: linux-system-roles.certificate
+        name: "{{ cockpit_test_roles_dir }}/linux-system-roles.certificate"
         public: true
       vars:
         certificate_requests:
@@ -108,3 +98,9 @@
 
         - name: test - generic cleanup
           include_tasks: tasks/cleanup.yml
+
+        - name: Clean up the tempdir
+          file:
+            path: "{{ cockpit_test_roles_dir }}"
+            state: absent
+          delegate_to: localhost
