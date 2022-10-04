@@ -6,8 +6,11 @@
       block:
         - include_role:
             name: linux-system-roles.cockpit
+            public: true
           vars:
             cockpit_packages: full
+            cockpit_manage_firewall: yes
+            cockpit_manage_selinux: no
 
         - meta: flush_handlers
 
@@ -36,6 +39,9 @@
           fail:
             msg: cockpit-doc is not installed
           when: "'cockpit-doc' not in ansible_facts.packages"
+
+        - name: test - ensure cockpit_port is configured for firewall and selinux
+          include_tasks: tasks/check_port.yml
 
       always:
         - include_tasks: tasks/cleanup.yml

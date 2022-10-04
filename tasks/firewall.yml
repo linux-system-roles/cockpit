@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Ensure the cockpit service is enabled
+  include_role:
+    name: fedora.linux_system_roles.firewall
+  vars:
+    _cockpit_port: "{{ cockpit_port if cockpit_port is not none else 9090 }}"
+    _cockpit_port_proto: "{{ _cockpit_port }}/tcp"
+    firewall: "{{ [{'service': 'cockpit', 'state': 'enabled'}]
+                  if (_cockpit_port | int) == 9090 else
+                  [{'port': _cockpit_port_proto, 'state': 'enabled'}] }}"
+  when:
+    - cockpit_manage_firewall | bool
+    - ansible_facts['os_family'] == 'RedHat'

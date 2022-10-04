@@ -8,6 +8,20 @@ Installs and configures the Cockpit Web Console for distributions that support i
   - RHEL/CentOS 7.x depend on the Extras repository being enabled.
   - Recommended to use [`linux-system-roles.firewall`](https://github.com/linux-system-roles/firewall/) to make the Web Console available remotely.
 
+  - The role requires the `firewall` role and the `selinux` role from the
+    `fedora.linux_system_roles` collection, if `cockpit_manage_firewall`
+    and `cockpit_manage_selinux` is set to yes, respectively.
+    Please see also `cockpit_manage_firewall` and `cockpit_manage_selinux`
+    in [`Role Variables`](#role-variables).
+
+    If `cockpit` is a role from the `fedora.linux_system_roles` collection
+    or from the Fedora RPM package, the requirement is already satisfied.
+
+    Otherwise, please run the following command line to install the collection.
+    ```
+    ansible-galaxy collection install -r meta/collection-requirements.yml
+    ```
+
 ## Role Variables
 
 Available variables per distribution are listed below, along with default values (see `defaults/main.yml`):
@@ -81,17 +95,36 @@ Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.con
     cockpit_port: 9090
 Cockpit runs on port 9090 by default. You can change the port with this option.
 
-Note that the default SELinux policy does not allow Cockpit to listen to anything else than port 9090, so you need to allow that first, with e.g.
+    cockpit_manage_firewall: no
+Boolean variable to control the `cockpit` firewall service with the `firewall` role.
+If the variable is set to `no`, the `cockpit` role does not manage the firewall.
+Default to `no`.
 
-    semanage port -m -t websm_port_t -p tcp 443
+NOTE: `cockpit_manage_firewall` is limited to *adding* ports.
+It cannot be used for *removing* ports.
+If you want to remove ports, you will need to use the firewall system
+role directly.
 
-for ports that are already defined in the SELinux policy, such as 443, or
+NOTE: This functionality is supported only when the managed host's `os_family`
+is `RedHat`.
 
-    semanage port -a -t websm_port_t -p tcp 9999
+    cockpit_manage_selinux: no
+Boolean flag allowing to configure selinux using the selinux role.
+The default SELinux policy does not allow Cockpit to listen to anything else
+than port 9090. If you change the port, enable this to use the selinux role
+to set the correct port permissions (websm_port_t).
+If the variable is set to no, the `cockpit` role does not manage the
+SELinux permissions of the cockpit port.
 
-otherwise.
+NOTE: `cockpit_manage_selinux` is limited to *adding* policy.
+It cannot be used for *removing* policy.
+If you want to remove policy, you will need to use the selinux system
+role directly.
 
-See the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
+NOTE: This functionality is supported only when the managed host's `os_family`
+is `RedHat`.
+
+See also the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
 
 ## Certificate setup
 
