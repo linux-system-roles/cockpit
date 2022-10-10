@@ -79,6 +79,23 @@
   when: cockpit_config is defined
   notify: restart cockpit
 
+- name: Create certificates
+  when:
+    - cockpit_certificates | length > 0
+    - ansible_facts['os_family'] == 'RedHat'
+  block:
+    - name: Create certificates using the certificate role
+      include_role:
+        name: fedora.linux_system_roles.certificate
+      vars:
+        __cert_name: "{{ cockpit_certificates.0.name  | basename }}"
+        certificate_requests: "{{ cockpit_certificates }}"
+
+    - name: Set cockpit_cert and cockpit_private_key
+      set_fact:
+        cockpit_cert: "/etc/pki/tls/certs/{{ cockpit_certificates.0.name }}.crt"
+        cockpit_private_key: "/etc/pki/tls/private/{{ cockpit_certificates.0.name }}.key"
+
 - name: Link to configured existing certificate
   file:
     src: "{{ cockpit_cert }}"

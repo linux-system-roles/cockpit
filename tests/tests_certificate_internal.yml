@@ -1,0 +1,62 @@
+---
+- name: Install cockpit
+  hosts: all
+  vars:
+    cockpit_packages: minimal
+    cockpit_certificates:
+      - name: cockpit_cert
+        dns: ['localhost', 'www.example.com']
+        ca: self-sign
+        group: cockpit-ws
+  roles:
+    - linux-system-roles.cockpit
+
+- name: Verify self-signed certmonger certificate created by the certificate role
+  hosts: all
+  vars:
+    cert_name: cockpit_cert
+  tasks:
+    - name: tests
+      block:
+        - name: Collect installed package versions
+          package_facts:
+
+        - name: Check if cockpit is new enough (at least 211) to support certmonger
+          when: ansible_facts.packages['cockpit-ws'][0].version | int >= 211
+          block:
+            #
+            # Validate installation
+            #
+            - name: test - cockpit works with TLS and expected certificate
+              command:
+                cmd: curl --cacert "/etc/pki/tls/certs/{{ cert_name }}.crt" https://localhost:9090
+                # ansible 2.11's uri module has ca_path, but that's still too new for us
+                warn: false
+              changed_when: false
+
+            - name: test - get certmonger tracking status
+              command: getcert list  --tracking-only -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
+              register: result
+              changed_when: false
+
+            - name: test - ensure certificate generation succeeded
+              assert:
+                that: "'status: MONITORING' in result.stdout"
+
+            - name: test - clean up tracked certificate
+              command: getcert stop-tracking -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
+              changed_when: false
+
+      always:
+        - name: test - clean up generated certificate
+          file:
+            path: "/etc/pki/tls/certs/{{ cert_name }}.crt"
+            state: absent
+
+        - name: test - clean up generated private key
+          file:
+            path: "/etc/pki/tls/private/{{ cert_name }}.key"
+            state: absent
+
+        - name: test - generic cleanup
+          include_tasks: tasks/cleanup.yml

@@ -23,3 +23,6 @@ cockpit_manage_firewall: no
 
 # If yes, manage the cockpit ports using the selinux role.
 cockpit_manage_selinux: no
+
+# pass to the certificate_requests variable of the certificate role.
+cockpit_certificates: []
