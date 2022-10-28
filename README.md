@@ -199,7 +199,7 @@ which is not currently supported by the system roles. To use `ca: self-sign` or
 `ca: local`, depending on your certmonger usage, see the
 [linux-system-roles.certificate documentation](https://github.com/linux-system-roles/certificate/#cas-and-providers) for details.
 
-NOTE: This does *not* work on RHEL/CentOS 7.
+NOTE: This creating a self-signed certificate is not supported on RHEL/CentOS-7.
 
 ## Example Playbooks
 The most simple example.

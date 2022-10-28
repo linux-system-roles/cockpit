@@ -84,11 +84,19 @@
     - cockpit_certificates | length > 0
     - ansible_facts['os_family'] == 'RedHat'
   block:
+    - name: Check the OS version for self-sign
+      when:
+        - (ansible_facts['distribution_version'] | int == 7 and
+           cockpit_certificates.0.ca == 'self-sign')
+      fail:
+        msg: >-
+          Creating a self-signed certificate is not supported on
+          {{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}
+
     - name: Create certificates using the certificate role
       include_role:
         name: fedora.linux_system_roles.certificate
       vars:
-        __cert_name: "{{ cockpit_certificates.0.name  | basename }}"
         certificate_requests: "{{ cockpit_certificates }}"
 
     - name: Set cockpit_cert and cockpit_private_key
