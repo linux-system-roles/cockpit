@@ -1,6 +1,54 @@
 Changelog
 =========
 
+[1.4.0] - 2022-11-01
+--------------------
+
+### New Features
+
+- Use the firewall role and the selinux role from the cockpit role (#76)
+
+Since cockpit_port is a public api of the cockpit role, define it
+in defaults/main.yml as null.
+
+- Introduce cockpit_manage_firewall to use the firewall role to
+  manage the cockpit service.
+  Default to false - means the firewall role is not used.
+
+- Add the test check task tasks/check_port.yml for verifying the
+  ports status.
+
+- Add meta/collection-requirements.yml.
+
+- Introduce cockpit_manage_selinux to use the selinux role to
+  manage the ports in the cockpit service.
+  Assign websm_port_t to the cockpit service ports.
+  Default to false - means the selinux role is not used.
+
+- Use the certificate role to create the cert and the key (#78)
+
+- Introduce a variable cockpit_certificates to set the certificate_requests.
+
+- Update README so that using the certificate role is recommended.
+
+Add a check and README note for not supporting creating a self-signed
+certificate on RHEL/CentOS-7.
+
+### Bug Fixes
+
+- none
+
+### Other Changes
+
+- workflows: Add integration-tests for Ubuntu 22.04 (#68)
+
+The current LTS 22.04 is the more interesting target. This detects bugs
+like [1]. Keep 20.04 running as well for the time being.
+
+[1] https://github.com/linux-system-roles/certificate/pull/130
+
+- Clone the certificate role in the temporary dir. (#77)
+
 [1.3.0] - 2022-07-29
 --------------------
 
