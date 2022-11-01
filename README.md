@@ -145,7 +145,34 @@ Note that this functionality requires at least Cockpit version 257, i.e. RHEL â‰
 
 ### Generate a new certificate
 
-For generating a new certificate for Cockpit it is recommended to use the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/). If your machines are joined to a FreeIPA domain, or you use certmonger in a different mode already, generate a certificate with:
+For generating a new certificate for Cockpit it is recommended to set the
+`cockpit_certificates` variable. The value of `cockpit_certificates` is passed
+on to the `certificate_requests` variable of the `certificate` role called
+internally in the `cockpit` role and it generates the private key and certificate.
+For the supported parameters of `cockpit_certificates`, see the
+[`certificate_requests` role documentation section](https://github.com/linux-system-roles/certificate/#certificate_requests).
+
+When you set `cockpit_certificates`, you must not set `cockpit_private_key`
+and `cockpit_cert` variables because they are ignored.
+
+This example installs Cockpit with an IdM-issued web server certificate
+assuming your machines are joined to a FreeIPA domain.
+
+```yaml
+    - name: Install cockpit with Cockpit web server certificate
+      include_role:
+        name: linux-system-roles.cockpit
+      vars:
+        cockpit_certificates:
+          - name: monger-cockpit
+            dns: ['localhost', 'www.example.com']
+            ca: ipa
+            group: cockpit-ws
+```
+
+Note: Generating a new certificate using the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/) in the playbook remains supported.
+
+This example also installs Cockpit with an IdM-issued web server certificate.
 
 ```yaml
     # This step is only necessary for Cockpit version < 255; in particular on RHEL/CentOS 8
@@ -166,9 +193,13 @@ For generating a new certificate for Cockpit it is recommended to use the [linux
             group: cockpit-ws
 ```
 
-You can also use `ca: self-sign` or `ca: local` depending on your certmonger usage, see the [linux-system-roles.certificate documentation](https://github.com/linux-system-roles/certificate/#cas-and-providers) for details.
+NOTE: The `certificate` role, unless using IPA and joining the systems to an IPA domain,
+creates self-signed certificates, so you will need to explicitly configure trust,
+which is not currently supported by the system roles. To use `ca: self-sign` or
+`ca: local`, depending on your certmonger usage, see the
+[linux-system-roles.certificate documentation](https://github.com/linux-system-roles/certificate/#cas-and-providers) for details.
 
-Note that this does *not* work on RHEL/CentOS 7.
+NOTE: This creating a self-signed certificate is not supported on RHEL/CentOS-7.
 
 ## Example Playbooks
 The most simple example.
