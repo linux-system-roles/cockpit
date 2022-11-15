@@ -1,6 +1,21 @@
 Changelog
 =========
 
+[1.4.1] - 2022-11-15
+--------------------
+
+### New Features
+
+- none
+
+### Bug Fixes
+
+- make role work with ansible-core 2.14 - fix ansible-lint 6.x issues (#81)
+
+### Other Changes
+
+- none
+
 [1.4.0] - 2022-11-01
 --------------------
 
