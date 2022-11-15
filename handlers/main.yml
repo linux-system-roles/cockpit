@@ -1,10 +1,10 @@
 ---
 # handlers file for cockpit
-- name: reload systemd
+- name: Reload systemd
   systemd:
     daemon_reload: true
 
-- name: restart cockpit
+- name: Restart cockpit
   service:
     name: "{{ __cockpit_daemon }}"
     state: "{{ 'restarted' if cockpit_started | bool else 'stopped' }}"
