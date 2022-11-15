@@ -1,4 +1,4 @@
-- name: cleanup - packages
+- name: Cleanup - packages
   package:
     name:
       # everything else depends on one of these two, so will be removed along
@@ -10,7 +10,7 @@
     - always
     - tests::cleanup
 
-- name: cleanup - find certificates
+- name: Cleanup - find certificates
   find:
     paths: /etc/cockpit/ws-certs.d/
     file_type: any
@@ -20,7 +20,7 @@
     - always
     - tests::cleanup
 
-- name: cleanup - certificates
+- name: Cleanup - certificates
   file:
     path: "{{ item.path }}"
     state: absent
@@ -29,7 +29,7 @@
     - always
     - tests::cleanup
 
-- name: cleanup - config file
+- name: Cleanup - config file
   file:
     path: /etc/cockpit/cockpit.conf
     state: absent
@@ -37,7 +37,7 @@
     - always
     - tests::cleanup
 
-- name: cleanup - port customization
+- name: Cleanup - port customization
   file:
     path: /etc/systemd/system/cockpit.socket.d/
     state: absent
@@ -45,7 +45,7 @@
     - always
     - tests::cleanup
 
-- name: cleanup - reload systemd
+- name: Cleanup - Reload systemd
   systemd:
     daemon_reload: true
   tags:

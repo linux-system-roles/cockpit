@@ -60,7 +60,6 @@
           command:
             cmd: curl --cacert /var/lib/certmonger/local/ca.pem https://localhost:9090
             # ansible 2.11's uri module has ca_path, but that's still too new for us
-            warn: false
           changed_when: false
 
         - name: test - get certmonger tracking status
