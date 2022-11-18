@@ -5,9 +5,6 @@
 - name: test certificate issuance with run_after shell script
   hosts: all
   tasks:
-    - name: Clone certificate role
-      include_tasks: tasks/clone_cert_role.yml
-
     - name: Install cockpit
       vars:
         cockpit_packages: minimal
@@ -24,10 +21,9 @@
         state: directory
         setype: cert_t
 
-    # has to be done dynamically, as the first step checks it out
-    - name: Generate certificate with linux-system-roles.certificate
+    - name: Generate certificate with system roles certificate role
       include_role:
-        name: "{{ cockpit_test_roles_dir }}/linux-system-roles.certificate"
+        name: fedora.linux_system_roles.certificate
         public: true
       vars:
         certificate_requests:
@@ -97,9 +93,3 @@
 
         - name: test - generic cleanup
           include_tasks: tasks/cleanup.yml
-
-        - name: Clean up the tempdir
-          file:
-            path: "{{ cockpit_test_roles_dir }}"
-            state: absent
-          delegate_to: localhost
