@@ -23,7 +23,16 @@ jobs:
           sudo apt update
           sudo apt install -y ansible
 
-      - name: Run test playbook
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          for ff in meta/collection-requirements.yml tests/collection-requirements.yml; do
+            if [ -f "$ff" ]; then
+              sudo ansible-galaxy collection install -vv -r "$ff"
+            fi
+          done
+
+      - name: Run test playbooks
         run: |
           cd tests
           sudo ansible-playbook -vv --connection=local --inventory localhost, tests_*.yml

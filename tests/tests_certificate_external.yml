@@ -2,13 +2,6 @@
 # This approach relies on https://github.com/linux-system-roles/certificate/pull/97 and cockpit ≥ 211,
 # so it does not work on RHEL/CentOS 7. tests_certificate_runafter.yml covers an approach which
 # works everywhere, but has to use a `runafter` script.
-- name: test - local setup
-  hosts: 127.0.0.1
-  gather_facts: false
-  tasks:
-    - name: Clone certificate role
-      include_tasks: tasks/clone_cert_role.yml
-
 - name: Install cockpit
   hosts: all
   vars:
@@ -35,11 +28,10 @@
                 setype: cert_t
 
             # has to be done dynamically, as the first step checks it out
-            - name: Generate certificate with linux-system-roles.certificate
+            - name: Generate certificate with certificate system role
               include_role:
-                name: "{{ cockpit_test_roles_dir }}/linux-system-roles.certificate"
+                name: fedora.linux_system_roles.certificate
               vars:
-                cockpit_test_roles_dir: "{{ hostvars['localhost']['cockpit_test_roles_dir'] }}"
                 certificate_requests:
                   - name: /etc/cockpit/ws-certs.d/monger-cockpit
                     dns: ['localhost', 'www.example.com']
@@ -82,9 +74,3 @@
 
         - name: test - generic cleanup
           include_tasks: tasks/cleanup.yml
-
-        - name: Clean up the tempdir
-          file:
-            path: "{{ hostvars['localhost']['cockpit_test_roles_dir'] }}"
-            state: absent
-          delegate_to: localhost
