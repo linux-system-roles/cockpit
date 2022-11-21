@@ -1,6 +1,24 @@
 Changelog
 =========
 
+[1.4.2] - 2022-11-21
+--------------------
+
+### New Features
+
+- none
+
+### Bug Fixes
+
+- ansible-core 2.14 support - remove another warn
+
+### Other Changes
+
+- use fedora.linux_system_roles.certificate role in tests
+
+The dependencies will be installed everywhere, so just use them
+in the tests
+
 [1.4.1] - 2022-11-15
 --------------------
 
