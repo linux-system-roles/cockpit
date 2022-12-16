@@ -105,7 +105,7 @@ Fixes #63
 
 ### Other Changes
 
-- changelog_to_tag action - support other than "master" for the main branch name (#66)
+- changelog_to_tag action - github action ansible test improvements
 
 - fix yamllint indentation issue
 
