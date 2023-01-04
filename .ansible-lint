@@ -6,10 +6,13 @@ exclude_paths:
   - .github/
   - examples/roles/
 kinds:
+  - yaml: "**/meta/collection-requirements.yml"
+  - yaml: "**/tests/collection-requirements.yml"
   - playbook: "**/tests/tests_*.yml"
   - playbook: "**/tests/setup-snapshot.yml"
   - tasks: "**/tests/*.yml"
-  - playbook: "**/tests/playbook/*.yml"
+  - playbook: "**/tests/playbooks/*.yml"
   - tasks: "**/tests/tasks/*.yml"
+  - tasks: "**/tests/tasks/*/*.yml"
   - vars: "**/tests/vars/*.yml"
-  - playbook: "**/examples/playbook/*.yml"
+  - playbook: "**/examples/*.yml"
