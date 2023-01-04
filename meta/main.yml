@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Terry Bowling <tbowling@redhat.com>
   description: Install and enable the Cockpit Web Console

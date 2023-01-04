@@ -7,4 +7,5 @@
 - name: Restart cockpit
   service:
     name: "{{ __cockpit_daemon }}"
+    # noqa args[module]
     state: "{{ 'restarted' if cockpit_started | bool else 'stopped' }}"

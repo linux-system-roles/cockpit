@@ -2,7 +2,9 @@
 #
 # to validate this list of packages
 #   yum clean all
-#   yum repoquery cockpit* --disablerepo=* --enablerepo=base --enablerepo=updates --enablerepo=extras --queryformat '%{name}.%{arch} : %{reponame}' ;
+#   yum repoquery cockpit* --disablerepo=* --enablerepo=base \
+#     --enablerepo=updates --enablerepo=extras \
+#     --queryformat '%{name}.%{arch} : %{reponame}' ;
 #
 #
 __cockpit_packages_minimal:
@@ -25,7 +27,9 @@ __cockpit_packages_full:
 __cockpit_packages:
   minimal: "{{ __cockpit_packages_minimal }}"
   default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
-  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default +
+    __cockpit_packages_full }}"
 __cockpit_packages_exclude:
+  # yamllint disable rule:line-length
   - cockpit-machines-ovirt   # omit only needed for Red Hat Virtualization product
   - cockpit-tests    # omit only needed for testing

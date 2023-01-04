@@ -3,13 +3,18 @@
   hosts: all
   gather_facts: true
   tasks:
-    - name: tests
+    - name: Tests
       block:
         - name: Install SELinux tools
           include_tasks: tasks/install_selinux_tools.yml
 
         - name: Allow cockpit to own customized port in SELinux
-          shell: if selinuxenabled; then semanage port -m -t websm_port_t -p tcp 443; fi
+          shell: |
+            set -eu
+            if selinuxenabled; then
+              semanage port -m -t websm_port_t -p tcp 443
+            fi
+          changed_when: false
 
         - name: Run cockpit role
           include_role:
@@ -18,29 +23,34 @@
             cockpit_packages: minimal
             cockpit_port: 443
 
-        - meta: flush_handlers
+        - name: Flush handlers
+          meta: flush_handlers
 
-        - name: test - cockpit works on customized port
+        - name: Test - cockpit works on customized port
           get_url:
             dest: /run/out
             url: https://localhost
-            validate_certs: no
+            validate_certs: false
+            mode: 0600
 
-        - name: test - HTTP response is something sensible
+        - name: Test - HTTP response is something sensible
           command: grep 'id="login-user-input"' /run/out
+          changed_when: false
 
-        - name: test - cockpit does not listen on port 9090
+        - name: Test - cockpit does not listen on port 9090
           get_url:
             dest: /run/out
             url: https://localhost:9090
-            validate_certs: no
+            validate_certs: false
+            mode: 0600
           register: result
           failed_when: result is succeeded
 
-        - name: test - clean up output file
+        - name: Test - clean up output file
           file:
             path: /run/out
             state: absent
 
       always:
-        - include_tasks: tasks/cleanup.yml
+        - name: Cleanup
+          include_tasks: tasks/cleanup.yml

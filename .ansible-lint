@@ -1,4 +1,15 @@
 ---
 skip_list:
-  - fqcn-builtin
-  - fqcn
+  - fqcn-builtins
+exclude_paths:
+  - tests/roles/
+  - .github/
+  - examples/roles/
+kinds:
+  - playbook: "**/tests/tests_*.yml"
+  - playbook: "**/tests/setup-snapshot.yml"
+  - tasks: "**/tests/*.yml"
+  - playbook: "**/tests/playbook/*.yml"
+  - tasks: "**/tests/tasks/*.yml"
+  - vars: "**/tests/vars/*.yml"
+  - playbook: "**/examples/playbook/*.yml"
