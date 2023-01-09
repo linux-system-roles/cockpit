@@ -5,45 +5,49 @@
     - role: linux-system-roles.cockpit
       vars:
         cockpit_packages: minimal
-        cockpit_enabled: yes
-        cockpit_started: no
+        cockpit_enabled: true
+        cockpit_started: false
         cockpit_config:
           WebService:
             LoginTitle: "hello world"
           Session:
             IdleTimeout: 60
-        cockpit_manage_firewall: no
-        cockpit_manage_selinux: yes
+        cockpit_manage_firewall: false
+        cockpit_manage_selinux: true
       public: true
 
   tasks:
-    - name: tests
+    - name: Tests
       block:
-        - meta: flush_handlers
+        - name: Flush handlers
+          meta: flush_handlers
 
-        - name: test - socket is enabled  # noqa 303 command-instead-of-module
+        - name: Test - socket is enabled
+          # noqa command-instead-of-module
           command: systemctl is-enabled {{ __cockpit_daemon }}
           changed_when: false
 
-        - name: test - socket is not active  # noqa 303 command-instead-of-module
+        - name: Test - socket is not active
+          # noqa command-instead-of-module
           command: systemctl is-active {{ __cockpit_daemon }}
           register: result
           failed_when: result is succeeded
           changed_when: false
 
-        - package_facts:
+        - name: Refresh package facts
+          package_facts:
 
-        - name: test - cockpit-bridge is installed
+        - name: Test - cockpit-bridge is installed
           fail:
             msg: cockpit-bridge is not installed
           when: "'cockpit-bridge' not in ansible_facts.packages"
 
-        - name: test - cockpit metapackage is not installed
+        - name: Test - cockpit metapackage is not installed
           fail:
             msg: cockpit is unexpectedly installed
           when: "'cockpit' in ansible_facts.packages"
 
-        - name: test - write expected configuration file
+        - name: Test - write expected configuration file
           copy:
             content: |+
               #
@@ -56,13 +60,16 @@
               LoginTitle = hello world
 
             dest: /run/cockpit.conf.expected
+            mode: 0600
 
-        - name: test - compare generated with expected configuration file
+        - name: Test - compare generated with expected configuration file
           command: diff -u /run/cockpit.conf.expected /etc/cockpit/cockpit.conf
           changed_when: false
 
-        - name: test - ensure cockpit_port is configured for firewall and selinux
+        - name: >-
+            Test - ensure cockpit_port is configured for firewall and selinux
           include_tasks: tasks/check_port.yml
 
       always:
-        - include_tasks: tasks/cleanup.yml
+        - name: Cleanup
+          include_tasks: tasks/cleanup.yml

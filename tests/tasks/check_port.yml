@@ -16,7 +16,8 @@
           when:
             - _cockpit_port | int == 9090
 
-        - name: Check firewall port status when cockpit_manage_firewall is yes
+        - name: >-
+            Check firewall port status when cockpit_manage_firewall is yes
           command: firewall-cmd --list-port
           register: _result
           failed_when: "'{{ _cockpit_port }}/tcp' not in _result.stdout"
@@ -30,8 +31,10 @@
         - name: Install SELinux tools
           include_tasks: install_selinux_tools.yml
 
-        - name: Check associated selinux ports when cockpit_manage_selinux is yes
+        - name: >-
+            Check associated selinux ports when cockpit_manage_selinux is yes
           shell: |-
-            set -euo pipefail
-            semanage port --list | egrep "websm_port_t *tcp" | grep "{{ _cockpit_port }}"
+            set -eu
+            semanage port --list | egrep "websm_port_t *tcp" | \
+              grep "{{ _cockpit_port }}"
           changed_when: false

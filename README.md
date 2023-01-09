@@ -74,10 +74,10 @@ cockpit_packages: full
         #  - cockpit-sosreport
 ```
 
-    cockpit_enabled: yes
+    cockpit_enabled: true
 Boolean variable to control if Cockpit is enabled to start automatically at boot (default yes).
 
-    cockpit_started: yes
+    cockpit_started: true
 Boolean variable to control if Cockpit should be started/running (default yes).
 
 
@@ -95,7 +95,7 @@ Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.con
     cockpit_port: 9090
 Cockpit runs on port 9090 by default. You can change the port with this option.
 
-    cockpit_manage_firewall: no
+    cockpit_manage_firewall: false
 Boolean variable to control the `cockpit` firewall service with the `firewall` role.
 If the variable is set to `no`, the `cockpit` role does not manage the firewall.
 Default to `no`.
@@ -108,7 +108,7 @@ role directly.
 NOTE: This functionality is supported only when the managed host's `os_family`
 is `RedHat`.
 
-    cockpit_manage_selinux: no
+    cockpit_manage_selinux: false
 Boolean flag allowing to configure selinux using the selinux role.
 The default SELinux policy does not allow Cockpit to listen to anything else
 than port 9090. If you change the port, enable this to use the selinux role
@@ -206,7 +206,7 @@ The most simple example.
 ```yaml
 ---
 - hosts: fedora, rhel7, rhel8
-  become: yes
+  become: true
   roles:
     - linux-system-roles.cockpit
 ```
