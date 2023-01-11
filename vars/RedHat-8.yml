@@ -1,10 +1,14 @@
+---
 # RHEL Web Console (Cockpit) only:#
 #  to validate this list of packages for each Major.Minor release
 #
 # for MINOR in 0 1; do
 #   subscription-manager release --set="8.${MINOR}"
 #   yum clean all
-#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-8-for-x86_64-appstream-rpms --enablerepo=rhel-8-for-x86_64-baseos-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+#   yum repoquery cockpit* --disablerepo=* \
+#     --enablerepo=rhel-8-for-x86_64-appstream-rpms \
+#     --enablerepo=rhel-8-for-x86_64-baseos-rpms \
+#     --queryformat '%{name}.%{arch} : %{reponame}' ;
 # done;
 #
 __cockpit_packages_minimal:
@@ -21,7 +25,8 @@ __cockpit_packages_full:
 __cockpit_packages:
   minimal: "{{ __cockpit_packages_minimal }}"
   default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
-  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default +
+    __cockpit_packages_full }}"
 __cockpit_packages_exclude:
   - cockpit-docker   # omit in favor of podman
   - cockpit-ostree   # omit only needed for CoreOS

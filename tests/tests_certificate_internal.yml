@@ -2,11 +2,12 @@
 - name: Test the cockpit role calling the certificate role internally
   hosts: all
   tasks:
-    - name: tests
+    - name: Tests
       vars:
         cert_name: cockpit_cert
       block:
-        - name: Install cockpit using the certificate role to create a certificate
+        - name: >-
+            Install cockpit using the certificate role to create a certificate
           block:
             - name: Install cockpit with cockpit_certificates request
               vars:
@@ -23,14 +24,17 @@
               vars:
                 expected: >-
                   Creating a self-signed certificate is not supported on
-                  {{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}
+                  {{ ansible_facts['distribution'] }}-{{
+                     ansible_facts['distribution_version'] }}
               assert:
                 that: ansible_failed_result.msg == expected
               when:
                 - ansible_facts['os_family'] == 'RedHat'
                 - ansible_facts['distribution_version'] | int == 7
 
-        - name: Verify self-signed certmonger certificate created by the certificate role
+        - name: >-
+            Verify self-signed certmonger certificate created by the
+            certificate role
           when:
             - ansible_facts['os_family'] == 'RedHat'
             - ansible_facts['distribution_version'] | int > 7
@@ -39,36 +43,43 @@
               package_facts:
 
             # Validate installation
-            - name: test - cockpit works with TLS and expected certificate
+            - name: Test - cockpit works with TLS and expected certificate
+              # noqa command-instead-of-module
               command:
-                cmd: curl --cacert "/etc/pki/tls/certs/{{ cert_name }}.crt" https://localhost:9090
-                # ansible 2.11's uri module has ca_path, but that's still too new for us
-                warn: false
+                cmd: >
+                  curl --cacert "/etc/pki/tls/certs/{{ cert_name }}.crt"
+                  https://localhost:9090
+                # ansible 2.11's uri module has ca_path,
+                # but that's still too new for us
               changed_when: false
 
-            - name: test - get certmonger tracking status
-              command: getcert list  --tracking-only -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
+            - name: Test - get certmonger tracking status
+              command: >
+                getcert list  --tracking-only
+                -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
               register: result
               changed_when: false
 
-            - name: test - ensure certificate generation succeeded
+            - name: Test - ensure certificate generation succeeded
               assert:
                 that: "'status: MONITORING' in result.stdout"
 
-            - name: test - clean up tracked certificate
-              command: getcert stop-tracking -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
+            - name: Test - clean up tracked certificate
+              command: >
+                getcert stop-tracking
+                -f "/etc/pki/tls/certs/{{ cert_name }}.crt"
               changed_when: false
 
       always:
-        - name: test - clean up generated certificate
+        - name: Test - clean up generated certificate
           file:
             path: "/etc/pki/tls/certs/{{ cert_name }}.crt"
             state: absent
 
-        - name: test - clean up generated private key
+        - name: Test - clean up generated private key
           file:
             path: "/etc/pki/tls/private/{{ cert_name }}.key"
             state: absent
 
-        - name: test - generic cleanup
+        - name: Test - generic cleanup
           include_tasks: tasks/cleanup.yml

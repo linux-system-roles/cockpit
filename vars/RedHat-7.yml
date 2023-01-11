@@ -1,10 +1,14 @@
+---
 # RHEL Web Console (Cockpit) only:#
 #  to validate this list of packages for each Major.Minor release
 #
 # for MINOR in 6 7 8; do
 #   subscription-manager release --set="7.${MINOR}"
 #   yum clean all
-#   yum repoquery cockpit* --disablerepo=* --enablerepo=rhel-7-server-rpms --enablerepo=rhel-7-server-extras-rpms --queryformat '%{name}.%{arch} : %{reponame}' ;
+#   yum repoquery cockpit* --disablerepo=* \
+#     --enablerepo=rhel-7-server-rpms \
+#     --enablerepo=rhel-7-server-extras-rpms \
+#     --queryformat '%{name}.%{arch} : %{reponame}' ;
 # done;
 #
 #
@@ -29,7 +33,9 @@ __cockpit_packages_full:
 __cockpit_packages:
   minimal: "{{ __cockpit_packages_minimal }}"
   default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
-  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default +
+    __cockpit_packages_full }}"
 __cockpit_packages_exclude:
+  # yamllint disable rule:line-length
   - cockpit-machines-ovirt   # omit only needed for Red Hat Virtualization product
   - cockpit-tests    # omit only needed for testing

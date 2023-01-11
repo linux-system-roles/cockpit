@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 - name: Test using an existing certificate with cockpit
   hosts: all
   roles:
@@ -15,25 +16,25 @@
     - name: Check if cockpit is new enough (at least 257) to support existing certificates
       when: ansible_facts.packages['cockpit-ws'][0].version | int >= 257
       block:
-        - name: create test certificate key
+        - name: Create test certificate key
           command: openssl ecparam -name secp521r1 -genkey -out /etc/myserver.key
           args:
             creates: /etc/myserver.key
 
-        - name: create test certificate cert
+        - name: Create test certificate cert
           command: openssl req -new -x509 -key /etc/myserver.key -subj '/CN=localhost' -out /etc/myserver.crt -days 365
           args:
             creates: /etc/myserver.crt
 
-        - name: test - cockpit works with TLS and expected certificate
+        - name: Test - cockpit works with TLS and expected certificate
+          # noqa command-instead-of-module
           command:
             cmd: curl --cacert /etc/myserver.crt https://localhost:9090
             # ansible 2.11's uri module has ca_path, but that's still too new for us
-            warn: false
           changed_when: false
 
       always:
-        - name: cleanup - test certificate cert
+        - name: Cleanup - test certificate cert
           file:
             path: /etc/myserver.crt
             state: absent
@@ -41,7 +42,7 @@
             - always
             - tests::cleanup
 
-        - name: cleanup - test certificate key
+        - name: Cleanup - test certificate key
           file:
             path: /etc/myserver.key
             state: absent
@@ -49,4 +50,5 @@
             - always
             - tests::cleanup
 
-        - include_tasks: tasks/cleanup.yml
+        - name: Cleanup
+          include_tasks: tasks/cleanup.yml

@@ -1,6 +1,39 @@
 Changelog
 =========
 
+[1.4.2] - 2022-11-21
+--------------------
+
+### New Features
+
+- none
+
+### Bug Fixes
+
+- ansible-core 2.14 support - remove another warn
+
+### Other Changes
+
+- use fedora.linux_system_roles.certificate role in tests
+
+The dependencies will be installed everywhere, so just use them
+in the tests
+
+[1.4.1] - 2022-11-15
+--------------------
+
+### New Features
+
+- none
+
+### Bug Fixes
+
+- make role work with ansible-core 2.14 - fix ansible-lint 6.x issues (#81)
+
+### Other Changes
+
+- none
+
 [1.4.0] - 2022-11-01
 --------------------
 
@@ -72,7 +105,7 @@ Fixes #63
 
 ### Other Changes
 
-- changelog_to_tag action - support other than "master" for the main branch name (#66)
+- changelog_to_tag action - github action ansible test improvements
 
 - fix yamllint indentation issue
 

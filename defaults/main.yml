@@ -1,9 +1,10 @@
+---
 # defaults file for Cockpit Web Console
 
 # public vars if user defined, else defaults from internal vars
 cockpit_packages: default
-cockpit_enabled: yes
-cockpit_started: yes
+cockpit_enabled: true
+cockpit_started: true
 
 # internal vars
 __cockpit_daemon: cockpit.socket
@@ -19,10 +20,10 @@ __cockpit_daemon: cockpit.socket
 cockpit_port: null
 
 # If yes, manage the cockpit ports using the firewall role.
-cockpit_manage_firewall: no
+cockpit_manage_firewall: false
 
 # If yes, manage the cockpit ports using the selinux role.
-cockpit_manage_selinux: no
+cockpit_manage_selinux: false
 
 # pass to the certificate_requests variable of the certificate role.
 cockpit_certificates: []
