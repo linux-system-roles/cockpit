@@ -53,6 +53,8 @@
               #
               # Ansible managed
               #
+              # system_role:cockpit
+
               [Session]
               IdleTimeout = 60
 
