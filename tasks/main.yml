@@ -17,6 +17,7 @@
     - name: Enable RHEL repositories
       command: subscription-manager repos --enable rhel-7-server-extras-rpms
       when: "'rhel-7-server-extras-rpms' not in __cockpit_repolist.stdout"
+      changed_when: true
 
 - name: >-
     Manage cockpit packages using platform specific package manager
