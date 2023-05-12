@@ -1,40 +1,48 @@
 # Cockpit
+
 ![CI Testing](https://github.com/linux-system-roles/cockpit/workflows/tox/badge.svg)
 
 Installs and configures the Cockpit Web Console for distributions that support it, such as RHEL, CentOS, Fedora, Debian, and Ubuntu.
 
 ## Requirements
 
-  - RHEL/CentOS 7.x depend on the Extras repository being enabled.
-  - Recommended to use [`linux-system-roles.firewall`](https://github.com/linux-system-roles/firewall/) to make the Web Console available remotely.
+RHEL/CentOS 7.x depend on the Extras repository being enabled.
 
-  - The role requires the `firewall` role and the `selinux` role from the
-    `fedora.linux_system_roles` collection, if `cockpit_manage_firewall`
-    and `cockpit_manage_selinux` is set to yes, respectively.
-    Please see also `cockpit_manage_firewall` and `cockpit_manage_selinux`
-    in [`Role Variables`](#role-variables).
+### Collection requirements
 
-    If `cockpit` is a role from the `fedora.linux_system_roles` collection
-    or from the Fedora RPM package, the requirement is already satisfied.
+The role requires the `firewall` role and the `selinux` role from the
+`fedora.linux_system_roles` collection, if `cockpit_manage_firewall` and
+`cockpit_manage_selinux` are set to `true`, respectively. Please see also
+`cockpit_manage_firewall` and `cockpit_manage_selinux` in
+[`Role Variables`](#role-variables).
 
-    Otherwise, please run the following command line to install the collection.
-    ```
-    ansible-galaxy collection install -r meta/collection-requirements.yml
-    ```
+If `cockpit` is a role from the `fedora.linux_system_roles` collection
+or from the Fedora RPM package, the requirement is already satisfied.
+
+Otherwise, please run the following command line to install the collection.
+
+```
+ansible-galaxy collection install -vv -r meta/collection-requirements.yml
+```
 
 ## Role Variables
 
 Available variables per distribution are listed below, along with default values (see `defaults/main.yml`):
 
+### cockpit_packages
+
 The primary variable is `cockpit_packages` which allows you to specify your own selection of cockpit packages you want to install, or allows you to choose one of three predefined package sets: `default, minimal, or full`.  Obviously `default` is selected if you do not define this variable.  Not that the packages installed may vary depending on the distribution and version as different packages of cockpit functionality have been provided over time.  Also, some may not be available on all distributions, such as `cockpit-docker` which was deprecated on RHEL in favor of `cockpit-podman`.
 
 Example of explicit cockpit packages to install.  Dependencies should pull in the minimal cockpit packages so that they work.
+
 ```yaml
 cockpit_packages:
   - cockpit-storaged
   - cockpit-podman
 ```
+
 Example of using the predefined package sets.  This is the recommended method for installation.
+
 ```yaml
 cockpit_packages: default
     # equivalent to
@@ -53,7 +61,7 @@ cockpit_packages: full
     # equivalent to globbing all of them
     #  - cockpit-*
     # This is will pull in many packages such as
-        #  - cockpit		## Default list
+        #  - cockpit    ## Default list
         #  - cockpit-bridge
         #  - cockpit-networkmanager
         #  - cockpit-packagekit
@@ -74,31 +82,53 @@ cockpit_packages: full
         #  - cockpit-sosreport
 ```
 
-    cockpit_enabled: true
-Boolean variable to control if Cockpit is enabled to start automatically at boot (default yes).
-
-    cockpit_started: true
-Boolean variable to control if Cockpit should be started/running (default yes).
-
+### cockpit_enabled
 
 ```yaml
-    cockpit_config:                               #Configure /etc/cockpit/cockpit.conf
-      WebService:                                 #Specify "WebService" config section
-        LoginTitle: "custom login screen title"   #Set "LoginTitle" in "WebService" section
-        MaxStartups: 20                           #Set "MaxStartups" in "WebService" section
-      Session:                                    #Specify "Session" config section
-        IdleTimeout: 15                           #Set "IdleTimeout" in "Session" section
-        Banner: "/etc/motd"                       #Set "Banner" in "Session" section
+cockpit_enabled: true
 ```
+
+Boolean variable to control if Cockpit is enabled to start automatically at boot (default `true`).
+
+### cockpit_started
+
+```yaml
+cockpit_started: true
+```
+
+Boolean variable to control if Cockpit should be started/running (default `true`).
+
+### cockpit_config
+
+```yaml
+cockpit_config:                               #Configure /etc/cockpit/cockpit.conf
+  WebService:                                 #Specify "WebService" config section
+    LoginTitle: "custom login screen title"   #Set "LoginTitle" in "WebService" section
+    MaxStartups: 20                           #Set "MaxStartups" in "WebService" section
+  Session:                                    #Specify "Session" config section
+    IdleTimeout: 15                           #Set "IdleTimeout" in "Session" section
+    Banner: "/etc/motd"                       #Set "Banner" in "Session" section
+```
+
 Configure settings in the /etc/cockpit/cockpit.conf file.  See [`man cockpit.conf`](https://cockpit-project.org/guide/latest/cockpit.conf.5.html) for a list of available settings.  Previous settings will be lost, even if they are not specified in the role variable (no attempt is made to preserve or merge the previous settings, the configuration file is replaced entirely).
 
-    cockpit_port: 9090
+### cockpit_port
+
+```yaml
+cockpit_port: 9090
+```
+
 Cockpit runs on port 9090 by default. You can change the port with this option.
 
-    cockpit_manage_firewall: false
+### cockpit_manage_firewall
+
+```yaml
+cockpit_manage_firewall: false
+```
+
 Boolean variable to control the `cockpit` firewall service with the `firewall` role.
-If the variable is set to `no`, the `cockpit` role does not manage the firewall.
-Default to `no`.
+If the variable is set to `false`, the `cockpit` role does not manage the firewall.
+Default to `false`.
 
 NOTE: `cockpit_manage_firewall` is limited to *adding* ports.
 It cannot be used for *removing* ports.
@@ -108,12 +138,17 @@ role directly.
 NOTE: This functionality is supported only when the managed host's `os_family`
 is `RedHat`.
 
-    cockpit_manage_selinux: false
+### cockpit_manage_selinux
+
+```yaml
+cockpit_manage_selinux: false
+```
+
 Boolean flag allowing to configure selinux using the selinux role.
 The default SELinux policy does not allow Cockpit to listen to anything else
 than port 9090. If you change the port, enable this to use the selinux role
 to set the correct port permissions (websm_port_t).
-If the variable is set to no, the `cockpit` role does not manage the
+If the variable is set to `false`, the `cockpit` role does not manage the
 SELinux permissions of the cockpit port.
 
 NOTE: `cockpit_manage_selinux` is limited to *adding* policy.
@@ -135,8 +170,8 @@ By default, Cockpit creates a self-signed certificate for itself on first startu
 If your server already has some certificate which you want Cockpit to use as well, point the `cockpit_cert` and `cockpit_private_key` role options to it:
 
 ```yaml
-    cockpit_cert: /path/to/server.crt
-    cockpit_private_key: /path/to/server.key
+cockpit_cert: /path/to/server.crt
+cockpit_private_key: /path/to/server.key
 ```
 
 This will create `/etc/cockpit/ws-certs.d/50-system-role.{crt,key}` symlinks.
@@ -170,7 +205,7 @@ assuming your machines are joined to a FreeIPA domain.
             group: cockpit-ws
 ```
 
-Note: Generating a new certificate using the [linux-system-roles.certificate role](https://github.com/linux-system-roles/certificate/) in the playbook remains supported.
+Note: Generating a new certificate using the `certificate` system role in the playbook remains supported.
 
 This example also installs Cockpit with an IdM-issued web server certificate.
 
@@ -202,15 +237,20 @@ which is not currently supported by the system roles. To use `ca: self-sign` or
 NOTE: This creating a self-signed certificate is not supported on RHEL/CentOS-7.
 
 ## Example Playbooks
+
 The most simple example.
+
 ```yaml
 ---
-- hosts: fedora, rhel7, rhel8
+- name: Manage cockpit
+  hosts: fedora, rhel7, rhel8
   become: true
   roles:
     - linux-system-roles.cockpit
 ```
+
 Another example, including the role as a task to control when the action is performed.  It is also recommended to configure the firewall using the linux-system-roles.firewall role to make the service accessible.
+
 ```yaml
 ---
 tasks:
@@ -230,5 +270,7 @@ tasks:
         service: cockpit
         state: enabled
 ```
+
 ## License
+
 GPLv3
