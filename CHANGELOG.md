@@ -1,6 +1,14 @@
 Changelog
 =========
 
+[1.4.6] - 2023-05-26
+--------------------
+
+### Other Changes
+
+- docs: Consistent contributing.md for all roles - allow role specific contributing.md section
+- docs: clean up collection requirements section
+
 [1.4.5] - 2023-04-13
 --------------------
 
