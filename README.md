@@ -21,7 +21,7 @@ or from the Fedora RPM package, the requirement is already satisfied.
 
 Otherwise, please run the following command line to install the collection.
 
-```
+```bash
 ansible-galaxy collection install -vv -r meta/collection-requirements.yml
 ```
 
