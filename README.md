@@ -1,6 +1,8 @@
 # Cockpit
 
-![CI Testing](https://github.com/linux-system-roles/cockpit/workflows/tox/badge.svg)
+[![ansible-lint.yml](https://github.com/linux-system-roles/cockpit/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/linux-system-roles/cockpit/actions/workflows/ansible-lint.yml) [![ansible-test.yml](https://github.com/linux-system-roles/cockpit/actions/workflows/ansible-test.yml/badge.svg)](https://github.com/linux-system-roles/cockpit/actions/workflows/ansible-test.yml) [![integration-tests.yml](https://github.com/linux-system-roles/cockpit/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/linux-system-roles/cockpit/actions/workflows/integration-tests.yml) [![markdownlint.yml](https://github.com/linux-system-roles/cockpit/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/linux-system-roles/cockpit/actions/workflows/markdownlint.yml) [![woke.yml](https://github.com/linux-system-roles/cockpit/actions/workflows/woke.yml/badge.svg)](https://github.com/linux-system-roles/cockpit/actions/workflows/woke.yml)
+
+---
 
 Installs and configures the Cockpit Web Console for distributions that support it, such as RHEL, CentOS, Fedora, Debian, and Ubuntu.
 
