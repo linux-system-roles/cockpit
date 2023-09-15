@@ -219,7 +219,7 @@ This example also installs Cockpit with an IdM-issued web server certificate.
 
     - name: Generate Cockpit web server certificate
       include_role:
-        name: linux-system-roles.certificate
+        name: fedora.linux_system_roles.certificate
       vars:
         certificate_requests:
           - name: /etc/cockpit/ws-certs.d/monger-cockpit
@@ -249,7 +249,7 @@ The most simple example.
     - linux-system-roles.cockpit
 ```
 
-Another example, including the role as a task to control when the action is performed.  It is also recommended to configure the firewall using the linux-system-roles.firewall role to make the service accessible.
+Another example, including the role as a task to control when the action is performed.  It is also recommended to configure the firewall using the fedora.linux_system_roles.firewall role to make the service accessible.
 
 ```yaml
 ---
@@ -264,7 +264,7 @@ tasks:
 
   - name: Configure Firewall for Web Console
     include_role:
-      name: linux-system-roles.firewall
+      name: fedora.linux_system_roles.firewall
     vars:
       firewall:
         service: cockpit
