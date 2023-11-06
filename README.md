@@ -19,7 +19,9 @@ The role requires the `firewall` role and the `selinux` role from the
 If `cockpit` is a role from the `fedora.linux_system_roles` collection
 or from the Fedora RPM package, the requirement is already satisfied.
 
-Otherwise, please run the following command line to install the collection.
+If you want to manage `rpm-ostree` systems with this role, you will need to
+install additional collections.  Please run the following command line to
+install the collection.
 
 ```bash
 ansible-galaxy collection install -vv -r meta/collection-requirements.yml
@@ -270,6 +272,10 @@ tasks:
         service: cockpit
         state: enabled
 ```
+
+## rpm-ostree
+
+See README-ostree.md
 
 ## License
 

@@ -1,0 +1,8 @@
+cockpit-composer
+cockpit-dashboard
+cockpit-doc
+cockpit-docker
+cockpit-leapp
+cockpit-machines
+cockpit-pcp
+cockpit-shell
