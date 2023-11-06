@@ -1,0 +1,7 @@
+cockpit
+cockpit-networkmanager
+cockpit-packagekit
+cockpit-selinux
+cockpit-storaged
+cockpit-system
+cockpit-ws

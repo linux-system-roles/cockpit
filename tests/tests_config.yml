@@ -45,7 +45,9 @@
         - name: Test - cockpit metapackage is not installed
           fail:
             msg: cockpit is unexpectedly installed
-          when: "'cockpit' in ansible_facts.packages"
+          when:
+            - "'cockpit' in ansible_facts.packages"
+            - ansible_facts.pkg_mgr | d() != "ansible.posix.rhel_rpm_ostree"
 
         - name: Test - write expected configuration file
           copy:
