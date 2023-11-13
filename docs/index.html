@@ -167,6 +167,7 @@ id="toc-generate-a-new-certificate">Generate a new certificate</a></li>
 </ul></li>
 <li><a href="#example-playbooks" id="toc-example-playbooks">Example
 Playbooks</a></li>
+<li><a href="#rpm-ostree" id="toc-rpm-ostree">rpm-ostree</a></li>
 <li><a href="#license" id="toc-license">License</a></li>
 </ul>
 </nav>
@@ -187,8 +188,9 @@ href="#role-variables"><code>Role Variables</code></a>.</p>
 <p>If <code>cockpit</code> is a role from the
 <code>fedora.linux_system_roles</code> collection or from the Fedora RPM
 package, the requirement is already satisfied.</p>
-<p>Otherwise, please run the following command line to install the
-collection.</p>
+<p>If you want to manage <code>rpm-ostree</code> systems with this role,
+you will need to install additional collections. Please run the
+following command line to install the collection.</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible-galaxy</span> collection install <span class="at">-vv</span> <span class="at">-r</span> meta/collection-requirements.yml</span></code></pre></div>
 <h1 id="role-variables">Role Variables</h1>
@@ -415,6 +417,8 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href=
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">firewall</span><span class="kw">:</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">service</span><span class="kw">:</span><span class="at"> cockpit</span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state</span><span class="kw">:</span><span class="at"> enabled</span></span></code></pre></div>
+<h1 id="rpm-ostree">rpm-ostree</h1>
+<p>See README-ostree.md</p>
 <h1 id="license">License</h1>
 <p>GPLv3</p>
 </article>
