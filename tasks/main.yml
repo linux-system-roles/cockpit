@@ -6,7 +6,7 @@
   when:
     - ansible_distribution == 'RedHat'
     - ansible_distribution_major_version == '7'
-    - ansible_facts.pkg_mgr | d() != "ansible.posix.rhel_rpm_ostree"
+    - not __cockpit_is_ostree | d(false)
   block:
     - name: List active RHEL repositories
       command:
@@ -27,7 +27,7 @@
   with_first_found:
     - "setup-{{ ansible_pkg_mgr }}.yml"
     - "setup-default.yml"
-  when: ansible_facts.pkg_mgr | d() != "ansible.posix.rhel_rpm_ostree"
+  when: not __cockpit_is_ostree | d(false)
 
 - name: Configure firewall
   include_tasks: firewall.yml
