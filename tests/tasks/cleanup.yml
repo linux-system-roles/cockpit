@@ -7,7 +7,7 @@
       - cockpit-ws
       - cockpit-doc
     state: absent
-  when: ansible_facts.pkg_mgr | d() != "ansible.posix.rhel_rpm_ostree"
+  when: not __cockpit_is_ostree | d(false)
   tags:
     - always
     - tests::cleanup

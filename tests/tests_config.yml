@@ -47,7 +47,7 @@
             msg: cockpit is unexpectedly installed
           when:
             - "'cockpit' in ansible_facts.packages"
-            - ansible_facts.pkg_mgr | d() != "ansible.posix.rhel_rpm_ostree"
+            - not __cockpit_is_ostree | d(false)
 
         - name: Test - write expected configuration file
           copy:
