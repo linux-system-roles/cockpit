@@ -1,6 +1,20 @@
 Changelog
 =========
 
+[1.5.0] - 2023-11-29
+--------------------
+
+### New Features
+
+- feat: support for ostree systems (#133)
+
+### Other Changes
+
+- docs: Use FQCN for scenarios that use other linux system roles (#122)
+- Bump actions/checkout from 3 to 4 (#123)
+- ci: ensure dependabot git commit message conforms to commitlint (#126)
+- ci: tox-lsr version 3.1.1 (#131)
+
 [1.4.8] - 2023-09-08
 --------------------
 
