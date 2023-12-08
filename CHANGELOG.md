@@ -1,6 +1,14 @@
 Changelog
 =========
 
+[1.5.1] - 2023-12-08
+--------------------
+
+### Other Changes
+
+- ci: bump actions/github-script from 6 to 7 (#136)
+- refactor: get_ostree_data.sh use env shebang - remove from .sanity* (#137)
+
 [1.5.0] - 2023-11-29
 --------------------
 
