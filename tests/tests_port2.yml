@@ -23,7 +23,7 @@
             dest: /run/out
             url: https://localhost
             validate_certs: false
-            mode: 0600
+            mode: "0600"
 
         - name: Test - HTTP response is something sensible
           command: grep 'id="login-user-input"' /run/out
@@ -34,7 +34,7 @@
             dest: /run/out
             url: https://localhost:9090
             validate_certs: false
-            mode: 0600
+            mode: "0600"
           register: result
           failed_when: result is succeeded
 

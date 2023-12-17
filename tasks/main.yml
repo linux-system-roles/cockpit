@@ -47,7 +47,7 @@
 - name: Create custom port configuration file
   copy:
     dest: /etc/systemd/system/cockpit.socket.d/listen.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
     content: |
@@ -78,7 +78,7 @@
   template:
     src: templates/cockpit.conf.j2
     dest: /etc/cockpit/cockpit.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
     backup: true
