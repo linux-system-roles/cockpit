@@ -1,0 +1,21 @@
+---
+- name: If choosing custom package set, ensure minimal cockpit is included
+  set_fact:
+    cockpit_packages: "{{ cockpit_packages + __cockpit_packages_minimal
+      if cockpit_packages not in __cockpit_package_types
+      else cockpit_packages }}"
+  when: cockpit_packages is defined
+
+- name: Ensure Cockpit Web Console packages are installed.
+  zypper:
+    name: "{{ __cockpit_packages[cockpit_packages]
+      if cockpit_packages in __cockpit_package_types
+      else cockpit_packages }}"
+    state: present
+
+- name: Reboot system
+  reboot:
+  when: ansible_distribution == 'ALP-Dolomite'
+
+- name: Flush handlers
+  meta: flush_handlers
