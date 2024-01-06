@@ -16,6 +16,3 @@
 - name: Reboot system
   reboot:
   when: ansible_distribution == 'ALP-Dolomite'
-
-- name: Flush handlers
-  meta: flush_handlers
