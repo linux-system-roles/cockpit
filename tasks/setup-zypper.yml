@@ -7,7 +7,7 @@
   when: cockpit_packages is defined
 
 - name: Ensure Cockpit Web Console packages are installed.
-  zypper:
+  community.general.zypper:
     name: "{{ __cockpit_packages[cockpit_packages]
       if cockpit_packages in __cockpit_package_types
       else cockpit_packages }}"
