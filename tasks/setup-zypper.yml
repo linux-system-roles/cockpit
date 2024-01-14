@@ -18,4 +18,4 @@
   reboot:
   when:
     - cockpit_installation_status is changed
-    - ansible_distribution == 'ALP-Dolomite'
+    - ansible_distribution == "ALP-Dolomite"
