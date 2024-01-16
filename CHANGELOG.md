@@ -1,6 +1,17 @@
 Changelog
 =========
 
+[1.5.2] - 2024-01-16
+--------------------
+
+### Other Changes
+
+- ci: Fix implicit octal values (#139)
+- ci: Use supported ansible-lint action; run ansible-lint against the collection (#140)
+- ci: Add ALP-Dolomite var file (#141)
+- ci: Use supported ansible-lint action; run ansible-lint against the collection (#142)
+- ci: Add check for Cockpit package installation status in reboot condition (#143)
+
 [1.5.1] - 2023-12-08
 --------------------
 
