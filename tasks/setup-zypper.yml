@@ -13,9 +13,3 @@
       else cockpit_packages }}"
     state: present
   register: cockpit_installation_status
-
-- name: Reboot transactional update systems
-  reboot:
-  when:
-    - cockpit_installation_status is changed
-    - ansible_distribution == "ALP-Dolomite"
