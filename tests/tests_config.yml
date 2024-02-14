@@ -1,6 +1,7 @@
 ---
 - name: Test cockpit_* role options
   hosts: all
+  gather_facts: false
   roles:
     - role: linux-system-roles.cockpit
       vars:
@@ -19,6 +20,20 @@
   tasks:
     - name: Tests
       block:
+        # For now, keeping this task in-place. Can be moved to a separate task
+        # file in case this is needed in other tests.
+        # Without this task, the test fails on Ansible-2.14 on RHEL 8.10
+        - name: Ensure ansible_facts used by this test
+          vars:
+            __cockpit_test_facts:
+              - python_version
+            __cockpit_test_facts_subsets: "{{ ['!all', '!min'] +
+              __cockpit_test_facts }}"
+          setup:
+            gather_subset: "{{ __cockpit_test_facts_subsets }}"
+          when: __cockpit_test_facts |
+            difference(ansible_facts.keys() | list) | length > 0
+
         - name: Flush handlers
           meta: flush_handlers
 
