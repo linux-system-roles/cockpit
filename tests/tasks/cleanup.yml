@@ -12,6 +12,16 @@
     - always
     - tests::cleanup
 
+- name: Cleanup - services
+  service:
+    name: "{{ __cockpit_daemon }}"
+    state: stopped
+    enabled: false
+  when: __cockpit_is_ostree | d(false)
+  tags:
+    - always
+    - tests::cleanup
+
 - name: Cleanup - find certificates
   find:
     paths: /etc/cockpit/ws-certs.d/
