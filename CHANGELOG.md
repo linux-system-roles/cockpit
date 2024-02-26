@@ -1,6 +1,13 @@
 Changelog
 =========
 
+[1.5.5] - 2024-02-26
+--------------------
+
+### Other Changes
+
+- test: Ensure cleanup and proper service state on ostree (#150)
+
 [1.5.4] - 2024-02-14
 --------------------
 
