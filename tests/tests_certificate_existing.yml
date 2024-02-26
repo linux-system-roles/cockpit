@@ -2,14 +2,16 @@
 # yamllint disable rule:line-length
 - name: Test using an existing certificate with cockpit
   hosts: all
-  roles:
-    - role: linux-system-roles.cockpit
+  tasks:
+    - name: Include role
+      include_role:
+        name: linux-system-roles.cockpit
+        public: true
       vars:
         cockpit_packages: minimal
         cockpit_cert: /etc/myserver.crt
         cockpit_private_key: /etc/myserver.key
 
-  tasks:
     - name: Collect installed package versions
       package_facts:
 
@@ -25,6 +27,14 @@
           command: openssl req -new -x509 -key /etc/myserver.key -subj '/CN=localhost' -out /etc/myserver.crt -days 365
           args:
             creates: /etc/myserver.crt
+
+        # ostree cannot remove packages and cannot cleanup properly
+        # this works around that issue
+        - name: Restart cockpit to use the new certificates
+          service:
+            name: "{{ __cockpit_daemon }}"
+            state: restarted
+          when: __cockpit_is_ostree | d(false)
 
         - name: Test - cockpit works with TLS and expected certificate
           # noqa command-instead-of-module

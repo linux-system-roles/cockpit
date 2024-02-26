@@ -19,6 +19,7 @@
         - name: Run cockpit role
           include_role:
             name: linux-system-roles.cockpit
+            public: true
           vars:
             cockpit_packages: minimal
             cockpit_port: 443
