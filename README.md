@@ -227,7 +227,7 @@ This example also installs Cockpit with an IdM-issued web server certificate.
           - name: /etc/cockpit/ws-certs.d/monger-cockpit
             dns: ['localhost', 'www.example.com']
             ca: ipa
-            group: cockpit-ws
+            group: cockpit-ws  # or cockpit-wsinstance on newer cockpit versions
 ```
 
 NOTE: The `certificate` role, unless using IPA and joining the systems to an IPA domain,

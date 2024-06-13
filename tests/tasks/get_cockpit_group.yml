@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Get name of cockpit group for tests
+  getent:
+    database: group
+    key: cockpit-wsinstance
+    fail_key: false
+
+- name: Set __cockpit_test_group
+  set_fact:
+    __cockpit_test_group: "{{ 'cockpit-wsinstance'
+      if ansible_facts['getent_group'].get('cockpit-wsinstance')
+      else 'cockpit-ws' }}"
