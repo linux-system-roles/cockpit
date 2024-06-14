@@ -43,6 +43,12 @@
             msg: cockpit-doc is not installed
           when: "'cockpit-doc' not in ansible_facts.packages"
 
+        - name: Ensure excluded packages are not installed
+          fail:
+            msg: The package {{ item }} should not be installed
+          when: item in ansible_facts.packages
+          loop: "{{ __cockpit_packages_exclude | d([]) }}"
+
         - name: >-
             Test - ensure cockpit_port is configured for firewall and selinux
           include_tasks: tasks/check_port.yml

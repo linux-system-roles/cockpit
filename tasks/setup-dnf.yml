@@ -13,3 +13,18 @@
               else cockpit_packages }}"
     exclude: "{{ __cockpit_packages_exclude }}"
     state: present
+
+# using the dnf module to install cockpit-* is not working in
+# newer el9
+- name: Ensure full package list is installed
+  command:
+    argv: "{{ __argv }}"
+  when: "'cockpit-*' in __pkgs"
+  register: __cockpit_dnf
+  changed_when: "'Nothing to do.' not in __cockpit_dnf.stdout_lines"
+  vars:
+    __excludes: "{{ ['--exclude'] | product(__cockpit_packages_exclude) | flatten }}"
+    __argv: "{{ ['dnf', '-y', 'install', 'cockpit-*'] + __excludes }}"
+    __pkgs: "{{ __cockpit_packages[cockpit_packages]
+      if cockpit_packages in __cockpit_package_types
+      else cockpit_packages }}"
