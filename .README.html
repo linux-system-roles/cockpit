@@ -59,7 +59,7 @@ SOFTWARE.
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -70,7 +70,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -376,7 +376,7 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href=
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> /etc/cockpit/ws-certs.d/monger-cockpit</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">dns</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&#39;localhost&#39;</span><span class="kw">,</span><span class="at"> </span><span class="st">&#39;www.example.com&#39;</span><span class="kw">]</span></span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">ca</span><span class="kw">:</span><span class="at"> ipa</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">group</span><span class="kw">:</span><span class="at"> cockpit-ws</span></span></code></pre></div>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">group</span><span class="kw">:</span><span class="at"> cockpit-ws</span><span class="co">  # or cockpit-wsinstance on newer cockpit versions</span></span></code></pre></div>
 <p>NOTE: The <code>certificate</code> role, unless using IPA and joining
 the systems to an IPA domain, creates self-signed certificates, so you
 will need to explicitly configure trust, which is not currently
