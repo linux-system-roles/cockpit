@@ -9,7 +9,6 @@ __cockpit_packages_default:
   - cockpit-storaged
 __cockpit_packages_full:
   - cockpit-bridge
-  - cockpit-machines
   - cockpit-networkmanager
   - cockpit-podman
   - cockpit-selinux
