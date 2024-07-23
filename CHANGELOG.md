@@ -1,6 +1,13 @@
 Changelog
 =========
 
+[1.5.9] - 2024-07-23
+--------------------
+
+### Other Changes
+
+- ci: Handle reboot for transactional update systems (#165)
+
 [1.5.8] - 2024-07-02
 --------------------
 
