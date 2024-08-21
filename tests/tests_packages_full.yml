@@ -46,7 +46,9 @@
         - name: Ensure excluded packages are not installed
           fail:
             msg: The package {{ item }} should not be installed
-          when: item in ansible_facts.packages
+          when:
+            - not __cockpit_is_ostree | d(false)  # skip this test on ostree
+            - item in ansible_facts.packages
           loop: "{{ __cockpit_packages_exclude | d([]) }}"
 
         - name: >-
