@@ -22,3 +22,21 @@ __cockpit_required_facts:
 # the 'gather_subset' parameter of the 'setup' module
 __cockpit_required_facts_subsets: "{{ ['!all', '!min'] +
   __cockpit_required_facts }}"
+
+# BEGIN - DO NOT EDIT THIS BLOCK - rh distros variables
+# Ansible distribution identifiers that the role treats like RHEL
+__cockpit_rh_distros:
+  - AlmaLinux
+  - CentOS
+  - RedHat
+  - Rocky
+
+# Same as above but includes Fedora
+__cockpit_rh_distros_fedora: "{{ __cockpit_rh_distros + ['Fedora'] }}"
+
+# Use this in conditionals to check if distro is Red Hat or clone
+__cockpit_is_rh_distro: "{{ ansible_distribution in __cockpit_rh_distros }}"
+
+# Use this in conditionals to check if distro is Red Hat or clone, or Fedora
+__cockpit_is_rh_distro_fedora: "{{ ansible_distribution in __cockpit_rh_distros_fedora }}"
+# END - DO NOT EDIT THIS BLOCK - rh distros variables
