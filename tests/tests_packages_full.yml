@@ -32,10 +32,10 @@
           when: "'cockpit' not in ansible_facts.packages"
 
         # extra package (part of full)
-        - name: Test - cockpit-pcp is installed
+        - name: Test - cockpit-machines package is installed
           fail:
-            msg: cockpit-pcp is not installed
-          when: "'cockpit-pcp' not in ansible_facts.packages"
+            msg: cockpit-machines is not installed
+          when: "'cockpit-machines' not in ansible_facts.packages"
 
         # another extra package (part of full)
         - name: Test - cockpit-doc is installed
