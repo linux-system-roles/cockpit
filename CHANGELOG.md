@@ -1,6 +1,13 @@
 Changelog
 =========
 
+[1.5.12] - 2024-11-19
+--------------------
+
+### Other Changes
+
+- test: cockpit-pcp is deprecated - use cockpit-machines (#181)
+
 [1.5.11] - 2024-10-30
 --------------------
 
