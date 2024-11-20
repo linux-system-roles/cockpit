@@ -1,6 +1,7 @@
 ---
 - name: "Test cockpit_packages: full"
   hosts: all
+  gather_facts: true
   tasks:
     - name: Tests
       block:
@@ -32,10 +33,14 @@
           when: "'cockpit' not in ansible_facts.packages"
 
         # extra package (part of full)
-        - name: Test - cockpit-machines package is installed
+        - name: Test - extra package is installed
           fail:
-            msg: cockpit-machines is not installed
-          when: "'cockpit-machines' not in ansible_facts.packages"
+            msg: "{{ __extra_pkg }} is not installed"
+          when: __extra_pkg not in ansible_facts.packages
+          vars:
+            __extra_pkg: "{{ 'cockpit-composer'
+              if ansible_facts['os_family'] == 'RedHat'
+              else 'cockpit-machines' }}"
 
         # another extra package (part of full)
         - name: Test - cockpit-doc is installed
