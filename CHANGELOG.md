@@ -1,6 +1,13 @@
 Changelog
 =========
 
+[1.5.13] - 2024-11-20
+--------------------
+
+### Other Changes
+
+- test: full test uses cockpit-composer or cockpit-machines (#183)
+
 [1.5.12] - 2024-11-19
 --------------------
 
