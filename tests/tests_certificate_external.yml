@@ -26,10 +26,6 @@
                 setype: cert_t
                 mode: "0755"
 
-            # returns global variable __cockpit_test_group
-            - name: Get name of cockpit group to use
-              include_tasks: tasks/get_cockpit_group.yml
-
             # has to be done dynamically, as the first step checks it out
             - name: Generate certificate with certificate system role
               include_role:
@@ -39,7 +35,6 @@
                   - name: /etc/cockpit/ws-certs.d/monger-cockpit
                     dns: ['localhost', 'www.example.com']
                     ca: self-sign
-                    group: "{{ __cockpit_test_group }}"
 
             # ostree cannot remove packages and cannot cleanup properly
             # this works around that issue
