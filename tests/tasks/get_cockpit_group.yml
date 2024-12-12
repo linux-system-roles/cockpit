@@ -1,13 +1,11 @@
 # SPDX-License-Identifier: MIT
 ---
-- name: Get name of cockpit group for tests
-  getent:
-    database: group
-    key: cockpit-wsinstance
-    fail_key: false
 
+# The ownership of the certificate hasn't mattered since Cockpit 257,
+# which is in RHEL 8.7, 9.0, and all current Fedora/Debian/Ubuntu OSes.
+# This only matters for RHEL 7
 - name: Set __cockpit_test_group
   set_fact:
-    __cockpit_test_group: "{{ 'cockpit-wsinstance'
-      if ansible_facts['getent_group'].get('cockpit-wsinstance')
-      else 'cockpit-ws' }}"
+    __cockpit_test_group: "{{ 'cockpit-ws'
+      if (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_version'] | int == 7)
+      else 'root' }}"
