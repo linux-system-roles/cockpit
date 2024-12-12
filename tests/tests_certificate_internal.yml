@@ -17,10 +17,6 @@
               vars:
                 cockpit_packages: minimal
 
-            # returns global variable __cockpit_test_group
-            - name: Get name of cockpit group to use
-              include_tasks: tasks/get_cockpit_group.yml
-
             - name: Install cockpit with cockpit_certificates request
               vars:
                 cockpit_packages: minimal
@@ -28,7 +24,6 @@
                   - name: "{{ cert_name }}"
                     dns: ['localhost', 'www.example.com']
                     ca: self-sign
-                    group: "{{ __cockpit_test_group }}"
               include_role:
                 name: linux-system-roles.cockpit
                 public: true
