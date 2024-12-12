@@ -212,7 +212,8 @@ assuming your machines are joined to a FreeIPA domain.
           - name: monger-cockpit
             dns: ['localhost', 'www.example.com']
             ca: ipa
-            group: cockpit-ws
+            # with Cockpit < 257 (RHEL 7) you need:
+            # group: cockpit-ws
 ```
 
 Note: Generating a new certificate using the `certificate` system role in the playbook remains supported.
@@ -235,7 +236,8 @@ This example also installs Cockpit with an IdM-issued web server certificate.
           - name: /etc/cockpit/ws-certs.d/monger-cockpit
             dns: ['localhost', 'www.example.com']
             ca: ipa
-            group: cockpit-ws  # or cockpit-wsinstance on newer cockpit versions
+            # with Cockpit < 257 (RHEL 7) you need:
+            # group: cockpit-ws
 ```
 
 NOTE: The `certificate` role, unless using IPA and joining the systems to an IPA domain,
