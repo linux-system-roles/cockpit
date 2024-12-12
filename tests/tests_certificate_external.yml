@@ -1,45 +1,32 @@
 ---
 - name: Test with generated self-signed certmonger certificate
   hosts: all
+  vars:
+    __test_cert_name: /etc/cockpit/ws-certs.d/monger-cockpit
+    __test_cert_files:
+      - "{{ __test_cert_name }}.crt"
+    __test_key_files:
+      - "{{ __test_cert_name }}.key"
   tasks:
     - name: Tests
       block:
-        - name: Include role
-          include_role:
-            name: linux-system-roles.cockpit
-            public: true
-          vars:
-            cockpit_packages: minimal
-
-        - name: Collect installed package versions
-          package_facts:
+        - name: Set up for certificate tests
+          include_tasks: tasks/setup_for_certificate_tests.yml
 
         - name: Check if cockpit is new enough (at least 211) to support certmonger
-          when: ansible_facts.packages['cockpit-ws'][0].version | int >= 211
+          when: __cockpit_version | int >= 211
           block:
-            # Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
-            - name: >-
-                Allow certmonger to write into Cockpit's certificate directory
-              file:
-                path: /etc/cockpit/ws-certs.d/
-                state: directory
-                setype: cert_t
-                mode: "0755"
-
-            # returns global variable __cockpit_test_group
-            - name: Get name of cockpit group to use
-              include_tasks: tasks/get_cockpit_group.yml
-
             # has to be done dynamically, as the first step checks it out
             - name: Generate certificate with certificate system role
               include_role:
                 name: fedora.linux_system_roles.certificate
               vars:
                 certificate_requests:
-                  - name: /etc/cockpit/ws-certs.d/monger-cockpit
+                  - name: "{{ __test_cert_name }}"
                     dns: ['localhost', 'www.example.com']
                     ca: self-sign
-                    group: "{{ __cockpit_test_group }}"
+                    group: "{{ __cockpit_test_group
+                      if __cockpit_test_group else omit }}"
 
             # ostree cannot remove packages and cannot cleanup properly
             # this works around that issue
@@ -57,7 +44,7 @@
               # noqa command-instead-of-module
               command:
                 cmd: >
-                  curl --cacert /etc/cockpit/ws-certs.d/monger-cockpit.crt
+                  curl --cacert {{ __test_cert_name }}.crt
                   https://localhost:9090
                 # ansible 2.11's uri module has ca_path,
                 # but that's still too new for us
@@ -66,7 +53,7 @@
             - name: Test - get certmonger tracking status
               command: >
                 getcert list  --tracking-only
-                -f /etc/cockpit/ws-certs.d/monger-cockpit.crt
+                -f {{ __test_cert_name }}.crt
               register: result
               changed_when: false
 
@@ -74,22 +61,6 @@
               assert:
                 that: "'status: MONITORING' in result.stdout"
 
-            - name: Test - clean up tracked certificate
-              command: >
-                getcert stop-tracking
-                -f /etc/cockpit/ws-certs.d/monger-cockpit.crt
-              changed_when: false
-
       always:
-        - name: Test - clean up generated certificate
-          file:
-            path: /etc/cockpit/ws-certs.d/monger-cockpit.crt
-            state: absent
-
-        - name: Test - clean up generated private key
-          file:
-            path: /etc/cockpit/ws-certs.d/monger-cockpit.key
-            state: absent
-
         - name: Test - generic cleanup
           include_tasks: tasks/cleanup.yml

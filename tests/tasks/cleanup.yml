@@ -22,24 +22,31 @@
     - always
     - tests::cleanup
 
-- name: Cleanup - find certificates
-  find:
-    paths: /etc/cockpit/ws-certs.d/
-    file_type: any
-    patterns: "*"
-  register: certs_to_delete
-  tags:
-    - always
-    - tests::cleanup
-
 - name: Cleanup - certificates
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ certs_to_delete.files }}"
-  tags:
-    - always
-    - tests::cleanup
+  when: __test_cert_files | d([]) | length > 0
+  block:
+    - name: Cleanup - stop tracking certificates
+      command: getcert stop-tracking -f {{ item }}
+      changed_when: false
+      with_items: "{{ __test_cert_files }}"
+      register: __cockpit_stop_tracking
+      failed_when:
+        - __cockpit_stop_tracking is failed
+        - "'stdout' in __cockpit_stop_tracking"
+        - not __cockpit_stop_tracking.stdout is
+          search("No request found that matched arguments")
+      tags:
+        - always
+        - tests::cleanup
+
+    - name: Cleanup - remove certificate and key files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items: "{{ __test_cert_files + __test_key_files }}"
+      tags:
+        - always
+        - tests::cleanup
 
 - name: Cleanup - config file
   file:

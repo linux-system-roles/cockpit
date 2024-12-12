@@ -1,0 +1,39 @@
+---
+# install so that we can get version, and create group on platforms
+# where we need the group
+- name: Install cockpit
+  include_role:
+    name: linux-system-roles.cockpit
+    public: true
+  vars:
+    cockpit_packages: minimal
+
+- name: Collect installed package versions
+  package_facts:
+
+# NOTE: There is no way to set __cockpit_version to be a native int
+# without using ANSIBLE_JINJA2_NATIVE
+# https://docs.ansible.com/ansible/latest/reference_appendices/config.html#default-jinja2-native
+- name: Set cockpit version for tests
+  set_fact:
+    __cockpit_version: "{{ ansible_facts.packages['cockpit-ws'][0].version }}"
+
+# Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
+- name: Allow certmonger to write into Cockpit's certificate directory
+  when: __cockpit_version | int < 255
+  file:
+    path: /etc/cockpit/ws-certs.d
+    state: directory
+    setype: cert_t
+    mode: "0755"
+  register: __cockpit_test_cert_dir
+
+# returns global variable __cockpit_test_group
+- name: Get name of cockpit group to use
+  include_tasks: tasks/get_cockpit_group.yml
+  when: __cockpit_version | int < 330
+
+- name: Set name of cockpit group to use to None
+  set_fact:
+    __cockpit_test_group: null
+  when: __cockpit_version | int >= 330
