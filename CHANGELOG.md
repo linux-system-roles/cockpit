@@ -1,6 +1,15 @@
 Changelog
 =========
 
+[1.5.14] - 2024-12-13
+--------------------
+
+### Other Changes
+
+- ci: Use Fedora 41, drop Fedora 39 (#185)
+- ci: Use Fedora 41, drop Fedora 39 - part two (#186)
+- test: Drop cockpit-ws* groups (#187)
+
 [1.5.13] - 2024-11-20
 --------------------
 
