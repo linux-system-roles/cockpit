@@ -1,6 +1,15 @@
 Changelog
 =========
 
+[1.5.15] - 2025-02-03
+--------------------
+
+### Other Changes
+
+- ci: ansible-plugin-scan is disabled for now (#190)
+- ci: bump ansible-lint to v25; provide collection requirements for ansible-lint (#193)
+- test: cockpit-composer is deprecated, so use storaged for test (#194)
+
 [1.5.14] - 2024-12-13
 --------------------
 
