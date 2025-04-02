@@ -1,0 +1,62 @@
+---
+name: Ansible tox
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+  merge_group:
+    branches:
+      - main
+    types:
+      - checks_requested
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+env:
+  TOX_ENV: qemu-ansible-core-2.16
+
+permissions:
+  contents: read
+jobs:
+  tox:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - centos-9
+          - centos-10
+          # ansible/libdnf5 bug: https://issues.redhat.com/browse/RHELMISC-10110
+          # - fedora-41
+          - fedora-42
+
+    steps:
+      - name: Accio /dev/kvm 🪄
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm --settle
+          ls -l /dev/kvm
+
+      - name: Install test dependencies
+        run: |
+          set -euxo pipefail
+          python3 -m pip install --upgrade pip
+          sudo apt update
+          sudo apt install -y git ansible-core genisoimage qemu-system-x86
+          pip3 install "git+https://github.com/linux-system-roles/tox-lsr@3.4.0"
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure tox-lsr
+        run: |
+          curl -o ~/.config/linux-system-roles.json https://raw.githubusercontent.com/linux-system-roles/linux-system-roles.github.io/master/download/linux-system-roles.json
+
+      - name: Run tox integration tests
+        run: |
+          if ! tox -e ${{ env.TOX_ENV }} -- --image-name ${{ matrix.image }} --make-batch --log-level=debug --
+          then
+              cat artifacts/ansible.log
+              exit 1
+          fi
