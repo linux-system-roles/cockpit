@@ -1,19 +1,19 @@
 ---
-- name: Cleanup - packages
-  package:
-    name: "cockpit*"
-    state: absent
-  when: not __cockpit_is_ostree | d(false)
-  tags:
-    - always
-    - tests::cleanup
-
 - name: Cleanup - services
   service:
     name: "{{ __cockpit_daemon }}"
     state: stopped
     enabled: false
   when: __cockpit_is_ostree | d(false)
+  tags:
+    - always
+    - tests::cleanup
+
+- name: Cleanup - packages
+  package:
+    name: "cockpit*"
+    state: absent
+  when: not __cockpit_is_ostree | d(false)
   tags:
     - always
     - tests::cleanup
