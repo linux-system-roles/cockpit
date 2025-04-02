@@ -1,11 +1,7 @@
 ---
 - name: Cleanup - packages
   package:
-    name:
-      # everything else depends on one of these two, so will be removed along
-      - cockpit-bridge
-      - cockpit-ws
-      - cockpit-doc
+    name: "cockpit*"
     state: absent
   when: not __cockpit_is_ostree | d(false)
   tags:
