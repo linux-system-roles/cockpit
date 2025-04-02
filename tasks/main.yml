@@ -85,6 +85,11 @@
   when: cockpit_config is defined
   notify: Restart cockpit
 
+- name: Clean up certificate facts from previous runs
+  set_fact:
+    cockpit_cert: ""
+    cockpit_private_key: ""
+
 - name: Create certificates
   when:
     - cockpit_certificates | length > 0
@@ -119,8 +124,8 @@
     state: link
     force: true
   when:
-    - cockpit_cert is defined
-    - cockpit_private_key is defined
+    - cockpit_cert | length > 0
+    - cockpit_private_key | length > 0
 
 - name: Link to configured existing certificate key
   file:
@@ -129,5 +134,5 @@
     state: link
     force: true
   when:
-    - cockpit_cert is defined
-    - cockpit_private_key is defined
+    - cockpit_cert | length > 0
+    - cockpit_private_key | length > 0
