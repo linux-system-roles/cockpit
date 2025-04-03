@@ -31,4 +31,5 @@ __cockpit_packages_exclude:
   - cockpit-docker   # omit in favor of podman
   - cockpit-ostree   # omit only needed for CoreOS
   - cockpit-tests    # omit only needed for testing
+  - cockpit-pcp      # not present any more in current composes, but in older ones, and conflicts with current bridge
 # --------------------------
