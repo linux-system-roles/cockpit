@@ -6,25 +6,23 @@
                           else cockpit_packages }}"
   when: cockpit_packages is defined
 
-- name: Ensure Cockpit Web Console packages are installed.
+- name: Determine all Cockpit Web Console packages
+  when: cockpit_packages == "full"
+  changed_when: false
+  shell: |
+    set -euo pipefail
+    dnf repoquery --latest-limit=1 --queryformat '%{name}\n' | grep -E '^cockpit-'
+  register: __cockpit_packages_full
+
+- name: Ensure Cockpit Web Console packages are installed
   dnf:
-    name: "{{ __cockpit_packages[cockpit_packages]
-              if cockpit_packages in __cockpit_package_types
-              else cockpit_packages }}"
+    name: "{{ (__cockpit_packages_minimal +
+              __cockpit_packages_full.stdout_lines | difference(__cockpit_packages_exclude))
+              if cockpit_packages == 'full'
+              else
+                  __cockpit_packages[cockpit_packages]
+                  if cockpit_packages in __cockpit_package_types
+                  else cockpit_packages }}"
+    # FIXME: this does not belong here, as it filters out explicit user-specified package lists as well
     exclude: "{{ __cockpit_packages_exclude }}"
     state: present
-
-# using the dnf module to install cockpit-* is not working in
-# newer el9
-- name: Ensure full package list is installed
-  command:
-    argv: "{{ __argv }}"
-  when: "'cockpit-*' in __pkgs"
-  register: __cockpit_dnf
-  changed_when: "'Nothing to do.' not in __cockpit_dnf.stdout_lines"
-  vars:
-    __excludes: "{{ ['--exclude'] | product(__cockpit_packages_exclude) | flatten }}"
-    __argv: "{{ ['dnf', '-y', 'install', 'cockpit-*'] + __excludes }}"
-    __pkgs: "{{ __cockpit_packages[cockpit_packages]
-      if cockpit_packages in __cockpit_package_types
-      else cockpit_packages }}"

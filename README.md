@@ -60,8 +60,7 @@ cockpit_packages: minimal
     #  - cockpit-ws
 
 cockpit_packages: full
-    # equivalent to globbing all of them
-    #  - cockpit-*
+    # equivalent to repoquery for 'cockpit-*'
     # This is will pull in many packages such as
         #  - cockpit    ## Default list
         #  - cockpit-bridge

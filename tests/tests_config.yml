@@ -64,6 +64,13 @@
             - "'cockpit' in ansible_facts.packages"
             - not __cockpit_is_ostree | d(false)
 
+        - name: Test - cockpit-doc is not installed
+          fail:
+            msg: cockpit-doc is unexpectedly installed
+          when:
+            - "'cockpit-doc' in ansible_facts.packages"
+            - not __cockpit_is_ostree | d(false)
+
         - name: Test - write expected configuration file
           copy:
             content: |+
