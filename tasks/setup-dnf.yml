@@ -6,12 +6,29 @@
                           else cockpit_packages }}"
   when: cockpit_packages is defined
 
-- name: Ensure Cockpit Web Console packages are installed.
+- name: Get cockpit-bridge available version in "full" package install mode
+  when: cockpit_packages == "full"
+  changed_when: false
+  command: dnf repoquery --latest-limit=1 --queryformat '%{version}' cockpit-bridge
+  register: __cockpit_bridge_version
+
+# cockpit-pcp was merged into cockpit-bridge in version 326, and thus
+# and conflicts with current bridge; but CentOS 9 composes have older versions
+# published, this leads to installation conflicts
+# https://issues.redhat.com/browse/CS-2799
+- name: Ignore cockpit-pcp in "full" package install mode with Cockpit ≥ 326
+  set_fact:
+    cockpit_packages_dyn_exclude: "{{ ['cockpit-pcp']
+      if cockpit_packages == 'full'
+      and __cockpit_bridge_version.stdout is version('326', '>=')
+      else [] }}"
+
+- name: Ensure Cockpit Web Console packages are installed
   dnf:
     name: "{{ __cockpit_packages[cockpit_packages]
               if cockpit_packages in __cockpit_package_types
               else cockpit_packages }}"
-    exclude: "{{ __cockpit_packages_exclude }}"
+    exclude: "{{ __cockpit_packages_exclude | union(cockpit_packages_dyn_exclude) }}"
     state: present
 
 # using the dnf module to install cockpit-* is not working in
@@ -23,7 +40,7 @@
   register: __cockpit_dnf
   changed_when: "'Nothing to do.' not in __cockpit_dnf.stdout_lines"
   vars:
-    __excludes: "{{ ['--exclude'] | product(__cockpit_packages_exclude) | flatten }}"
+    __excludes: "{{ ['--exclude'] | product(__cockpit_packages_exclude | union(cockpit_packages_dyn_exclude)) | flatten }}"
     __argv: "{{ ['dnf', '-y', 'install', 'cockpit-*'] + __excludes }}"
     __pkgs: "{{ __cockpit_packages[cockpit_packages]
       if cockpit_packages in __cockpit_package_types
