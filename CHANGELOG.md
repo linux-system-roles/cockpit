@@ -1,6 +1,27 @@
 Changelog
 =========
 
+[1.5.16] - 2025-04-23
+--------------------
+
+### Bug Fixes
+
+- fix: Ignore cockpit-pcp on RedHat 9 (#204)
+- fix: Run Fedora 42 with dnf instead of default setup (#205)
+- fix: Dynamically ignore cockpit-pcp (#206)
+
+### Other Changes
+
+- ci: Check spelling with codespell (#196)
+- ci: Add test plan that runs CI tests and customize it for each role (#197)
+- ci: In test plans, prefix all relate variables with SR_ (#198)
+- ci: Fix bug with ARTIFACTS_URL after prefixing with SR_ (#199)
+- test: Remove all cockpit packages in cleanup (#201)
+- ci: Remove EOL ubuntu-20.04 runner, add 24.04 (#207)
+- ci: several changes related to new qemu test, ansible-lint, python versions, ubuntu versions (#208)
+- ci: use tox-lsr 3.6.0; improve qemu test logging (#209)
+- ci: skip storage scsi, nvme tests in github qemu ci (#210)
+
 [1.5.15] - 2025-02-03
 --------------------
 
