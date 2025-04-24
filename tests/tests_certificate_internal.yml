@@ -1,6 +1,9 @@
 ---
 - name: Test the cockpit role calling the certificate role internally
   hosts: all
+  # certmonger does not work in container builds
+  tags:
+    - tests::booted
   tasks:
     - name: Tests
       vars:

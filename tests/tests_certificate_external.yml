@@ -1,6 +1,9 @@
 ---
 - name: Test with generated self-signed certmonger certificate
   hosts: all
+  # certmonger does not work in container builds
+  tags:
+    - tests::booted
   tasks:
     - name: Tests
       block:

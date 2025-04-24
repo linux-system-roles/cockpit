@@ -5,6 +5,9 @@
 # yamllint disable rule:line-length
 - name: Test certificate issuance with run_after shell script
   hosts: all
+  # certmonger does not work in container builds
+  tags:
+    - tests::booted
   tasks:
     - name: Install cockpit
       vars:

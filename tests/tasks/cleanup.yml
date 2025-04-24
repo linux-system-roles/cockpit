@@ -56,6 +56,7 @@
 - name: Cleanup - Reload systemd
   systemd:
     daemon_reload: true
+  when: __cockpit_is_booted
   tags:
     - always
     - tests::cleanup

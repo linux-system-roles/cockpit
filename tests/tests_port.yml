@@ -27,16 +27,23 @@
         - name: Flush handlers
           meta: flush_handlers
 
+        # config file only check for non-booted environments
+        - name: Test - Ensure that port was configured
+          command: grep -q ListenStream=443 /etc/systemd/system/cockpit.socket.d/listen.conf
+          changed_when: false
+
         - name: Test - cockpit works on customized port
           get_url:
             dest: /run/out
             url: https://localhost
             validate_certs: false
             mode: "0600"
+          when: __cockpit_is_booted
 
         - name: Test - HTTP response is something sensible
           command: grep 'id="login-user-input"' /run/out
           changed_when: false
+          when: __cockpit_is_booted
 
         - name: Test - cockpit does not listen on port 9090
           get_url:
@@ -46,6 +53,7 @@
             mode: "0600"
           register: result
           failed_when: result is succeeded
+          when: __cockpit_is_booted
 
         - name: Test - clean up output file
           file:

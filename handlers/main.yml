@@ -3,9 +3,11 @@
 - name: Reload systemd
   systemd:
     daemon_reload: true
+  when: __cockpit_is_booted
 
 - name: Restart cockpit
   service:
     name: "{{ __cockpit_daemon }}"
     # noqa args[module]
     state: "{{ 'restarted' if cockpit_started | bool else 'stopped' }}"
+  when: __cockpit_is_booted
