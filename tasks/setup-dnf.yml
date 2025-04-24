@@ -20,7 +20,7 @@
   set_fact:
     cockpit_packages_dyn_exclude: "{{ ['cockpit-pcp']
       if cockpit_packages == 'full'
-      and __cockpit_bridge_version.stdout is version('326', '>=')
+      and __cockpit_bridge_version.stdout_lines[-1] is version('326', '>=')
       else [] }}"
 
 - name: Ensure Cockpit Web Console packages are installed
