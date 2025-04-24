@@ -68,11 +68,16 @@
     - Reload systemd
     - Restart cockpit
 
-- name: Ensure Cockpit Web Console is started/stopped and enabled/disabled
+- name: Ensure Cockpit Web Console is enabled/disabled
   service:
     name: "{{ __cockpit_daemon }}"
     enabled: "{{ cockpit_enabled | bool }}"
+
+- name: Ensure Cockpit Web Console is started/stopped
+  service:
+    name: "{{ __cockpit_daemon }}"
     state: "{{ 'started' if cockpit_started | bool else 'stopped' }}"
+  when: __cockpit_is_booted
 
 - name: Create cockpit.conf configuration file
   template:

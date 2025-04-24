@@ -42,6 +42,7 @@
             cmd: curl --cacert /etc/myserver.crt https://localhost:9090
             # ansible 2.11's uri module has ca_path, but that's still too new for us
           changed_when: false
+          when: __cockpit_is_booted
 
       always:
         - name: Cleanup - test certificate cert

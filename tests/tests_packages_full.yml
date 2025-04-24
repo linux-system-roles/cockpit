@@ -11,7 +11,8 @@
             public: true
           vars:
             cockpit_packages: full
-            cockpit_manage_firewall: true
+            # firewall role not yet supported during container builds: https://issues.redhat.com/browse/RHEL-88425
+            cockpit_manage_firewall: "{{ __cockpit_is_booted }}"
             cockpit_manage_selinux: false
 
         - name: Flush handlers

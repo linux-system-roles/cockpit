@@ -11,6 +11,7 @@
         - name: Test - socket is active  # noqa command-instead-of-module
           command: systemctl is-active {{ __cockpit_daemon }}
           changed_when: false
+          when: __cockpit_is_booted
 
         - name: Test - socket is enabled  # noqa command-instead-of-module
           command: systemctl is-enabled {{ __cockpit_daemon }}
@@ -22,10 +23,12 @@
             url: https://localhost:9090
             validate_certs: false
             mode: "0600"
+          when: __cockpit_is_booted
 
         - name: Test - HTTP response is something sensible
           command: grep 'id="login-user-input"' /run/out
           changed_when: false
+          when: __cockpit_is_booted
 
         - name: Test - clean up output file
           file:

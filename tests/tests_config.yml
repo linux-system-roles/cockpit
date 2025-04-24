@@ -48,6 +48,7 @@
           register: result
           failed_when: result is succeeded
           changed_when: false
+          when: __cockpit_is_booted
 
         - name: Refresh package facts
           package_facts:
