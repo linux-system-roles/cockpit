@@ -24,4 +24,5 @@ galaxy_info:
     - fedora
     - redhat
     - rhel
+    - containerbuild
 dependencies: []
