@@ -6,7 +6,7 @@
     difference(ansible_facts.keys() | list) | length > 0
 
 - name: Determine if system is booted with systemd
-  when: not __cockpit_is_booted is defined
+  when: __cockpit_is_booted is not defined
   block:
     - name: Run systemctl
       # noqa command-instead-of-module
@@ -21,7 +21,7 @@
         __cockpit_is_booted: "{{ __is_system_running.stdout != 'offline' }}"
 
 - name: Determine if system is ostree and set flag
-  when: not __cockpit_is_ostree is defined
+  when: __cockpit_is_ostree is not defined
   block:
     - name: Check if system is ostree
       stat:
