@@ -5,6 +5,11 @@
   tags:
     - tests::booted
   gather_facts: true
+  # role vars, but we also check them in tasks/check_port.yml
+  vars:
+    cockpit_manage_firewall: true
+    cockpit_manage_selinux: true
+    cockpit_port: 443
   tasks:
     - name: Tests
       block:
@@ -13,10 +18,7 @@
             name: linux-system-roles.cockpit
             public: true
           vars:
-            cockpit_manage_firewall: true
-            cockpit_manage_selinux: true
             cockpit_packages: minimal
-            cockpit_port: 443
 
         - name: Flush handlers
           meta: flush_handlers

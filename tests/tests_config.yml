@@ -2,6 +2,10 @@
 - name: Test cockpit_* role options
   hosts: all
   gather_facts: false
+  # role vars, but we also check them in tasks/check_port.yml
+  vars:
+    cockpit_manage_firewall: false
+    cockpit_manage_selinux: true
   roles:
     - role: linux-system-roles.cockpit
       vars:
@@ -13,8 +17,6 @@
             LoginTitle: "hello world"
           Session:
             IdleTimeout: 60
-        cockpit_manage_firewall: false
-        cockpit_manage_selinux: true
       public: true
 
   tasks:
