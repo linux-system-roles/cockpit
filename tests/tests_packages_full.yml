@@ -2,6 +2,10 @@
 - name: "Test cockpit_packages: full"
   hosts: all
   gather_facts: true
+  vars:
+    # firewall role not yet supported during container builds: https://issues.redhat.com/browse/RHEL-88425
+    cockpit_manage_firewall: "{{ __cockpit_is_booted }}"
+    cockpit_manage_selinux: false
   tasks:
     - name: Tests
       block:
@@ -11,9 +15,6 @@
             public: true
           vars:
             cockpit_packages: full
-            # firewall role not yet supported during container builds: https://issues.redhat.com/browse/RHEL-88425
-            cockpit_manage_firewall: "{{ __cockpit_is_booted }}"
-            cockpit_manage_selinux: false
 
         - name: Flush handlers
           meta: flush_handlers
