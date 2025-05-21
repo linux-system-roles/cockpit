@@ -8,21 +8,40 @@
     - name: Check firewall port status
       when: cockpit_manage_firewall | bool
       block:
-        - name: Check firewall port status when cockpit_manage_firewall is yes
-          command: firewall-cmd --list-service
+        - name: Check permanent firewall port status when cockpit_manage_firewall is yes
+          command: firewall-offline-cmd --list-service
           register: _result
           failed_when: "'cockpit' not in _result.stdout"
           changed_when: false
           when:
             - _cockpit_port | int == 9090
 
+        - name: Check runtime firewall port status when cockpit_manage_firewall is yes
+          command: firewall-cmd --list-service
+          register: _result
+          failed_when: "'cockpit' not in _result.stdout"
+          changed_when: false
+          when:
+            - __cockpit_is_booted
+            - _cockpit_port | int == 9090
+
         - name: >-
-            Check firewall port status when cockpit_manage_firewall is yes
+            Check permanent firewall port status when cockpit_manage_firewall is yes
+          command: firewall-offline-cmd --list-port
+          register: _result
+          failed_when: "'{{ _cockpit_port }}/tcp' not in _result.stdout"
+          changed_when: false
+          when:
+            - _cockpit_port | int != 9090
+
+        - name: >-
+            Check runtime firewall port status when cockpit_manage_firewall is yes
           command: firewall-cmd --list-port
           register: _result
           failed_when: "'{{ _cockpit_port }}/tcp' not in _result.stdout"
           changed_when: false
           when:
+            - __cockpit_is_booted
             - _cockpit_port | int != 9090
 
     - name: Check SELinux port labeling
