@@ -3,8 +3,7 @@
   hosts: all
   gather_facts: true
   vars:
-    # firewall role not yet supported during container builds: https://issues.redhat.com/browse/RHEL-88425
-    cockpit_manage_firewall: "{{ __cockpit_is_booted }}"
+    cockpit_manage_firewall: true
     cockpit_manage_selinux: false
   tasks:
     - name: Tests

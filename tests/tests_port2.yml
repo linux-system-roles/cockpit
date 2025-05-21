@@ -1,9 +1,6 @@
 ---
 - name: Test cockpit_* role options
   hosts: all
-  # firewall role does not yet work in container builds (https://issues.redhat.com/browse/RHEL-88425)
-  tags:
-    - tests::booted
   gather_facts: true
   # role vars, but we also check them in tasks/check_port.yml
   vars:
