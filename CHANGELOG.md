@@ -1,6 +1,25 @@
 Changelog
 =========
 
+[1.6.0] - 2025-05-21
+--------------------
+
+### New Features
+
+- feat: Support this role in container builds (#212)
+
+### Bug Fixes
+
+- fix: Ignore extra lines in dnf repoquery parsing (#214)
+- fix: Consider "degraded" systemd state as booted (#217)
+
+### Other Changes
+
+- ci: Update to tox-lsr 3.7.0 (#213)
+- ci: bump sclorg/testing-farm-as-github-action from 3 to 4 (#215)
+- ci: bump tox-lsr to 3.8.0; rename qemu/kvm tests (#216)
+- ci: Add Fedora 42; use tox-lsr 3.9.0; use lsr-report-errors for qemu tests (#218)
+
 [1.5.16] - 2025-04-23
 --------------------
 
