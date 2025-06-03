@@ -9,12 +9,17 @@
           include_tasks: tasks/install_selinux_tools.yml
 
         - name: Allow cockpit to own customized port in SELinux
+          # all supported buildah environments (bootc) have SELinux enabled;
+          # but there we need --noreload
           shell: |
             set -eu
-            if selinuxenabled; then
-              semanage port -m -t websm_port_t -p tcp 443
+            if selinuxenabled || [ -n "{{ __noreload }}" ]; then
+              semanage port {{ __noreload }} -m -t websm_port_t -p tcp 443
             fi
+          vars:
+            __noreload: "{{ '--noreload' if ansible_connection == 'buildah' else '' }}"
           changed_when: false
+          when: not __bootc_validation | d(false)
 
         - name: Run cockpit role
           include_role:
@@ -23,9 +28,24 @@
           vars:
             cockpit_packages: minimal
             cockpit_port: 443
+          when: not __bootc_validation | d(false)
 
         - name: Flush handlers
           meta: flush_handlers
+          when: not __bootc_validation | d(false)
+
+        - name: Create QEMU deployment during bootc end-to-end test
+          delegate_to: localhost
+          become: false
+          command: "{{ lsr_scriptdir }}/bootc-buildah-qcow.sh {{ ansible_host }}"
+          changed_when: true
+          when: ansible_connection == "buildah"
+
+        # role does not run during bootc QEMU validation, thus __cockpit_is_booted is undefined
+        - name: Set __cockpit_is_booted for bootc validation tests
+          set_fact:
+            __cockpit_is_booted: true
+          when: __bootc_validation | d(false)
 
         # config file only check for non-booted environments
         - name: Test - Ensure that port was configured
@@ -63,3 +83,4 @@
       always:
         - name: Cleanup
           include_tasks: tasks/cleanup.yml
+          when: not __bootc_validation | d(false)
