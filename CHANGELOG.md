@@ -1,6 +1,16 @@
 Changelog
 =========
 
+[1.6.1] - 2025-06-16
+--------------------
+
+### Other Changes
+
+- tests: Fix check_port.yml invocation, check permanent firewall configuration (#219)
+- tests: Enable firewall management tests in container builds (#222)
+- tests: Update tests_port to do bootc end-to-end validation (#223)
+- ci: Use ansible 2.19 for fedora 42 testing; support python 3.13 (#224)
+
 [1.6.0] - 2025-05-21
 --------------------
 
