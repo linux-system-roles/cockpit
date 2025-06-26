@@ -7,11 +7,11 @@
     _cockpit_port: "{{ cockpit_port if cockpit_port is not none else 9090 }}"
     _cockpit_port_proto: "{{ _cockpit_port }}/tcp"
     firewall:
-        permanent: true
-        runtime: "{{ __cockpit_is_booted | bool }}"
-        state: enabled
-        service: "{{ 'cockpit' if (_cockpit_port | int) == 9090 else omit }}"
-        port: "{{ _cockpit_port_proto if (_cockpit_port | int) != 9090 else omit }}"
+      permanent: true
+      runtime: "{{ __cockpit_is_booted | bool }}"
+      state: enabled
+      service: "{{ 'cockpit' if (_cockpit_port | int) == 9090 else omit }}"
+      port: "{{ _cockpit_port_proto if (_cockpit_port | int) != 9090 else omit }}"
   when:
     - cockpit_manage_firewall | bool
     - ansible_facts['os_family'] == 'RedHat' or ansible_facts['os_family'] == 'Suse'
