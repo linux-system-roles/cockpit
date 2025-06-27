@@ -1,0 +1,27 @@
+---
+__cockpit_packages_minimal:
+  - cockpit-system
+  - cockpit-ws
+
+__cockpit_packages_default:
+  - cockpit
+  - cockpit-bridge
+  - cockpit-machines
+  - cockpit-networkmanager
+  - cockpit-packagekit
+  - cockpit-podman
+  - cockpit-repos
+  - cockpit-selinux
+  - cockpit-storaged
+  - cockpit-subscriptions
+  - cockpit-ws-selinux
+
+__cockpit_packages_full:
+  - cockpit-doc
+  - cockpit-kdump
+  - cockpit-packages
+
+__cockpit_packages:
+  minimal: "{{ __cockpit_packages_minimal }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
