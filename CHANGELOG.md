@@ -1,6 +1,17 @@
 Changelog
 =========
 
+[1.7.0] - 2025-07-02
+--------------------
+
+### New Features
+
+- feat: add sles 16 support (#227)
+
+### Other Changes
+
+- refactor: fix ansible-lint indentation (#226)
+
 [1.6.1] - 2025-06-16
 --------------------
 
