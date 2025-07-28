@@ -23,10 +23,22 @@
           args:
             creates: /etc/myserver.key
 
+        - name: Get openssl algorithms
+          command: openssl list -public-key-algorithms
+          register: openssl_algorithms
+          changed_when: false
+          no_log: true  # this is quite verbose
+
+        # Use PQ algorithm if available, otherwise use default
+        # cockpit uses gnutls, which supports mldsa65 since 3.8.10
         - name: Create test certificate cert
-          command: openssl req -new -x509 -key /etc/myserver.key -subj '/CN=localhost' -out /etc/myserver.crt -days 365
+          command: openssl req -x509 {{ key_algo_args }} /etc/myserver.key -subj '/CN=localhost' -out /etc/myserver.crt -days 365
           args:
             creates: /etc/myserver.crt
+          vars:
+            key_algo_args: "{{ '-nodes -newkey mldsa65 -keyout' if 'MLDSA65' in openssl_algorithms.stdout and
+              ansible_facts.packages['gnutls'][0].version is version('3.8.10', '>=')
+              else '-new -key' }}"
 
         # ostree cannot remove packages and cannot cleanup properly
         # this works around that issue
