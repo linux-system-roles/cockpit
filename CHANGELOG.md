@@ -1,6 +1,13 @@
 Changelog
 =========
 
+[1.7.1] - 2025-08-01
+--------------------
+
+### Other Changes
+
+- test: Use post quantum encryption where available (#229)
+
 [1.7.0] - 2025-07-02
 --------------------
 
