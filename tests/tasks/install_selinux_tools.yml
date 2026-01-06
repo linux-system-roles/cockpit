@@ -21,8 +21,8 @@
     use: "{{ (__cockpit_is_ostree | d(false)) |
       ternary('ansible.posix.rhel_rpm_ostree', omit) }}"
   when:
-    - ansible_python_version is version('3', '<')
-    - ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"]
+    - ansible_facts["python_version"] is version('3', '<')
+    - ansible_facts["distribution"] in ["Fedora", "CentOS", "RedHat", "Rocky"]
 
 - name: Install SELinux python3 tools
   package:
@@ -33,8 +33,8 @@
     use: "{{ (__cockpit_is_ostree | d(false)) |
       ternary('ansible.posix.rhel_rpm_ostree', omit) }}"
   when:
-    - ansible_python_version is version('3', '>=')
-    - ansible_distribution in ["Fedora", "CentOS", "RedHat", "Rocky"]
+    - ansible_facts["python_version"] is version('3', '>=')
+    - ansible_facts["distribution"] in ["Fedora", "CentOS", "RedHat", "Rocky"]
 
 - name: Install SELinux tool semanage
   package:
@@ -43,6 +43,6 @@
     state: present
     use: "{{ (__cockpit_is_ostree | d(false)) |
       ternary('ansible.posix.rhel_rpm_ostree', omit) }}"
-  when: ansible_distribution == "Fedora" or
-    (ansible_distribution_major_version | int > 7 and
-     ansible_distribution in ["CentOS", "RedHat", "Rocky"])
+  when: ansible_facts["distribution"] == "Fedora" or
+    (ansible_facts["distribution_major_version"] | int > 7 and
+     ansible_facts["distribution"] in ["CentOS", "RedHat", "Rocky"])
