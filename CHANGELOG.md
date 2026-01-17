@@ -1,6 +1,14 @@
 Changelog
 =========
 
+[1.7.4] - 2026-01-17
+--------------------
+
+### Other Changes
+
+- ci: use ANSIBLE_INJECT_FACT_VARS=false by default for testing (#252)
+- test: use crypto policy DEFAULT:PQ to enable PQC on el9.7 and later (#253)
+
 [1.7.3] - 2026-01-07
 --------------------
 
