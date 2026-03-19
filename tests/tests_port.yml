@@ -1,7 +1,6 @@
 ---
 - name: Test cockpit_* role options
   hosts: all
-  gather_facts: true
   tasks:
     - name: Tests
       block:
@@ -22,12 +21,11 @@
           when: not __bootc_validation | d(false)
 
         - name: Run cockpit role
-          include_role:
-            name: linux-system-roles.cockpit
-            public: true
+          include_tasks: tasks/run_role_with_clear_facts.yml
           vars:
             cockpit_packages: minimal
             cockpit_port: 443
+            __sr_public: true
           when: not __bootc_validation | d(false)
 
         - name: Flush handlers

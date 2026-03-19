@@ -14,17 +14,17 @@
           block:
             # install cockpit package to get group
             - name: Include role
-              include_role:
-                name: linux-system-roles.cockpit
-                public: true
+              include_tasks: tasks/run_role_with_clear_facts.yml
               vars:
                 cockpit_packages: minimal
+                __sr_public: true
 
             # returns global variable __cockpit_test_group
             - name: Get name of cockpit group to use
               include_tasks: tasks/get_cockpit_group.yml
 
             - name: Install cockpit with cockpit_certificates request
+              include_tasks: tasks/run_role_with_clear_facts.yml
               vars:
                 cockpit_packages: minimal
                 cockpit_certificates:
@@ -32,9 +32,7 @@
                     dns: ['localhost', 'www.example.com']
                     ca: self-sign
                     group: "{{ __cockpit_test_group }}"
-              include_role:
-                name: linux-system-roles.cockpit
-                public: true
+                __sr_public: true
           rescue:
             - name: Check the error message
               vars:

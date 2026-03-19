@@ -1,7 +1,6 @@
 ---
 - name: Test cockpit_* role options
   hosts: all
-  gather_facts: true
   # role vars, but we also check them in tasks/check_port.yml
   vars:
     cockpit_manage_firewall: true
@@ -11,11 +10,10 @@
     - name: Tests
       block:
         - name: Run cockpit role
-          include_role:
-            name: linux-system-roles.cockpit
-            public: true
+          include_tasks: tasks/run_role_with_clear_facts.yml
           vars:
             cockpit_packages: minimal
+            __sr_public: true
 
         - name: Flush handlers
           meta: flush_handlers

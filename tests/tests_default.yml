@@ -1,11 +1,12 @@
 ---
 - name: Test role with default options
   hosts: all
-  gather_facts: false
-  roles:
-    - linux-system-roles.cockpit
-
   tasks:
+    - name: Run cockpit role
+      include_tasks: tasks/run_role_with_clear_facts.yml
+      vars:
+        __sr_public: true
+
     - name: Tests
       block:
         - name: Test - socket is active  # noqa command-instead-of-module

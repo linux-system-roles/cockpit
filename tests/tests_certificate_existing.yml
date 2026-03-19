@@ -4,27 +4,30 @@
   hosts: all
   tasks:
     - name: Include role
-      include_role:
-        name: linux-system-roles.cockpit
-        public: true
+      include_tasks: tasks/run_role_with_clear_facts.yml
       vars:
         cockpit_packages: minimal
         cockpit_cert: /etc/myserver.crt
         cockpit_private_key: /etc/myserver.key
+        __sr_public: true
 
     - name: Collect installed package versions
       package_facts:
 
+    - name: Set variable for cockpit certificate existing version check and PQC crypto policy check
+      set_fact:
+        __cockpit_certificate_existing_new_enough: "{{ (ansible_facts.packages | default({})).get('cockpit-ws', [{'version': 0}])[0].version | int >= 257 }}"
+        __cockpit_certificate_existing_needs_pqc_crypto_policy: "{{ __cockpit_is_rh_distro and (
+          ((ansible_facts['distribution'] == 'RedHat' and ansible_facts['distribution_version'] is version('9.7', '>=')
+            and ansible_facts['distribution_version'] is version('10', '<'))
+          or (ansible_facts['distribution'] != 'RedHat'
+            and ansible_facts['distribution_major_version'] is version('9', '==')))) }}"
+
     - name: Check if cockpit is new enough (at least 257) to support existing certificates
-      when: ansible_facts.packages['cockpit-ws'][0].version | int >= 257
+      when: __cockpit_certificate_existing_new_enough
       block:
         - name: Check if the managed node needs crypto-policies to be able to use PQC
-          when:
-            - __cockpit_is_rh_distro | bool
-            - (ansible_facts["distribution"] == "RedHat" and ansible_facts["distribution_version"] is version("9.7", ">=")
-              and ansible_facts["distribution_version"] is version("10", "<"))
-              or (ansible_facts["distribution"] != "RedHat" and
-                  ansible_facts['distribution_major_version'] is version("9", "=="))
+          when: __cockpit_certificate_existing_needs_pqc_crypto_policy
           block:
             # calling role with null will just return the current policy
             - name: Get current crypto policy
