@@ -8,17 +8,21 @@
     - name: Tests
       block:
         - name: Include role
-          include_role:
-            name: linux-system-roles.cockpit
-            public: true
+          include_tasks: tasks/run_role_with_clear_facts.yml
           vars:
             cockpit_packages: minimal
+            __sr_public: true
 
         - name: Collect installed package versions
           package_facts:
 
+        - name: Set variable for cockpit certmonger version check
+          set_fact:
+            __cockpit_certificate_external_new_enough: "{{
+              (ansible_facts.packages | default({})).get('cockpit-ws', [{'version': 0}])[0].version | int >= 211 }}"
+
         - name: Check if cockpit is new enough (at least 211) to support certmonger
-          when: ansible_facts.packages['cockpit-ws'][0].version | int >= 211
+          when: __cockpit_certificate_external_new_enough
           block:
             # Fixed in cockpit 255 (https://github.com/cockpit-project/cockpit/commit/6ec4881856e)
             - name: >-

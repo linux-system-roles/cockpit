@@ -1,7 +1,6 @@
 ---
 - name: "Test cockpit_packages: full"
   hosts: all
-  gather_facts: true
   vars:
     cockpit_manage_firewall: true
     cockpit_manage_selinux: false
@@ -9,11 +8,10 @@
     - name: Tests
       block:
         - name: Include cockpit role
-          include_role:
-            name: linux-system-roles.cockpit
-            public: true
+          include_tasks: tasks/run_role_with_clear_facts.yml
           vars:
             cockpit_packages: full
+            __sr_public: true
 
         - name: Flush handlers
           meta: flush_handlers

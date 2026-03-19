@@ -10,11 +10,10 @@
     - tests::booted
   tasks:
     - name: Install cockpit
+      include_tasks: tasks/run_role_with_clear_facts.yml
       vars:
         cockpit_packages: minimal
-      include_role:
-        name: linux-system-roles.cockpit
-        public: true
+        __sr_public: true
 
     # self-signed is broken (https://github.com/linux-system-roles/certificate/issues/98),
     # and has too restrictive keyUsage so that using the certificate as CA is not allowed
