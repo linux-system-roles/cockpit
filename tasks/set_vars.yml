@@ -7,9 +7,13 @@
 
 - name: Record role begin fingerprint
   sr_fingerprint:
-    sr_message: >-
-      begin system_role:cockpit ansible_version={{ ansible_version.full }}
-      {{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}
+    status: begin
+    role_name: cockpit
+    role_path: "{{ role_path }}"
+    ansible_play_hosts_all: "{{ ansible_play_hosts_all }}"
+    distribution: "{{ ansible_facts['distribution'] }}"
+    distribution_version: "{{ ansible_facts['distribution_version'] }}"
+    write_log_file: "{{ __cockpit_write_log_file }}"
 
 - name: Determine if system is booted with systemd
   when: __cockpit_is_booted is not defined
