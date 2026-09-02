@@ -2,6 +2,9 @@
 - name: Ensure ansible_facts and variables used by role
   include_tasks: tasks/set_vars.yml
 
+- name: Validate role parameters
+  ansible.builtin.include_tasks: assert_role_vars.yml
+
 - name: Enable the Extras repository on RHEL 7
   when:
     - ansible_facts["distribution"] == 'RedHat'
