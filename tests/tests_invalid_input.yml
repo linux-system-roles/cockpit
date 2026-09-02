@@ -1,0 +1,244 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Verify invalid parameters are rejected
+  hosts: all
+  tasks:
+    - name: Run invalid input tests
+      block:
+        # ====================================================
+        # Section 1: Verify role works with valid defaults
+        # ====================================================
+        - name: Run role with valid defaults
+          ansible.builtin.include_role:
+            name: linux-system-roles.cockpit
+
+        # ====================================================
+        # Section 2: argument_specs validation (Ansible 2.11+)
+        # ====================================================
+        - name: Run argument specs validation tests
+          when: ansible_version.full is version("2.11", ">=")
+          block:
+            # --- Test: required field missing ---
+            - name: Argument specs reject missing required name
+              block:
+                - name: Run role without required name in cockpit_certificates
+                  ansible.builtin.include_role:
+                    name: linux-system-roles.cockpit
+                  vars:
+                    cockpit_certificates:
+                      - ca: self-sign
+              rescue:
+                - name: Mark missing name rejected
+                  ansible.builtin.set_fact:
+                    __invalid_input_missing_name_failed: true
+                  when: >-
+                    'missing required arguments' in
+                    (ansible_failed_result | default({}) | to_json)
+
+            - name: Assert missing name was rejected
+              ansible.builtin.assert:
+                that:
+                  - __invalid_input_missing_name_failed | default(false)
+                fail_msg: >-
+                  argument_specs should reject cockpit_certificates entries
+                  missing the required name field
+
+            - name: Argument specs reject missing required ca
+              block:
+                - name: Run role without required ca in cockpit_certificates
+                  ansible.builtin.include_role:
+                    name: linux-system-roles.cockpit
+                  vars:
+                    cockpit_certificates:
+                      - name: test-cert
+              rescue:
+                - name: Mark missing ca rejected
+                  ansible.builtin.set_fact:
+                    __invalid_input_missing_ca_failed: true
+                  when: >-
+                    'missing required arguments' in
+                    (ansible_failed_result | default({}) | to_json)
+
+            - name: Assert missing ca was rejected
+              ansible.builtin.assert:
+                that:
+                  - __invalid_input_missing_ca_failed | default(false)
+                fail_msg: >-
+                  argument_specs should reject cockpit_certificates entries
+                  missing the required ca field
+
+            # --- Test: invalid type ---
+            - name: Argument specs reject non-bool cockpit_enabled
+              block:
+                - name: Run role with non-bool cockpit_enabled
+                  ansible.builtin.include_role:
+                    name: linux-system-roles.cockpit
+                  vars:
+                    cockpit_enabled: "not_a_bool"
+              rescue:
+                - name: Mark invalid cockpit_enabled type rejected
+                  ansible.builtin.set_fact:
+                    __invalid_input_cockpit_enabled_type_failed: true
+
+            - name: Assert invalid cockpit_enabled type was rejected
+              ansible.builtin.assert:
+                that:
+                  - __invalid_input_cockpit_enabled_type_failed | default(false)
+                fail_msg: >-
+                  argument_specs should reject cockpit_enabled with type
+                  string
+
+            - name: Argument specs reject non-bool cockpit_manage_firewall
+              block:
+                - name: Run role with non-bool cockpit_manage_firewall
+                  ansible.builtin.include_role:
+                    name: linux-system-roles.cockpit
+                  vars:
+                    cockpit_manage_firewall: "not_a_bool"
+              rescue:
+                - name: Mark invalid cockpit_manage_firewall type rejected
+                  ansible.builtin.set_fact:
+                    __invalid_input_cockpit_manage_firewall_type_failed: true
+
+            - name: Assert invalid cockpit_manage_firewall type was rejected
+              ansible.builtin.assert:
+                that:
+                  - >-
+                    __invalid_input_cockpit_manage_firewall_type_failed
+                    | default(false)
+                fail_msg: >-
+                  argument_specs should reject cockpit_manage_firewall with
+                  type string
+
+            - name: Argument specs reject invalid key_usage choice
+              block:
+                - name: Run role with invalid key_usage choice
+                  ansible.builtin.include_role:
+                    name: linux-system-roles.cockpit
+                  vars:
+                    cockpit_certificates:
+                      - name: test-cert
+                        ca: self-sign
+                        key_usage:
+                          - invalid_choice
+              rescue:
+                - name: Mark invalid key_usage choice rejected
+                  ansible.builtin.set_fact:
+                    __invalid_input_key_usage_choice_failed: true
+
+            - name: Assert invalid key_usage choice was rejected
+              ansible.builtin.assert:
+                that:
+                  - __invalid_input_key_usage_choice_failed | default(false)
+                fail_msg: >-
+                  argument_specs should reject key_usage value
+                  'invalid_choice'
+
+        # ====================================================
+        # Section 3: assert_role_vars validation (all versions)
+        # ====================================================
+
+        - name: Assert rejects cockpit_packages as integer
+          block:
+            - name: Run role with cockpit_packages as integer
+              ansible.builtin.include_role:
+                name: linux-system-roles.cockpit
+              vars:
+                cockpit_packages: 123
+          rescue:
+            - name: Mark cockpit_packages integer rejected
+              ansible.builtin.set_fact:
+                __invalid_input_cockpit_packages_integer_failed: true
+
+        - name: Assert cockpit_packages integer was rejected
+          ansible.builtin.assert:
+            that:
+              - >-
+                __invalid_input_cockpit_packages_integer_failed
+                | default(false)
+            fail_msg: >-
+              assert_role_vars should reject cockpit_packages when given
+              an integer value
+
+        - name: Assert rejects cockpit_port as string
+          block:
+            - name: Run role with cockpit_port as string
+              ansible.builtin.include_role:
+                name: linux-system-roles.cockpit
+              vars:
+                cockpit_port: "not_an_int"
+          rescue:
+            - name: Mark cockpit_port string rejected
+              ansible.builtin.set_fact:
+                __invalid_input_cockpit_port_string_failed: true
+
+        - name: Assert cockpit_port string was rejected
+          ansible.builtin.assert:
+            that:
+              - >-
+                __invalid_input_cockpit_port_string_failed
+                | default(false)
+            fail_msg: >-
+              assert_role_vars should reject cockpit_port when given
+              a string value
+
+        - name: Assert rejects cockpit_transactional_update_reboot_ok as string
+          block:
+            - name: Run role with cockpit_transactional_update_reboot_ok as string
+              ansible.builtin.include_role:
+                name: linux-system-roles.cockpit
+              vars:
+                cockpit_transactional_update_reboot_ok: "not_a_bool"
+          rescue:
+            - name: Mark cockpit_transactional_update_reboot_ok string rejected
+              ansible.builtin.set_fact:
+                __invalid_input_cockpit_transactional_update_reboot_ok_string_failed: true
+
+        - name: Assert cockpit_transactional_update_reboot_ok string was rejected
+          ansible.builtin.assert:
+            that:
+              - >-
+                __invalid_input_cockpit_transactional_update_reboot_ok_string_failed
+                | default(false)
+            fail_msg: >-
+              assert_role_vars should reject cockpit_transactional_update_reboot_ok
+              when given a string value
+
+        - name: Assert rejects cockpit_certificates dns as integer
+          block:
+            - name: Run role with cockpit_certificates dns as integer
+              ansible.builtin.include_role:
+                name: linux-system-roles.cockpit
+              vars:
+                cockpit_certificates:
+                  - name: test-cert
+                    ca: self-sign
+                    dns: 123
+          rescue:
+            - name: Mark cockpit_certificates dns integer rejected
+              ansible.builtin.set_fact:
+                __invalid_input_cockpit_certificates_dns_integer_failed: true
+
+        - name: Assert cockpit_certificates dns integer was rejected
+          ansible.builtin.assert:
+            that:
+              - >-
+                __invalid_input_cockpit_certificates_dns_integer_failed
+                | default(false)
+            fail_msg: >-
+              assert_role_vars should reject cockpit_certificates dns when
+              given an integer value
+
+      always:
+        - name: Clear test facts
+          ansible.builtin.set_fact:
+            __invalid_input_missing_name_failed:
+            __invalid_input_missing_ca_failed:
+            __invalid_input_cockpit_enabled_type_failed:
+            __invalid_input_cockpit_manage_firewall_type_failed:
+            __invalid_input_key_usage_choice_failed:
+            __invalid_input_cockpit_packages_integer_failed:
+            __invalid_input_cockpit_port_string_failed:
+            __invalid_input_cockpit_transactional_update_reboot_ok_string_failed:
+            __invalid_input_cockpit_certificates_dns_integer_failed:
+          tags: tests::cleanup
