@@ -1,0 +1,128 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Assert cockpit_packages is a predefined type or list of package names
+  ansible.builtin.assert:
+    that:
+      - >-
+        (cockpit_packages is string
+         and cockpit_packages in ['minimal', 'default', 'full'])
+        or (cockpit_packages is sequence and cockpit_packages is not mapping
+            and cockpit_packages is not string
+            and cockpit_packages | reject('string') | list | length == 0)
+    fail_msg: >-
+      cockpit_packages must be minimal, default, full, or a list of package
+      names, got {{ cockpit_packages | type_debug }}
+  when: cockpit_packages is defined
+
+- name: Assert cockpit_port is null or an integer
+  ansible.builtin.assert:
+    that:
+      - >-
+        (cockpit_port is none)
+        or ((cockpit_port | type_debug) == 'int')
+    fail_msg: >-
+      cockpit_port must be null or an integer,
+      got {{ cockpit_port | type_debug }}
+  when: cockpit_port is defined
+
+- name: Assert cockpit_transactional_update_reboot_ok is null or a boolean
+  ansible.builtin.assert:
+    that:
+      - >-
+        (cockpit_transactional_update_reboot_ok is none)
+        or (cockpit_transactional_update_reboot_ok is sameas true)
+        or (cockpit_transactional_update_reboot_ok is sameas false)
+    fail_msg: >-
+      cockpit_transactional_update_reboot_ok must be null or a boolean,
+      got {{ cockpit_transactional_update_reboot_ok | type_debug }}
+
+- name: Assert dns in cockpit_certificates is a string or list of strings
+  ansible.builtin.assert:
+    that:
+      - >-
+        item.dns is string
+        or (item.dns is sequence and item.dns is not mapping
+            and item.dns is not string
+            and item.dns | reject('string') | list | length == 0)
+    fail_msg: >-
+      cockpit_certificates[{{ idx }}].dns must be a string or list of
+      strings, got {{ item.dns | type_debug }}
+  loop: "{{ cockpit_certificates }}"
+  loop_control:
+    index_var: idx
+    label: "{{ item.name | d('unnamed') }}"
+  when:
+    - cockpit_certificates | length > 0
+    - item.dns is defined
+
+- name: Assert email in cockpit_certificates is a string or list of strings
+  ansible.builtin.assert:
+    that:
+      - >-
+        item.email is string
+        or (item.email is sequence and item.email is not mapping
+            and item.email is not string
+            and item.email | reject('string') | list | length == 0)
+    fail_msg: >-
+      cockpit_certificates[{{ idx }}].email must be a string or list of
+      strings, got {{ item.email | type_debug }}
+  loop: "{{ cockpit_certificates }}"
+  loop_control:
+    index_var: idx
+    label: "{{ item.name | d('unnamed') }}"
+  when:
+    - cockpit_certificates | length > 0
+    - item.email is defined
+
+- name: Assert ip in cockpit_certificates is a string or list of strings
+  ansible.builtin.assert:
+    that:
+      - >-
+        item.ip is string
+        or (item.ip is sequence and item.ip is not mapping
+            and item.ip is not string
+            and item.ip | reject('string') | list | length == 0)
+    fail_msg: >-
+      cockpit_certificates[{{ idx }}].ip must be a string or list of
+      strings, got {{ item.ip | type_debug }}
+  loop: "{{ cockpit_certificates }}"
+  loop_control:
+    index_var: idx
+    label: "{{ item.name | d('unnamed') }}"
+  when:
+    - cockpit_certificates | length > 0
+    - item.ip is defined
+
+- name: Assert principal in cockpit_certificates is a string or list of strings
+  ansible.builtin.assert:
+    that:
+      - >-
+        item.principal is string
+        or (item.principal is sequence and item.principal is not mapping
+            and item.principal is not string
+            and item.principal | reject('string') | list | length == 0)
+    fail_msg: >-
+      cockpit_certificates[{{ idx }}].principal must be a string or list of
+      strings, got {{ item.principal | type_debug }}
+  loop: "{{ cockpit_certificates }}"
+  loop_control:
+    index_var: idx
+    label: "{{ item.name | d('unnamed') }}"
+  when:
+    - cockpit_certificates | length > 0
+    - item.principal is defined
+
+- name: Assert mode in cockpit_certificates is a string or integer
+  ansible.builtin.assert:
+    that:
+      - (item.mode | type_debug) in ['str', 'int', 'unicode']
+    fail_msg: >-
+      cockpit_certificates[{{ idx }}].mode must be a string or integer,
+      got {{ item.mode | type_debug }}
+  loop: "{{ cockpit_certificates }}"
+  loop_control:
+    index_var: idx
+    label: "{{ item.name | d('unnamed') }}"
+  when:
+    - cockpit_certificates | length > 0
+    - item.mode is defined
