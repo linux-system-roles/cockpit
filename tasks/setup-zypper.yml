@@ -6,18 +6,33 @@
       else cockpit_packages }}"
   when: cockpit_packages is defined
 
-- name: Ensure Cockpit Web Console packages are installed.
-  community.general.zypper:
-    name: "{{ __cockpit_packages[cockpit_packages]
+- name: Install the Cockpit packages and see whether they are live
+  vars:
+    __cockpit_zypper_packages: "{{ __cockpit_packages[cockpit_packages]
       if cockpit_packages in __cockpit_package_types
       else cockpit_packages }}"
-    state: present
-  register: cockpit_package_result
+  block:
+    - name: Ensure Cockpit Web Console packages are installed.
+      community.general.zypper:
+        name: "{{ __cockpit_zypper_packages }}"
+        state: present
+      register: cockpit_package_result
+
+    # A staged install reports ok on re-runs, so ask rpm (by provides) if it is live.
+    - name: Check whether the packages are live on a transactional update system
+      command:  # noqa command-instead-of-module
+        argv: "{{ ['rpm', '-q', '--whatprovides'] + __cockpit_zypper_packages }}"
+      register: __cockpit_packages_live
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      when: __cockpit_is_transactional | d(false)
 
 - name: Handle reboot for transactional update systems
   when:
     - __cockpit_is_transactional | d(false)
-    - cockpit_package_result is changed
+    - cockpit_package_result is changed or
+      (__cockpit_packages_live.rc | d(0)) != 0
   block:
     - name: Notify user that reboot is needed to apply changes
       debug:
@@ -27,7 +42,9 @@
     - name: Reboot transactional update systems
       reboot:
         msg: Rebooting the system to apply transactional update changes.
-      when: cockpit_transactional_update_reboot_ok | bool
+      when:
+        - cockpit_transactional_update_reboot_ok is not none
+        - cockpit_transactional_update_reboot_ok | bool
 
     - name: Fail if reboot is needed and not set
       fail:
