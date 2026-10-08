@@ -14,11 +14,12 @@ jobs:
         release:
           - ubuntu-22.04
           - ubuntu-24.04
+          - ubuntu-26.04
     runs-on: '${{ matrix.release }}'
     timeout-minutes: 30
     steps:
       - name: Clone repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Install Ansible
         run: |
