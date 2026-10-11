@@ -44,5 +44,6 @@
     use: "{{ (__cockpit_is_ostree | d(false)) |
       ternary('ansible.posix.rhel_rpm_ostree', omit) }}"
   when: ansible_facts["distribution"] == "Fedora" or
+    ansible_facts["os_family"] == "Suse" or
     (ansible_facts["distribution_major_version"] | int > 7 and
      ansible_facts["distribution"] in ["CentOS", "RedHat", "Rocky"])

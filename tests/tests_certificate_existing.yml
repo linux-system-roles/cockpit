@@ -67,8 +67,10 @@
           args:
             creates: /etc/myserver.crt
           vars:
+            # no gnutls package (e.g. SUSE, which ships libgnutls30): use the classic key
+            gnutls_pkg: "{{ ansible_facts.packages['gnutls'] | d([{'version': '0'}]) }}"
             key_algo_args: "{{ '-nodes -newkey mldsa65 -keyout' if 'MLDSA65' in openssl_algorithms.stdout and
-              ansible_facts.packages['gnutls'][0].version is version('3.8.10', '>=')
+              gnutls_pkg[0].version is version('3.8.10', '>=')
               else '-new -key' }}"
 
         # ostree cannot remove packages and cannot cleanup properly
