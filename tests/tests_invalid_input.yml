@@ -2,6 +2,13 @@
 ---
 - name: Verify invalid parameters are rejected
   hosts: all
+  vars:
+    __invalid_input_failure_messages: >-
+      {{ ([ansible_failed_result.msg | default(''),
+           ansible_failed_result.msg.msg | default('')]
+          + (ansible_failed_result.results | default([])
+             | map(attribute='msg') | map('default', '') | list))
+         | join(' ') }}
   tasks:
     - name: Run invalid input tests
       block:
@@ -32,8 +39,8 @@
                   ansible.builtin.set_fact:
                     __invalid_input_missing_name_failed: true
                   when: >-
-                    'missing required arguments' in
-                    (ansible_failed_result | default({}) | to_json)
+                    'missing required arguments: name found in cockpit_certificates'
+                    in __invalid_input_failure_messages
 
             - name: Assert missing name was rejected
               ansible.builtin.assert:
@@ -56,8 +63,8 @@
                   ansible.builtin.set_fact:
                     __invalid_input_missing_ca_failed: true
                   when: >-
-                    'missing required arguments' in
-                    (ansible_failed_result | default({}) | to_json)
+                    'missing required arguments: ca found in cockpit_certificates'
+                    in __invalid_input_failure_messages
 
             - name: Assert missing ca was rejected
               ansible.builtin.assert:
@@ -79,6 +86,11 @@
                 - name: Mark invalid cockpit_enabled type rejected
                   ansible.builtin.set_fact:
                     __invalid_input_cockpit_enabled_type_failed: true
+                  when: >-
+                    "argument 'cockpit_enabled' is of type" in
+                    __invalid_input_failure_messages and
+                    'we were unable to convert to bool' in
+                    __invalid_input_failure_messages
 
             - name: Assert invalid cockpit_enabled type was rejected
               ansible.builtin.assert:
@@ -99,6 +111,11 @@
                 - name: Mark invalid cockpit_manage_firewall type rejected
                   ansible.builtin.set_fact:
                     __invalid_input_cockpit_manage_firewall_type_failed: true
+                  when: >-
+                    "argument 'cockpit_manage_firewall' is of type" in
+                    __invalid_input_failure_messages and
+                    'we were unable to convert to bool' in
+                    __invalid_input_failure_messages
 
             - name: Assert invalid cockpit_manage_firewall type was rejected
               ansible.builtin.assert:
@@ -125,6 +142,11 @@
                 - name: Mark invalid key_usage choice rejected
                   ansible.builtin.set_fact:
                     __invalid_input_key_usage_choice_failed: true
+                  when: >-
+                    'value of key_usage must be one or more of:' in
+                    __invalid_input_failure_messages and
+                    'Got no match for: invalid_choice found in cockpit_certificates'
+                    in __invalid_input_failure_messages
 
             - name: Assert invalid key_usage choice was rejected
               ansible.builtin.assert:
@@ -149,6 +171,9 @@
             - name: Mark cockpit_packages integer rejected
               ansible.builtin.set_fact:
                 __invalid_input_cockpit_packages_integer_failed: true
+              when: >-
+                'cockpit_packages must be minimal, default, full, or a list of package names, got int'
+                in __invalid_input_failure_messages
 
         - name: Assert cockpit_packages integer was rejected
           ansible.builtin.assert:
@@ -171,6 +196,11 @@
             - name: Mark cockpit_port string rejected
               ansible.builtin.set_fact:
                 __invalid_input_cockpit_port_string_failed: true
+              when: >-
+                'cockpit_port must be null or an integer, got str'
+                in __invalid_input_failure_messages or
+                'cockpit_port must be null or an integer, got AnsibleUnicode'
+                in __invalid_input_failure_messages
 
         - name: Assert cockpit_port string was rejected
           ansible.builtin.assert:
@@ -193,6 +223,11 @@
             - name: Mark cockpit_transactional_update_reboot_ok string rejected
               ansible.builtin.set_fact:
                 __invalid_input_cockpit_transactional_update_reboot_ok_string_failed: true
+              when: >-
+                'cockpit_transactional_update_reboot_ok must be null or a boolean, got str'
+                in __invalid_input_failure_messages or
+                'cockpit_transactional_update_reboot_ok must be null or a boolean, got AnsibleUnicode'
+                in __invalid_input_failure_messages
 
         - name: Assert cockpit_transactional_update_reboot_ok string was rejected
           ansible.builtin.assert:
@@ -218,6 +253,9 @@
             - name: Mark cockpit_certificates dns integer rejected
               ansible.builtin.set_fact:
                 __invalid_input_cockpit_certificates_dns_integer_failed: true
+              when: >-
+                'cockpit_certificates[0].dns must be a string or list of strings, got int'
+                in __invalid_input_failure_messages
 
         - name: Assert cockpit_certificates dns integer was rejected
           ansible.builtin.assert:
