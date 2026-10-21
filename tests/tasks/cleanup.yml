@@ -3,7 +3,31 @@
   package:
     name: "cockpit*"
     state: absent
-  when: not __cockpit_is_ostree | d(false)
+  when:
+    - not __cockpit_is_ostree | d(false)
+    - ansible_facts["pkg_mgr"] != "zypper"
+  tags:
+    - always
+    - tests::cleanup
+
+# the zypper module drops wildcard names from removals
+- name: Cleanup - get installed packages
+  package_facts:
+  when:
+    - not __cockpit_is_ostree | d(false)
+    - ansible_facts["pkg_mgr"] == "zypper"
+  tags:
+    - always
+    - tests::cleanup
+
+- name: Cleanup - packages with zypper
+  package:
+    name: "{{ ansible_facts.packages | select('match', '^cockpit') | list }}"
+    state: absent
+    clean_deps: true
+  when:
+    - not __cockpit_is_ostree | d(false)
+    - ansible_facts["pkg_mgr"] == "zypper"
   tags:
     - always
     - tests::cleanup
