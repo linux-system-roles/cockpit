@@ -21,7 +21,13 @@ __cockpit_packages_full:
   - cockpit-kdump
   - cockpit-packages
 
+# cockpit-bootloader ships from 16.1
+__cockpit_packages_extra: "{{ ['cockpit-bootloader']
+  if ansible_facts['distribution_version'] is version('16.1', '>=') else [] }}"
+
 __cockpit_packages:
   minimal: "{{ __cockpit_packages_minimal }}"
-  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default }}"
-  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default + __cockpit_packages_full }}"
+  default: "{{ __cockpit_packages_minimal + __cockpit_packages_default +
+    __cockpit_packages_extra }}"
+  full: "{{ __cockpit_packages_minimal + __cockpit_packages_default +
+    __cockpit_packages_extra + __cockpit_packages_full }}"
