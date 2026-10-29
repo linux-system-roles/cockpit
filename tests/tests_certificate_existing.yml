@@ -60,6 +60,13 @@
           changed_when: false
           no_log: true  # this is quite verbose
 
+        # rc 1: the system crypto policy does not allow ML-DSA; rc 2: there is no system crypto policy
+        - name: Check if the system crypto policy allows ML-DSA for gnutls
+          command: grep -qx 'secure-sig = ML-DSA-65' /etc/crypto-policies/back-ends/gnutls.config
+          register: gnutls_policy_mldsa
+          changed_when: false
+          failed_when: false
+
         # Use PQ algorithm if available, otherwise use default
         # cockpit uses gnutls, which supports mldsa65 since 3.8.10
         - name: Create test certificate cert
@@ -67,10 +74,11 @@
           args:
             creates: /etc/myserver.crt
           vars:
-            # no gnutls package (e.g. SUSE, which ships libgnutls30): use the classic key
-            gnutls_pkg: "{{ ansible_facts.packages['gnutls'] | d([{'version': '0'}]) }}"
+            # the gnutls library package is libgnutls30 on SUSE; if it is missing, use the classic key
+            gnutls_pkg: "{{ ansible_facts.packages['libgnutls30' if ansible_facts['os_family'] == 'Suse' else 'gnutls']
+              | d([{'version': '0'}]) }}"
             key_algo_args: "{{ '-nodes -newkey mldsa65 -keyout' if 'MLDSA65' in openssl_algorithms.stdout and
-              gnutls_pkg[0].version is version('3.8.10', '>=')
+              gnutls_pkg[0].version is version('3.8.10', '>=') and gnutls_policy_mldsa.rc != 1
               else '-new -key' }}"
 
         # ostree cannot remove packages and cannot cleanup properly

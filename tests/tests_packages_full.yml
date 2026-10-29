@@ -31,6 +31,16 @@
             msg: cockpit is not installed
           when: "'cockpit' not in ansible_facts.packages"
 
+        # part of default on SUSE 16.1 and later
+        - name: Test - cockpit-bootloader is installed
+          fail:
+            msg: cockpit-bootloader is not installed
+          when:
+            - ansible_facts['os_family'] == 'Suse'
+            - ansible_facts['distribution_major_version'] == '16'
+            - ansible_facts['distribution_version'] is version('16.1', '>=')
+            - "'cockpit-bootloader' not in ansible_facts.packages"
+
         # extra package (part of full)
         - name: Test - extra package is installed
           fail:
