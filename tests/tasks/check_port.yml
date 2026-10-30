@@ -3,7 +3,7 @@
 - name: Check firewall and SELinux port status for custom port
   vars:
     _cockpit_port: "{{ cockpit_port if cockpit_port is not none else 9090 }}"
-  when: ansible_facts['os_family'] == 'RedHat'
+  when: ansible_facts['os_family'] == 'RedHat' or ansible_facts['os_family'] == 'Suse'
   block:
     - name: Check firewall port status
       when: cockpit_manage_firewall | bool

@@ -138,7 +138,7 @@ If you want to remove ports, you will need to use the firewall system
 role directly.
 
 NOTE: This functionality is supported only when the managed host's `os_family`
-is `RedHat`.
+is `RedHat` or `Suse`.
 
 ### cockpit_manage_selinux
 
@@ -159,7 +159,7 @@ If you want to remove policy, you will need to use the selinux system
 role directly.
 
 NOTE: This functionality is supported only when the managed host's `os_family`
-is `RedHat`.
+is `RedHat` or `Suse`.
 
 See also the [Cockpit guide](https://cockpit-project.org/guide/latest/listen.html#listen-systemd) for details.
 
