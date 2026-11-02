@@ -297,7 +297,7 @@ firewall. Default to <code>false</code>.</p>
 you want to remove ports, you will need to use the firewall system role
 directly.</p>
 <p>NOTE: This functionality is supported only when the managed host's
-<code>os_family</code> is <code>RedHat</code>.</p>
+<code>os_family</code> is <code>RedHat</code> or <code>Suse</code>.</p>
 <h2 id="cockpit_manage_selinux">cockpit_manage_selinux</h2>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cockpit_manage_selinux</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div>
@@ -312,7 +312,7 @@ does not manage the SELinux permissions of the cockpit port.</p>
 If you want to remove policy, you will need to use the selinux system
 role directly.</p>
 <p>NOTE: This functionality is supported only when the managed host's
-<code>os_family</code> is <code>RedHat</code>.</p>
+<code>os_family</code> is <code>RedHat</code> or <code>Suse</code>.</p>
 <p>See also the <a
 href="https://cockpit-project.org/guide/latest/listen.html#listen-systemd">Cockpit
 guide</a> for details.</p>
