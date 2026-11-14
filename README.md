@@ -35,7 +35,7 @@ Available variables per distribution are listed below, along with default values
 
 The primary variable is `cockpit_packages` which allows you to specify your own selection of cockpit packages you want to install, or allows you to choose one of three predefined package sets: `default, minimal, or full`.  Obviously `default` is selected if you do not define this variable.  Not that the packages installed may vary depending on the distribution and version as different packages of cockpit functionality have been provided over time.  Also, some may not be available on all distributions, such as `cockpit-docker` which was deprecated on RHEL in favor of `cockpit-podman`.
 
-Example of explicit cockpit packages to install.  Dependencies should pull in the minimal cockpit packages so that they work.
+Example of explicit cockpit packages to install.  The role adds the `minimal` packages to the list so that they work.
 
 ```yaml
 cockpit_packages:
