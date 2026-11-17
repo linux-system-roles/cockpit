@@ -210,8 +210,8 @@ different packages of cockpit functionality have been provided over
 time. Also, some may not be available on all distributions, such as
 <code>cockpit-docker</code> which was deprecated on RHEL in favor of
 <code>cockpit-podman</code>.</p>
-<p>Example of explicit cockpit packages to install. Dependencies should
-pull in the minimal cockpit packages so that they work.</p>
+<p>Example of explicit cockpit packages to install. The role adds the
+<code>minimal</code> packages to the list so that they work.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cockpit_packages</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> cockpit-storaged</span></span>
