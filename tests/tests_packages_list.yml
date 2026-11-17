@@ -24,6 +24,19 @@
             - cockpit-system
             - cockpit-ws
 
+        # no clear_facts here, so a list kept as a fact by the first run would be reused
+        - name: Run the role again without cockpit_packages
+          ansible.builtin.include_role:
+            name: linux-system-roles.cockpit
+
+        - name: Refresh package facts after the second run
+          ansible.builtin.package_facts:
+
+        - name: Test - the second run installs the default set
+          ansible.builtin.fail:
+            msg: cockpit is not installed, the second run did not use the default set
+          when: "'cockpit' not in ansible_facts.packages"
+
       always:
         - name: Cleanup
           ansible.builtin.include_tasks: tasks/cleanup.yml
